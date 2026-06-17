@@ -1,6 +1,6 @@
 {
   "name": "claude-powerplatform",
-  "version": "0.11.1",
+  "version": "0.12.0",
   "description": "Assistant Power Apps (Code Apps) pour Claude Code dans VS Code, du scaffold React au déploiement en solution : skills pp-setup (mise en place du poste + extensions VS Code), pp-auth (connexion pac à l'environnement), pp-scaffold (maquette React → Code App Vite/TS + SDK), pp-data (Dataverse et connecteurs via pac code add-data-source), pp-diag (diagnostic) et pp-ship (build + pac code push dans une solution). La config par projet est lue dans un fichier PowerPlatform.md à la racine du projet.",
   "author": {
     "name": "Jean-Rémy"

@@ -33,7 +33,7 @@ Contenu à mettre dans `PowerPlatform.md` :
   # L'adresse de ton organisation Dynamics — c'est CE QUE pac utilise (auth, env select, init).
   # ⚠️ Ne la devine pas : récupère-la avec « pac env list » (ou la barre d'adresse sur
   #   make.powerapps.com). Attention à la région : .crm.dynamics.com (Amérique du Nord),
-  #   .crm12.dynamics.com (France), etc.
+  #   .crm.dynamics.com (France), etc.
 
 - Solution : NomDeLaSolution
   # Une « solution » est le conteneur qui regroupe ton app et ses éléments dans Power Platform.

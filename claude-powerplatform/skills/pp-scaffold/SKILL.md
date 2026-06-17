@@ -20,9 +20,19 @@ description: >-
 - Reste **sobre** : pas de jargon (keytar, TLS, build natif…) ni de sortie brute, **sauf** pour
   expliquer un blocage. Annoncer les étapes en clair (« j'installe les dépendances », « j'enregistre
   l'app ») plutôt que les commandes.
-- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
-  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
-  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+- **À la fin**, afficher un **tableau de progression** (façon QUICKSTART) montrant où on en est, puis
+  la prochaine action. Modèle :
+
+  | Étape | Comment | État |
+  |---|---|---|
+  | Créer l'app | `/pp-scaffold` | ✅ / 👉 / ⏳ |
+  | Brancher les données | `/pp-data` | ✅ / 👉 / ⏳ |
+  | Construire l'app | en discutant avec Claude | ✅ / 👉 / ⏳ |
+  | Publier | `/pp-ship` | ✅ / 👉 / ⏳ |
+
+  Légende : ✅ fait · 👉 tu es ici · ⏳ à venir. Sous le tableau : une ligne
+  « Aides : `/pp-setup` (poste) · `/pp-auth` (connexion) · `/pp-diag` (vérifier) » et une ligne
+  **« 👉 Prochaine étape : … »** (action concrète).
 
 Objectif : produire la structure d'une Power App Code App (SPA Vite + TypeScript branchée au SDK
 Power Platform), puis l'initialiser avec `pac code init`. Le branchement aux données (Dataverse,

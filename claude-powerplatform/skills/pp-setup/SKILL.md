@@ -20,9 +20,19 @@ description: >-
   vérifie les outils nécessaires et je te connecte à ton environnement — certaines étapes se font dans
   le navigateur, je te guide. »
 - Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
-- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
-  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
-  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+- **À la fin**, afficher un **tableau de progression** (façon QUICKSTART) montrant où on en est, puis
+  la prochaine action. Modèle :
+
+  | Étape | Comment | État |
+  |---|---|---|
+  | Créer l'app | `/pp-scaffold` | ✅ / 👉 / ⏳ |
+  | Brancher les données | `/pp-data` | ✅ / 👉 / ⏳ |
+  | Construire l'app | en discutant avec Claude | ✅ / 👉 / ⏳ |
+  | Publier | `/pp-ship` | ✅ / 👉 / ⏳ |
+
+  Légende : ✅ fait · 👉 tu es ici · ⏳ à venir. Sous le tableau : une ligne
+  « Aides : `/pp-setup` (poste) · `/pp-auth` (connexion) · `/pp-diag` (vérifier) » et une ligne
+  **« 👉 Prochaine étape : … »** (action concrète).
 
 Objectif : amener une machine VS Code de rien à un poste prêt à créer une Code App. La création du
 projet est ensuite faite par `/pp-scaffold`, le branchement des données par `/pp-data`, la publication

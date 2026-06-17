@@ -18,9 +18,19 @@ description: >-
   technique). À dire : « Je te connecte à ton environnement Power Platform pour que les autres étapes
   fonctionnent. Une fenêtre de connexion va s'ouvrir pour valider ton identité. »
 - Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
-- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
-  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
-  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+- **À la fin**, afficher un **tableau de progression** (façon QUICKSTART) montrant où on en est, puis
+  la prochaine action. Modèle :
+
+  | Étape | Comment | État |
+  |---|---|---|
+  | Créer l'app | `/pp-scaffold` | ✅ / 👉 / ⏳ |
+  | Brancher les données | `/pp-data` | ✅ / 👉 / ⏳ |
+  | Construire l'app | en discutant avec Claude | ✅ / 👉 / ⏳ |
+  | Publier | `/pp-ship` | ✅ / 👉 / ⏳ |
+
+  Légende : ✅ fait · 👉 tu es ici · ⏳ à venir. Sous le tableau : une ligne
+  « Aides : `/pp-setup` (poste) · `/pp-auth` (connexion) · `/pp-diag` (vérifier) » et une ligne
+  **« 👉 Prochaine étape : … »** (action concrète).
 
 Objectif : garantir que `pac` est authentifié sur le **bon** environnement **avant** de lancer
 `/pp-diag`, `/pp-scaffold`, etc. Évite de lancer un diagnostic qui échouerait juste sur l'auth.

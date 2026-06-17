@@ -19,9 +19,19 @@ description: >-
   technique). À dire : « Je vérifie que tout est prêt pour travailler sur ton application. Je te dis
   en clair ce qui fonctionne et ce qui bloque, avec l'action à faire. »
 - Reste **sobre** : voir la section « Présentation » plus bas (pas de narration, rapport final).
-- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
-  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
-  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+- **À la fin**, afficher un **tableau de progression** (façon QUICKSTART) montrant où on en est, puis
+  la prochaine action. Modèle :
+
+  | Étape | Comment | État |
+  |---|---|---|
+  | Créer l'app | `/pp-scaffold` | ✅ / 👉 / ⏳ |
+  | Brancher les données | `/pp-data` | ✅ / 👉 / ⏳ |
+  | Construire l'app | en discutant avec Claude | ✅ / 👉 / ⏳ |
+  | Publier | `/pp-ship` | ✅ / 👉 / ⏳ |
+
+  Légende : ✅ fait · 👉 tu es ici · ⏳ à venir. Sous le tableau : une ligne
+  « Aides : `/pp-setup` (poste) · `/pp-auth` (connexion) · `/pp-diag` (vérifier) » et une ligne
+  **« 👉 Prochaine étape : … »** (action concrète).
 
 Objectif : vérifier en quelques commandes que le poste **et** le projet sont opérationnels pour
 développer et publier une Power App Code App, et pointer la cause exacte quand quelque chose cloche.

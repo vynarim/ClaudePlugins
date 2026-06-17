@@ -18,9 +18,19 @@ description: >-
   technique). À dire : « Je branche ton application sur tes données (tables Dataverse, Teams,
   Office 365). Tu pourras les afficher et les modifier dans l'app sans écrire le code d'accès. »
 - Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
-- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
-  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
-  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+- **À la fin**, afficher un **tableau de progression** (façon QUICKSTART) montrant où on en est, puis
+  la prochaine action. Modèle :
+
+  | Étape | Comment | État |
+  |---|---|---|
+  | Créer l'app | `/pp-scaffold` | ✅ / 👉 / ⏳ |
+  | Brancher les données | `/pp-data` | ✅ / 👉 / ⏳ |
+  | Construire l'app | en discutant avec Claude | ✅ / 👉 / ⏳ |
+  | Publier | `/pp-ship` | ✅ / 👉 / ⏳ |
+
+  Légende : ✅ fait · 👉 tu es ici · ⏳ à venir. Sous le tableau : une ligne
+  « Aides : `/pp-setup` (poste) · `/pp-auth` (connexion) · `/pp-diag` (vérifier) » et une ligne
+  **« 👉 Prochaine étape : … »** (action concrète).
 
 Objectif : ajouter à une Code App ses sources de données et obtenir des **services TypeScript typés**
 prêts à consommer dans le React. Toutes les sources passent par `pac code add-data-source`.
