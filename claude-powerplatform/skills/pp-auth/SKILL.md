@@ -29,9 +29,11 @@ Contexte : VS Code sous Windows, shell **PowerShell**.
 
 ## 1. Lire l'URL d'environnement
 
-Lire `PowerPlatform.md` à la racine du projet et récupérer **« URL de l'environnement »**
-(ex. `https://orgXXXX.crm.dynamics.com/`). Si le fichier ou l'URL manque → le signaler et renvoyer
-vers `/pp-scaffold` (qui crée `PowerPlatform.md`).
+Récupérer l'**URL de l'environnement** (ex. `https://orgXXXX.crm.dynamics.com/`) :
+- Si `PowerPlatform.md` existe à la racine, y lire « URL de l'environnement ».
+- **Sinon** (auth lancée avant `/pp-scaffold`), **demander l'URL à l'utilisateur** — ou l'aider avec
+  `pac env list` qui montre les environnements et leurs URLs. Ne pas bloquer : l'auth peut se faire
+  sans `PowerPlatform.md`.
 
 ## 2. Vérifier l'état actuel
 

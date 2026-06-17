@@ -58,20 +58,18 @@ puis te demande d'aller le remplir avant de continuer.
 
 Ouvrir une session Claude Code **dans ce projet**, puis dans l'ordre :
 
-L'ordre suit la dépendance **PowerPlatform.md (URL) → authentification → init** :
+Les étapes 1 à 3 sont **OPTIONNELLES** (préparation / vérifications, à lancer au besoin) ; la création
+de l'app commence vraiment à l'étape 4.
 
 | # | Commande | Ce qui se passe |
 |---|---|---|
-| 1 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env URL, solution…) et un `.claude/settings.json` (allow-list diag), puis **t'authentifie** (`/pp-auth`), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. |
-| 2 | `/pp-data` | Branche une source, ex. Dataverse : `pac code add-data-source -a dataverse -t account` → services typés. |
-| 3 | `/pp-ship` | `npm run build` + `pac code push --solutionName "<TaSolution>"`. |
-
-**Skills d'appoint, à tout moment :**
-- `/pp-auth` — (re)connecter pac au bon environnement (lit l'URL de `PowerPlatform.md`). L'auth ouvre
-  une fenêtre de connexion ; à lancer dès que `PowerPlatform.md` est rempli, et quand le MFA expire.
-- `/pp-diag` — vérifier l'état (extensions, toolchain, auth, projet). S'il n'est pas authentifié, il
-  s'arrête net et te donne la commande d'auth plutôt qu'un rapport rouge.
-- `/pp-setup` — mise en place du poste (extensions, PATH, certificat, activation Code Apps).
+| 1 | `/pp-auth` | **OPTIONNEL** — te connecte à ton environnement Power Platform. Lit l'URL de `PowerPlatform.md` si présent, sinon te la demande. L'auth ouvre une fenêtre de connexion. Si tu es déjà connecté, passe. |
+| 2 | `/pp-diag` | **OPTIONNEL** — vérifie que tout est prêt (extensions, outils, auth, projet) et dit quoi corriger. S'il manque l'auth, il te donne la commande au lieu d'un rapport rouge. |
+| 3 | `/pp-setup` | **OPTIONNEL** — prépare le poste la 1re fois (extensions VS Code, outils, certificat, activation Code Apps). À faire surtout si `/pp-diag` est rouge. |
+| 4 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env URL, solution…) et un `.claude/settings.json` (allow-list diag), puis **t'authentifie** (`/pp-auth`), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. Peut produire un **premier écran d'exemple**. |
+| 5 | `/pp-data` | Branche une source, ex. Dataverse : `pac code add-data-source -a dataverse -t account` → services typés. |
+| 6 | **Construis ton app en discutant avec Claude** (pas de slash-command) | Décris en langage courant tes écrans et fonctions (« une liste des comptes avec un bouton Ajouter », « un formulaire de contact »…). Claude écrit/modifie le React en utilisant les **données branchées à l'étape 5**. Vérifie le rendu avec `npm run dev`, ajuste, recommence. C'est **le cœur de la création de l'app**. |
+| 7 | `/pp-ship` | `npm run build` + `pac code push --solutionName "<TaSolution>"`. |
 
 > `/pp-scaffold` ajoute une **allow-list** des commandes de diagnostic en lecture seule dans
 > `.claude/settings.json`, pour que `/pp-diag` tourne **sans demande d'autorisation**. Les commandes
