@@ -1,7 +1,7 @@
 {
   "name": "claude-powerplatform",
-  "version": "1.0.0",
-  "description": "Outils pour développer des Power Apps (Code Apps) avec Claude Code dans VS Code : skill pp-diag (diagnostic toolchain/auth/environnement) et pp-ship (build + pac code push, avec correctif du PATH et du certificat corporate). La config par projet (URL d'environnement, nom de solution, certificat, connexions) est lue dans le CLAUDE.md du projet.",
+  "version": "1.1.0",
+  "description": "Outils pour développer des Power Apps (Code Apps) avec Claude Code dans VS Code : skills pp-diag (diagnostic toolchain/auth/environnement), pp-ship (build + pac code push, avec correctif du PATH et du certificat corporate) et pp-setup (guide de mise en place complet d'un poste). La config par projet (URL d'environnement, nom de solution, certificat, connexions) est lue dans le CLAUDE.md du projet.",
   "author": {
     "name": "Jean-Rémy"
   },

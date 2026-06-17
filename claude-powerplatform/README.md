@@ -8,6 +8,7 @@ CA corporate, activation des Code Apps, auth pac).
 
 | Skill | Invocation | Rôle |
 |---|---|---|
+| `pp-setup` | `/pp-setup` | Mise en place d'un poste de zéro : toolchain, PATH, certificat, activation Code Apps, auth pac, connexions OAuth |
 | `pp-diag` | `/pp-diag` | Diagnostic : toolchain (node/npm/pac/git), PATH, certificat, auth pac, activation Code Apps |
 | `pp-ship` | `/pp-ship` | Publication : recharge le PATH, `npm run build`, `pac code push --solutionName`, traduction des erreurs |
 
@@ -21,13 +22,13 @@ solution, dossier de l'app, certificat, connexions OAuth. Gabarit prêt à colle
 
 **Automatisé** : diagnostic, correctif du PATH (session), build, push, traduction des erreurs pac.
 
-**Hors périmètre** (étapes manuelles, sans CLI) :
-- Installation de Node / pac CLI
+**Manuel mais guidé** (étapes sans CLI, `pp-setup` guide pas-à-pas et attend confirmation) :
+- Installation de Node / pac CLI (ZIP/winget sans droits admin)
 - Activation des « Power Apps code apps » dans le Power Platform Admin Center
 - Création des connexions OAuth (SharePoint, Outlook) dans le maker portal
 
-Ces étapes sont documentées par `pp-diag` quand elles bloquent, mais ne sont pas exécutées par le
-plugin.
+Ces étapes ne sont pas exécutées par le plugin, mais `pp-setup` les détaille et `pp-diag` les
+signale quand elles bloquent.
 
 ## Prérequis
 

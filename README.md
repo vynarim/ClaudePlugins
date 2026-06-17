@@ -30,6 +30,7 @@ avant le reset, pour finir ou borner la tâche à temps.
 
 | Skill | Invocation | Rôle |
 |---|---|---|
+| `pp-setup` | `/pp-setup` | Mise en place d'un poste de zéro : toolchain, certificat, activation Code Apps, auth, connexions OAuth |
 | `pp-diag` | `/pp-diag` | Diagnostic du poste : toolchain, PATH, certificat corporate, auth pac, Code Apps |
 | `pp-ship` | `/pp-ship` | Publication : recharge le PATH, `npm run build`, `pac code push`, traduction des erreurs |
 
