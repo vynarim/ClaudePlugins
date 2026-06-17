@@ -1,60 +1,28 @@
 # ClaudePlugins — marketplace interne `dev-tools`
 
-> 👉 **Développeur ? Commence ici : [INSTALL.md](INSTALL.md)** — installation en une commande.
+Dépôt-catalogue de plugins Claude Code. Contient le plugin **`claude-utils`**.
 
-Dépôt-catalogue (marketplace **`dev-tools`**) des plugins Claude Code internes. Contient pour l'instant
-le plugin **`claude-utils`** (boîte à outils de skills génériques + hook fenêtre 5 h). Repo **public** :
-l'installation ne demande aucune authentification.
+## Skills disponibles
 
-## Vocabulaire (4 noms à ne pas confondre)
-
-| Élément | Nom | Où |
+| Skill | Invocation | Rôle |
 |---|---|---|
-| Repo GitHub | `ClaudePlugins` | github.com/vynarim/ClaudePlugins |
-| Marketplace | `dev-tools` | champ `name` de `.claude-plugin/marketplace.json` |
-| Plugin | `claude-utils` | dossier `claude-utils/` |
-| Skill | `eco` | `claude-utils/skills/eco/` (invocable via `/eco`) |
+| `eco` | `/eco` | Discipline tokens/contexte — limites 5 h et hebdo, choix de modèle |
+| `pr-draft` | `/pr-draft` | Génère titre + corps de PR GitHub depuis le diff courant |
+| `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet |
 
-L'install se réfère au couple **plugin@marketplace** : `claude-utils@dev-tools`.
+Inclut aussi un hook `UserPromptSubmit` qui alerte ~30 min avant le reset estimé de la fenêtre 5 h.
 
-## Structure
-
-\```
-.
-├── .claude-plugin/marketplace.json
-├── claude-utils/                ← le plugin
-│   ├── .claude-plugin/plugin.json
-│   ├── skills/eco/
-│   │   ├── SKILL.md
-│   │   └── references/
-│   └── hooks/
-│       ├── hooks.json
-│       └── scripts/eco-window-check.js
-├── examples/
-│   └── project.claude-settings.json   ← à committer dans Azalee / LudEvent
-├── INSTALL.md                  ← guide développeur (installer/utiliser)
-├── DEPLOYMENT.md               ← guide mainteneur (publier/mettre à jour)
-├── CHANGELOG.md
-└── README.md
-\```
-
-## Documentation
-
-| Tu es… | Tu veux… | Lis |
-|---|---|---|
-| Développeur | installer et utiliser le plugin sur ton poste | **[INSTALL.md](INSTALL.md)** |
-| Mainteneur | créer le repo, publier, faire évoluer le plugin | **[DEPLOYMENT.md](DEPLOYMENT.md)** |
-| Curieux | comprendre ce que contient le plugin | [claude-utils/README.md](claude-utils/README.md) |
-| Tous | suivre les versions | [CHANGELOG.md](CHANGELOG.md) |
-
-## Installation rapide (développeur)
-
-Le plus souvent, **ouvre simplement le projet** (Azalee, LudEvent…) et accepte l'invite d'installation
-au moment du « trust » du dossier. Sinon, en manuel depuis le terminal :
+## Installation
 
 ```powershell
 claude plugin marketplace add vynarim/ClaudePlugins
 claude plugin install claude-utils@dev-tools
 ```
 
-Détails, vérifications et dépannage dans **[INSTALL.md](INSTALL.md)**.
+Repo public — aucune authentification requise. Voir [INSTALL.md](INSTALL.md) pour les détails et le dépannage.
+
+## Pour aller plus loin
+
+- [INSTALL.md](INSTALL.md) — installer, vérifier, mettre à jour, dépanner
+- [DEPLOYMENT.md](DEPLOYMENT.md) — ajouter une skill, publier une version, activer dans un projet
+- [claude-utils/README.md](claude-utils/README.md) — détails du plugin
