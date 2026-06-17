@@ -64,12 +64,24 @@ Dans une session Claude Code :
 
 ## Mettre à jour
 
+Deux étapes : rafraîchir le **catalogue**, puis appliquer la nouvelle version au plugin **installé**.
+
 ```powershell
-claude plugin marketplace update dev-tools
+claude plugin marketplace update dev-tools      # rafraîchit le catalogue (ne met PAS à jour les plugins)
+claude plugin update <plugin>@dev-tools         # applique la dernière version au plugin installé
 ```
 
-Met à jour la marketplace **et tous ses plugins installés** d'un coup. L'auto-update est désactivé
-par défaut pour les marketplaces tierces — lance cette commande après chaque release.
+Puis **redémarrer** pour appliquer : recharge la fenêtre VS Code (*Developer: Reload Window*) ou
+`/reload-plugins`.
+
+> ⚠️ `marketplace update` seul ne suffit pas : il rafraîchit le catalogue mais ne ré-upgrade pas un
+> plugin déjà installé (auto-update désactivé par défaut pour les marketplaces tierces). C'est
+> `claude plugin update` qui applique la nouvelle version. Avec le plugin `claude-utils` installé, la
+> skill `/update-plugins` enchaîne ces étapes pour toi.
+>
+> Cas particuliers : un **nouveau** plugin pas encore installé → `claude plugin install <plugin>@dev-tools`.
+> Un retour à une version **inférieure** (downgrade) n'est pas géré par `update` → `uninstall` puis
+> `install`.
 
 ---
 
@@ -89,6 +101,13 @@ complète fonctionne aussi :
 ```powershell
 claude plugin marketplace add https://github.com/vynarim/ClaudePlugins.git
 ```
+
+**Une skill `/xxx` n'est pas reconnue (« No matching commands »)**
+Cause la plus fréquente : le plugin qui la fournit n'est **pas installé** sur ce poste (l'avoir poussé
+dans la marketplace ne suffit pas). Vérifie avec `claude plugin list` ; si le plugin manque,
+`claude plugin install <plugin>@dev-tools`. S'il est listé mais la skill manque toujours, **recharge
+la fenêtre** VS Code (*Developer: Reload Window*) — les plugins sont chargés à l'ouverture de la
+fenêtre. Si la skill a été ajoutée dans une nouvelle version, voir « Mettre à jour » (ré-installer).
 
 **Un plugin n'apparaît pas dans les extensions VS Code**
 Normal — un plugin Claude Code est distinct d'une extension VS Code. Gère-les via `/plugin` en

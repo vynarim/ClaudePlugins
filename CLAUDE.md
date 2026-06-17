@@ -24,7 +24,10 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
   stage + commit Conventional Commits avec trailer Co-Authored-By + push). Voir [[no-auto-commit-ship-skill]].
 - Messages de commit : `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`).
 - Travail directement sur `main`.
-- Publier une version = bump `version` du plugin + `/ship`, puis `claude plugin marketplace update dev-tools` côté postes.
+- Publier une version = bump `version` du plugin + `/ship`. Côté postes : `claude plugin marketplace
+  update dev-tools` (catalogue) puis `claude plugin update <plugin>@dev-tools` (applique le bump), ou
+  la skill `/update-plugins`. `marketplace update` seul ne ré-upgrade pas. Détails dans
+  [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Docs
 

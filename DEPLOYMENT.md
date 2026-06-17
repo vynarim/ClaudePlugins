@@ -38,12 +38,20 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
    ```powershell
    node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8')); console.log('OK')"
    ```
-3. `git commit` + `git push`.
-4. Sur chaque poste : `claude plugin marketplace update dev-tools` (ou `/plugin marketplace update dev-tools`
-   en session, suivi de `/reload-plugins`).
+3. `git commit` + `git push` (via `/ship`).
+4. Sur chaque poste, après le push :
+   ```powershell
+   claude plugin marketplace update dev-tools          # rafraîchit le catalogue
+   claude plugin update <plugin>@dev-tools             # applique la nouvelle version au plugin installé
+   ```
+   Puis recharger la fenêtre VS Code (*Developer: Reload Window*) ou `/reload-plugins`. Avec
+   `claude-utils` installé, la skill `/update-plugins` enchaîne ces étapes.
 
-L'auto-update étant désactivé par défaut pour les marketplaces tierces, les développeurs doivent
-lancer cette commande manuellement après chaque release.
+⚠️ **`marketplace update` ne suffit pas** : il rafraîchit seulement le catalogue (auto-update désactivé
+par défaut pour les marketplaces tierces). C'est `claude plugin update` qui applique réellement le bump
+à un plugin installé. Cas particuliers : **nouveau** plugin → `claude plugin install <plugin>@dev-tools` ;
+**downgrade** (ex. repasser en 0.9.0 depuis une version supérieure, non géré par `update`) →
+`uninstall` puis `install`.
 
 ---
 
