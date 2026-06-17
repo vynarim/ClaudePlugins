@@ -12,8 +12,8 @@
     {
       "name": "claude-utils",
       "source": "./claude-utils",
-      "description": "Boîte à outils générique : skills internes réutilisables (eco + à venir) et hook d'alerte fenêtre 5 h.",
-      "keywords": ["utils", "toolkit", "tokens", "efficiency"]
+      "description": "Boîte à outils générique : skills eco (tokens/contexte), pr-draft (PR GitHub), session-brief (reprise de session) et hook d'alerte fenêtre 5 h.",
+      "keywords": ["utils", "toolkit", "tokens", "efficiency", "github", "pr", "session"]
     }
   ]
 }

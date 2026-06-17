@@ -1,7 +1,7 @@
 {
   "name": "claude-utils",
-  "version": "1.0.0",
-  "description": "Boîte à outils générique pour Claude Code : ensemble de skills internes réutilisables. Contient actuellement la skill 'eco' (discipline de tokens/contexte, limites 5 h/hebdo) et un hook qui alerte avant le reset estimé de la fenêtre 5 h. D'autres skills génériques s'ajouteront sous skills/.",
+  "version": "1.1.0",
+  "description": "Boîte à outils générique pour Claude Code : skills internes réutilisables et hook d'alerte fenêtre 5 h. Skills disponibles : eco (discipline tokens/contexte), pr-draft (génération PR GitHub), session-brief (brief de reprise de session).",
   "author": {
     "name": "Jean-Rémy"
   },
@@ -11,7 +11,10 @@
     "tokens",
     "context",
     "usage-limits",
-    "efficiency"
+    "efficiency",
+    "github",
+    "pr",
+    "session"
   ],
   "license": "MIT"
 }
