@@ -1,9 +1,12 @@
-# INSTALL.md — installer `claude-utils`
+# INSTALL.md — installer les plugins de la marketplace `dev-tools`
+
+Ce repo expose la marketplace `dev-tools`, qui contient plusieurs plugins (voir [README.md](README.md)
+pour la liste à jour). On enregistre la marketplace une fois, puis on installe les plugins voulus.
 
 ## Prérequis
 
 - **Claude Code** installé (`claude --version`)
-- **Node.js** dans le PATH (`node --version`) — requis par le hook d'alerte 5 h
+- **Node.js** dans le PATH (`node --version`) — requis par certains plugins (ex. le hook de `claude-utils`)
 
 ---
 
@@ -13,31 +16,35 @@ Si le projet (ex. `horizon-app`, `stellar-api`…) déclare déjà la marketplac
 `.claude/settings.json`, l'installation se fait en trois clics :
 
 1. Ouvre le projet dans VS Code et accepte le **trust du dossier** quand Claude Code le demande.
-2. Claude Code détecte la marketplace et le plugin déclarés — accepte la proposition d'installation.
+2. Claude Code détecte la marketplace et les plugins déclarés — accepte la proposition d'installation.
 3. Recharge la fenêtre : `Ctrl+Shift+P` → *Developer: Reload Window*.
 
-Le trust du dossier n'est pas une formalité : il autorise l'exécution du hook Node. N'accepte que
+Le trust du dossier n'est pas une formalité : il autorise l'exécution de code (hooks). N'accepte que
 pour des projets de confiance.
 
 ---
 
 ## Méthode 2 — manuelle (premier poste, ou projet sans configuration)
 
-Une fois installé manuellement, le plugin est disponible dans **tous** tes projets sur ce poste.
+Une fois installés manuellement, les plugins sont disponibles dans **tous** tes projets sur ce poste.
 
-Dans le terminal (PowerShell) :
+Dans le terminal (PowerShell) — enregistre la marketplace, puis installe les plugins voulus :
 
 ```powershell
 claude plugin marketplace add vynarim/ClaudePlugins
 claude plugin install claude-utils@dev-tools
+claude plugin install claude-powerplatform@dev-tools
 ```
+
+> Tu n'es pas obligé de tout installer : n'installe que les plugins dont tu as besoin. La liste
+> complète et à jour est dans le [README.md](README.md).
 
 Ou depuis une session Claude Code ouverte (les commandes commençant par `/` ne fonctionnent que
 dans l'invite Claude, pas dans PowerShell) :
 
 ```
 /plugin marketplace add vynarim/ClaudePlugins
-/plugin install claude-utils@dev-tools
+/plugin install <plugin>@dev-tools
 /reload-plugins
 ```
 
@@ -49,9 +56,9 @@ Recharge ensuite la fenêtre VS Code.
 
 Dans une session Claude Code :
 
-- `/plugin` → onglet *Installed* : `claude-utils@dev-tools` présent et activé
-- `/hooks` → un hook `UserPromptSubmit` listé (c'est l'alerte 5 h)
-- `/eco`, `/pr-draft`, `/session-brief` → chaque skill doit être proposée
+- `/plugin` → onglet *Installed* : chaque plugin installé (`…@dev-tools`) présent et activé
+- `/hooks` → les hooks éventuels du plugin sont listés (ex. `UserPromptSubmit` pour `claude-utils`)
+- Tape `/` : les skills des plugins installés doivent être proposées (ex. `/eco`, `/pp-diag`)
 
 ---
 
@@ -61,8 +68,8 @@ Dans une session Claude Code :
 claude plugin marketplace update dev-tools
 ```
 
-L'auto-update est désactivé par défaut pour les marketplaces tierces. Lance cette commande après
-chaque release pour récupérer les nouvelles versions.
+Met à jour la marketplace **et tous ses plugins installés** d'un coup. L'auto-update est désactivé
+par défaut pour les marketplaces tierces — lance cette commande après chaque release.
 
 ---
 
@@ -83,20 +90,12 @@ complète fonctionne aussi :
 claude plugin marketplace add https://github.com/vynarim/ClaudePlugins.git
 ```
 
-**Le plugin n'apparaît pas dans les extensions VS Code**
-Normal — un plugin Claude Code est distinct d'une extension VS Code. Gère-le via `/plugin` en
+**Un plugin n'apparaît pas dans les extensions VS Code**
+Normal — un plugin Claude Code est distinct d'une extension VS Code. Gère-les via `/plugin` en
 session ou `claude plugin list` dans le terminal.
 
-**Le hook 5 h ne se déclenche jamais**
-Vérifie que `node --version` répond et que `/hooks` liste un `UserPromptSubmit`. Pour tester sans
-attendre 4 h 30, ajoute ces variables d'environnement **avant** de lancer `claude` :
-```powershell
-$env:ECO_WINDOW_MIN = "5"; $env:ECO_WARN_BEFORE_MIN = "4"
-Remove-Item "$HOME\.claude\eco-window-state.json" -ErrorAction SilentlyContinue
-```
-Envoie 2–3 messages ; l'alerte `⏳ eco — fenêtre 5 h…` doit apparaître. Nettoie ensuite les
-variables et le fichier d'état.
-
-**Réglages du hook**
-Variables d'environnement optionnelles : `ECO_WARN_BEFORE_MIN` (défaut 30), `ECO_WINDOW_MIN`
-(défaut 300), `ECO_STATE_FILE` (défaut `~/.claude/eco-window-state.json`).
+**Dépannage propre à un plugin**
+Les particularités (réglages d'un hook, variables d'environnement, prérequis spécifiques) sont
+documentées dans le README de chaque plugin :
+- [claude-utils/README.md](claude-utils/README.md)
+- [claude-powerplatform/README.md](claude-powerplatform/README.md)
