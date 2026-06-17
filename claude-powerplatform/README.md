@@ -10,6 +10,8 @@ Code Apps, auth pac).
 > (remplacement progressif par le CLI npm embarqué dans `@microsoft/power-apps`). Le plugin ne fige
 > aucune version ; vérifier la doc officielle en cas de doute.
 
+**Démarrer de zéro** : suivre le [QUICKSTART.md](QUICKSTART.md) — du dossier vide au déploiement.
+
 ## Skills (dans l'ordre du parcours)
 
 | Skill | Invocation | Rôle |
