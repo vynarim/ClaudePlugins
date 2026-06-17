@@ -12,6 +12,16 @@ description: >-
 
 # pp-auth — Se connecter à l'environnement Power Platform
 
+## Cadre citizen dev (au lancement et à la fin)
+
+- **Au lancement**, annonce en **2 phrases** ce que tu vas faire, en langage **fonctionnel** (pas
+  technique). À dire : « Je te connecte à ton environnement Power Platform pour que les autres étapes
+  fonctionnent. Une fenêtre de connexion va s'ouvrir pour valider ton identité. »
+- Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
+- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
+  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
+  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+
 Objectif : garantir que `pac` est authentifié sur le **bon** environnement **avant** de lancer
 `/pp-diag`, `/pp-scaffold`, etc. Évite de lancer un diagnostic qui échouerait juste sur l'auth.
 

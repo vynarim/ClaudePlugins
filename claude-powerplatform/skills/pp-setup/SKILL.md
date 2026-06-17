@@ -13,6 +13,17 @@ description: >-
 
 # pp-setup — Mettre en place un poste Power Platform (Code Apps) de zéro
 
+## Cadre citizen dev (au lancement et à la fin)
+
+- **Au lancement**, annonce en **2 phrases** ce que tu vas faire, en langage **fonctionnel** (pas
+  technique). À dire : « Je prépare ton poste pour créer des applications Power Apps. J'installe et
+  vérifie les outils nécessaires et je te connecte à ton environnement — certaines étapes se font dans
+  le navigateur, je te guide. »
+- Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
+- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
+  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
+  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+
 Objectif : amener une machine VS Code de rien à un poste prêt à créer une Code App. La création du
 projet est ensuite faite par `/pp-scaffold`, le branchement des données par `/pp-data`, la publication
 par `/pp-ship`.

@@ -12,6 +12,16 @@ description: >-
 
 # pp-data — Brancher Dataverse et les connecteurs
 
+## Cadre citizen dev (au lancement et à la fin)
+
+- **Au lancement**, annonce en **2 phrases** ce que tu vas faire, en langage **fonctionnel** (pas
+  technique). À dire : « Je branche ton application sur tes données (tables Dataverse, Teams,
+  Office 365). Tu pourras les afficher et les modifier dans l'app sans écrire le code d'accès. »
+- Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
+- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
+  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
+  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+
 Objectif : ajouter à une Code App ses sources de données et obtenir des **services TypeScript typés**
 prêts à consommer dans le React. Toutes les sources passent par `pac code add-data-source`.
 

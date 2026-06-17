@@ -12,6 +12,16 @@ description: >-
 
 # pp-ship — Publier une Power App Code App dans une solution
 
+## Cadre citizen dev (au lancement et à la fin)
+
+- **Au lancement**, annonce en **2 phrases** ce que tu vas faire, en langage **fonctionnel** (pas
+  technique). À dire : « Je publie ton application dans ton environnement Power Platform. Une fois
+  fait, elle sera accessible en ligne via une adresse. »
+- Reste **sobre** ensuite : pas de jargon ni de détails techniques, sauf pour expliquer un blocage.
+- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
+  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
+  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+
 Objectif : enchaîner build + push de façon fiable, en neutralisant d'abord les pièges du poste (PATH
 périmé, certificat), en associant l'app à la bonne solution, et en traduisant les erreurs `pac` en
 action concrète.

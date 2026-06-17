@@ -13,6 +13,16 @@ description: >-
 
 # pp-diag — Diagnostic poste + projet Power Platform (Code Apps)
 
+## Cadre citizen dev (au lancement et à la fin)
+
+- **Au lancement**, annonce en **2 phrases** ce que tu vas faire, en langage **fonctionnel** (pas
+  technique). À dire : « Je vérifie que tout est prêt pour travailler sur ton application. Je te dis
+  en clair ce qui fonctionne et ce qui bloque, avec l'action à faire. »
+- Reste **sobre** : voir la section « Présentation » plus bas (pas de narration, rapport final).
+- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
+  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
+  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+
 Objectif : vérifier en quelques commandes que le poste **et** le projet sont opérationnels pour
 développer et publier une Power App Code App, et pointer la cause exacte quand quelque chose cloche.
 

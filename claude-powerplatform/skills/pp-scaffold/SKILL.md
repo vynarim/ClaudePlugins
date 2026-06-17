@@ -12,6 +12,18 @@ description: >-
 
 # pp-scaffold — D'une maquette React à une Code App
 
+## Cadre citizen dev (au lancement et à la fin)
+
+- **Au lancement**, annonce en **2 phrases** ce que tu vas faire, en langage **fonctionnel** (pas
+  technique). À dire : « Je transforme ton dossier en une application Power Apps prête à l'emploi. Je
+  crée sa fiche de configuration, je prépare le projet et je l'enregistre dans ton environnement. »
+- Reste **sobre** : pas de jargon (keytar, TLS, build natif…) ni de sortie brute, **sauf** pour
+  expliquer un blocage. Annoncer les étapes en clair (« j'installe les dépendances », « j'enregistre
+  l'app ») plutôt que les commandes.
+- **À la fin**, rappelle l'enchaînement et **la prochaine étape concrète** :
+  `/pp-setup` (poste, une fois) → `/pp-scaffold` (créer l'app) → `/pp-data` (données) →
+  `/pp-ship` (publier). Aides à tout moment : `/pp-auth` (connexion), `/pp-diag` (vérifier).
+
 Objectif : produire la structure d'une Power App Code App (SPA Vite + TypeScript branchée au SDK
 Power Platform), puis l'initialiser avec `pac code init`. Le branchement aux données (Dataverse,
 connecteurs) est ensuite fait par `/pp-data` ; la publication par `/pp-ship`.
@@ -32,8 +44,15 @@ dépréciation plus bas.
 ```powershell
 npx degit github:microsoft/PowerAppsCodeApps/templates/vite <mon-app>
 cd <mon-app>
-npm install
+npm install --ignore-scripts
 ```
+
+> **Pourquoi `--ignore-scripts` par défaut** (citizen dev) : ça saute les scripts d'installation qui
+> compilent des modules natifs (ex. `keytar`) — lesquels échouent souvent sur les postes d'entreprise
+> (interception TLS, Node très récent, pas de Python). Ces modules ne sont **pas** nécessaires pour
+> `npm run build` ni `pac code push`. Ne **pas** afficher ces détails à l'utilisateur ; dire simplement
+> « j'installe les dépendances ». Seulement **si** le build échoue ensuite faute d'un binaire natif :
+> faire un `npm install` complet (et pointer le certificat si réseau corporate, voir `/pp-setup`).
 
 **B. Depuis une maquette React existante / from scratch** : s'assurer que c'est un **SPA Vite +
 TypeScript**, puis ajouter les pièces Power Platform (étape 3).
