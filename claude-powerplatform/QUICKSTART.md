@@ -58,13 +58,20 @@ puis te demande d'aller le remplir avant de continuer.
 
 Ouvrir une session Claude Code **dans ce projet**, puis dans l'ordre :
 
+L'ordre suit la dépendance **PowerPlatform.md (URL) → authentification → init** :
+
 | # | Commande | Ce qui se passe |
 |---|---|---|
-| 1 | `/pp-diag` | Vérifie extensions, toolchain, auth pac. Corriger les ❌ avant de continuer. |
-| 2 | `/pp-setup` (si diag rouge) | Guide sur ce qui manque (auth `pac auth create`, PATH, certificat…). |
-| 3 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env, solution…) et un `.claude/settings.json` (allow-list diag), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. |
-| 4 | `/pp-data` | Branche une source de test, ex. Dataverse : `pac code add-data-source -a dataverse -t account` → génère les services typés. |
-| 5 | `/pp-ship` | `npm run build` + `pac code push --solutionName "<TaSolution>"`. |
+| 1 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env URL, solution…) et un `.claude/settings.json` (allow-list diag), puis **t'authentifie** (`/pp-auth`), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. |
+| 2 | `/pp-data` | Branche une source, ex. Dataverse : `pac code add-data-source -a dataverse -t account` → services typés. |
+| 3 | `/pp-ship` | `npm run build` + `pac code push --solutionName "<TaSolution>"`. |
+
+**Skills d'appoint, à tout moment :**
+- `/pp-auth` — (re)connecter pac au bon environnement (lit l'URL de `PowerPlatform.md`). L'auth ouvre
+  une fenêtre de connexion ; à lancer dès que `PowerPlatform.md` est rempli, et quand le MFA expire.
+- `/pp-diag` — vérifier l'état (extensions, toolchain, auth, projet). S'il n'est pas authentifié, il
+  s'arrête net et te donne la commande d'auth plutôt qu'un rapport rouge.
+- `/pp-setup` — mise en place du poste (extensions, PATH, certificat, activation Code Apps).
 
 > `/pp-scaffold` ajoute une **allow-list** des commandes de diagnostic en lecture seule dans
 > `.claude/settings.json`, pour que `/pp-diag` tourne **sans demande d'autorisation**. Les commandes

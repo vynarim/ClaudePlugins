@@ -18,7 +18,7 @@
     {
       "name": "claude-powerplatform",
       "source": "./claude-powerplatform",
-      "description": "Assistant Power Apps (Code Apps) dans VS Code, du scaffold React au déploiement en solution : skills pp-setup, pp-scaffold, pp-data (Dataverse/connecteurs), pp-diag et pp-ship.",
+      "description": "Assistant Power Apps (Code Apps) dans VS Code, du scaffold React au déploiement en solution : skills pp-setup, pp-auth, pp-scaffold, pp-data (Dataverse/connecteurs), pp-diag et pp-ship.",
       "keywords": ["power-platform", "power-apps", "code-apps", "pac", "dataverse", "connectors"]
     }
   ]

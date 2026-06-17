@@ -35,6 +35,7 @@ Pour démarrer de zéro, suivre le [QUICKSTART](claude-powerplatform/QUICKSTART.
 | Skill | Invocation | Rôle |
 |---|---|---|
 | `pp-setup` | `/pp-setup` | Mise en place du poste : extensions VS Code, toolchain, certificat, activation Code Apps, auth |
+| `pp-auth` | `/pp-auth` | Connecte pac au bon environnement (avant `/pp-diag`) |
 | `pp-scaffold` | `/pp-scaffold` | Maquette React → Code App : Vite/TS, SDK, PowerProvider, `pac code init` |
 | `pp-data` | `/pp-data` | Brancher Dataverse et les connecteurs (Teams, O365) via `pac code add-data-source` |
 | `pp-diag` | `/pp-diag` | Diagnostic poste + projet : extensions, toolchain, SDK, auth, certificat |

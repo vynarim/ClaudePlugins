@@ -17,6 +17,7 @@ Code Apps, auth pac).
 | Skill | Invocation | Rôle |
 |---|---|---|
 | `pp-setup` | `/pp-setup` | Mise en place du poste : extensions VS Code, toolchain, PATH, certificat, activation Code Apps, auth pac, connexions |
+| `pp-auth` | `/pp-auth` | Connecte pac au bon environnement (lit l'URL de PowerPlatform.md) — à faire avant `/pp-diag` |
 | `pp-scaffold` | `/pp-scaffold` | Maquette React → Code App : SPA Vite/TS, SDK `@microsoft/power-apps`, PowerProvider, `pac code init` |
 | `pp-data` | `/pp-data` | Brancher les données : `pac code add-data-source` (Dataverse + connecteurs Teams/O365), services typés générés |
 | `pp-diag` | `/pp-diag` | Diagnostic poste + projet : extensions, toolchain, SDK, `power.config.json`, auth, certificat |

@@ -35,6 +35,27 @@ Lire le fichier `PowerPlatform.md` à la racine du projet (gabarit :
 dossier de l'app, certificat, sources de données. Si absent, le signaler : le diagnostic reste possible
 mais sans valeurs attendues à confronter (et recommander de le créer via `/pp-scaffold`).
 
+## Porte d'entrée : authentification (court-circuit)
+
+L'auth est le blocage le plus fréquent et se règle par une action **interactive** (navigateur). Pour
+ne pas dérouler un rapport rouge inutile, **vérifier l'auth en premier** :
+
+```powershell
+pac auth list; pac org who
+```
+
+- Si `pac` **n'est pas reconnu** → ce n'est pas un problème d'auth mais de toolchain/PATH : ne pas
+  court-circuiter, dérouler le diagnostic complet (vérifs 1-2).
+- Si `pac` répond mais **aucune auth / MFA expirée / mauvais environnement** (différent de l'URL de
+  `PowerPlatform.md`) → **s'arrêter ici**. N'afficher **que** l'action d'auth, sans le rapport complet :
+  > ⚠️ Connecte-toi d'abord (ouvre une fenêtre de connexion), puis relance `/pp-diag` :
+  > ```powershell
+  > pac auth create --environment "<URL-de-PowerPlatform.md>"
+  > pac env select --environment "<URL-de-PowerPlatform.md>"
+  > ```
+  > (ou lance `/pp-auth`.)
+- Si l'auth pointe **déjà** le bon environnement → continuer le diagnostic complet ci-dessous.
+
 ## Les vérifications
 
 ### 0. Extensions VS Code

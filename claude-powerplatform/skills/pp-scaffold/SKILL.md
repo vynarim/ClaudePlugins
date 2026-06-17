@@ -52,8 +52,8 @@ car les étapes suivantes (`pac code init`, `/pp-data`, `/pp-ship`) ont besoin d
    d'exemple commentées**.
 2. **Dire explicitement à l'utilisateur d'aller le modifier** : ouvrir `PowerPlatform.md` et remplacer
    les valeurs d'exemple par les siennes (environnement nom + URL, solution, dossier de l'app,
-   displayName, tables/connecteurs). **Marquer une pause** et attendre sa confirmation avant de lancer
-   `pac code init` (étape 4), qui consomme l'URL d'environnement.
+   displayName, tables/connecteurs). **Marquer une pause** et attendre sa confirmation avant
+   l'authentification (étape 4) et `pac code init` (étape 5), qui consomment l'URL d'environnement.
 3. Si le projet a un `CLAUDE.md`, y ajouter un **pointeur** :
    `- Config Power Platform → voir PowerPlatform.md`.
 4. **Créer/fusionner** `.claude/settings.json` à la racine du projet avec une allow-list des commandes
@@ -91,7 +91,15 @@ Ne jamais mettre de secrets ici ; l'URL d'environnement et le nom de solution ne
    - `dev` lance le serveur SDK local **et** Vite (ex. `"dev": "start pac code run && vite"`).
    - `build` = `"tsc -b && vite build"`.
 
-## Étape 4 — Initialiser la Code App
+## Étape 4 — S'authentifier (avant l'init)
+
+`pac code init` cible l'environnement → il faut être connecté **avant**. Vérifier / établir l'auth via
+**`/pp-auth`** (il lit l'URL de `PowerPlatform.md`). En résumé : `pac org who` doit pointer l'URL
+attendue ; sinon l'utilisateur lance `pac auth create --environment "<url>"` puis
+`pac env select --environment "<url>"` (interactif — ouvre le navigateur). Ne pas continuer tant que
+l'auth ne pointe pas le bon environnement.
+
+## Étape 5 — Initialiser la Code App
 
 À la racine du projet (utiliser le displayName et l'URL d'environnement de `PowerPlatform.md`) :
 
@@ -102,7 +110,7 @@ pac code init --displayName "<nom affiché de l'app>"
 
 Génère `power.config.json` (métadonnées de l'app) — c'est le marqueur que le dossier est une Code App.
 
-## Étape 5 — Générer / adapter la maquette React
+## Étape 6 — Générer / adapter la maquette React
 
 Claude génère ici les composants React de la maquette selon le besoin métier. Contraintes Code Apps à
 respecter :
@@ -112,7 +120,7 @@ respecter :
 - L'arbre de rendu reste enveloppé par `PowerProvider`.
 - Garder l'UI découplée de l'accès données (composants ↔ services typés) pour faciliter le câblage.
 
-## Étape 6 — Exécution locale
+## Étape 7 — Exécution locale
 
 ```powershell
 npm run dev   # lance pac code run + Vite (port 3000)
