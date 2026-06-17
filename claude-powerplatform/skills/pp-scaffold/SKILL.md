@@ -83,10 +83,21 @@ npm run dev   # lance pac code run + Vite (port 3000)
 > local peut nécessiter d'autoriser l'accès réseau local dans le navigateur (ou `allow="local-network-access"`
 > sur les iframes).
 
-## Étape 6 — Renseigner le CLAUDE.md
+## Étape 6 — Créer PowerPlatform.md
 
-Reporter dans la section Power Platform du `CLAUDE.md` : dossier de l'app, displayName, solution
-cible. Gabarit partagé : `../../references/claude-md-template.md` (racine du plugin).
+La config du projet vit dans un fichier **`PowerPlatform.md` à la racine du projet** (pas dans le
+`CLAUDE.md`). Le template officiel ne le fournit pas : il faut le créer (sinon les autres skills n'ont
+aucune valeur à lire — c'est le ⚠️ que remonte `/pp-diag`).
+
+1. **Créer** `PowerPlatform.md` à la racine en y collant le contenu du gabarit
+   `../../references/powerplatform-md-template.md` (racine du plugin).
+2. Remplacer les valeurs d'exemple par celles du projet : environnement (nom + URL Dynamics),
+   solution, dossier de l'app, displayName, sources de données.
+3. Si le projet a un `CLAUDE.md`, y ajouter un **pointeur** :
+   `- Config Power Platform → voir PowerPlatform.md`.
+
+Ne jamais committer de secrets ici ; l'URL d'environnement et le nom de solution ne sont pas
+sensibles.
 
 ## Suite
 

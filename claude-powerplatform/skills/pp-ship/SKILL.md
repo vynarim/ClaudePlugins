@@ -20,8 +20,9 @@ Contexte : VS Code sous Windows, shell **PowerShell**. Statut **preview**.
 
 ## 1. Lire la config et vérifier les prérequis
 
-Lire la section Power Platform du `CLAUDE.md` (gabarit : `../../references/claude-md-template.md`,
-racine du plugin) : **nom de solution** (`--solutionName`), **dossier de l'app**, certificat.
+Lire `PowerPlatform.md` à la racine du projet (gabarit :
+`../../references/powerplatform-md-template.md`, racine du plugin) : **nom de solution**
+(`--solutionName`), **dossier de l'app**, certificat.
 
 Vérifier que le projet est une Code App initialisée :
 
@@ -30,8 +31,8 @@ Test-Path power.config.json
 ```
 
 Si absent → le projet n'est pas initialisé : passer par `/pp-scaffold` (`pac code init`) avant de
-publier. Si le nom de solution ou le dossier manque dans le `CLAUDE.md`, demander la valeur — ne pas
-deviner.
+publier. Si le nom de solution ou le dossier manque dans `PowerPlatform.md`, demander la valeur — ne
+pas deviner.
 
 ## 2. Recharger le PATH (session-scopée)
 
@@ -42,7 +43,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 ## 3. (Si besoin) Certificat pour les installs
 
 `npm run build` et `pac code push` n'ont **pas** besoin du certificat. Ne le poser que si un
-`npm install` est requis : `$env:NODE_EXTRA_CA_CERTS = "<chemin .pem du CLAUDE.md>"`.
+`npm install` est requis : `$env:NODE_EXTRA_CA_CERTS = "<chemin .pem de PowerPlatform.md>"`.
 
 ## 4. Build
 

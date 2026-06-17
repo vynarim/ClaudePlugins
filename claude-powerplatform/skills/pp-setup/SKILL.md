@@ -113,10 +113,12 @@ le **maker portal** (make.powerapps.com → Connexions) ou via le **CLI** (previ
 `apiName` + `connectionId` (`pac connection list`). Le câblage effectif dans l'app se fait ensuite avec
 `/pp-data` (`pac code add-data-source`). Dataverse ne nécessite **pas** de connexion.
 
-## Renseigner le CLAUDE.md du projet
+## Renseigner PowerPlatform.md
 
-À l'issue du setup, remplir la section Power Platform du `CLAUDE.md` (environnement, solution, dossier
-app, certificat, sources). Gabarit : `../../references/claude-md-template.md` (racine du plugin).
+À l'issue du setup, la config du projet ira dans un fichier `PowerPlatform.md` à la racine du projet
+(environnement, solution, dossier app, certificat, sources) — créé par `/pp-scaffold`. Gabarit :
+`../../references/powerplatform-md-template.md` (racine du plugin). Ajouter aussi un pointeur dans le
+`CLAUDE.md` s'il existe : `- Config Power Platform → voir PowerPlatform.md`.
 
 ## Suite
 
@@ -125,8 +127,8 @@ Poste prêt → `/pp-scaffold` pour créer la Code App, puis `/pp-data` et `/pp-
 ## Sortie attendue
 
 Progression étape par étape : pour chaque étape, soit Claude l'exécute et rapporte, soit il guide
-l'action manuelle et attend confirmation. À la fin : récap de ce qui est en place + la section
-CLAUDE.md proposée.
+l'action manuelle et attend confirmation. À la fin : récap de ce qui est en place + le contenu
+`PowerPlatform.md` proposé.
 
 ## En résumé
 

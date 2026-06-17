@@ -21,6 +21,9 @@ Contexte : VS Code sous Windows, shell **PowerShell**. Statut **preview**.
 
 - Projet initialisé : `power.config.json` présent (sinon → `/pp-scaffold`).
 - Authentifié sur le bon environnement (`pac org who` / `pac env select`). Doute → `/pp-diag`.
+- Lire `PowerPlatform.md` à la racine du projet : il liste les **tables Dataverse existantes à
+  utiliser** et les connecteurs voulus. Cette skill **connecte des sources existantes** — elle ne
+  crée pas de table Dataverse (la création se fait dans le maker portal / la solution).
 
 ## Étape 1 — Connexion (pour les connecteurs, pas pour Dataverse)
 
@@ -42,8 +45,16 @@ pac code list-tables   -a <apiName> -c <connectionId> -d <dataset>
 
 ## Étape 3 — Ajouter la source
 
+**Tables Dataverse existantes** : pour **chaque** table listée dans `PowerPlatform.md`, lancer un
+`add-data-source` (ce sont des tables déjà présentes dans l'environnement — on les **connecte**, on
+ne les crée pas). Le `-t` attend le **nom logique** de la table, pas son nom d'affichage.
+
+> Trouver le nom logique : make.powerapps.com → Tables → ouvre la table → Propriétés → « Nom
+> logique » (en minuscules, parfois préfixé, ex. `account`, `contact`, `cr123_projet`). Le nom
+> d'affichage (« Comptes ») ne fonctionne pas avec `-t`.
+
 ```powershell
-# Dataverse (par nom logique de table) — pas de connectionId
+# Dataverse (par nom logique de table) — pas de connectionId. Répéter pour chaque table listée.
 pac code add-data-source -a dataverse -t <table-logical-name>
 
 # Microsoft Teams (connecteur)
@@ -83,10 +94,11 @@ pac code delete-data-source -a <apiName> -ds <dataSourceName>
 # puis refaire le add-data-source de l'étape 3
 ```
 
-## Étape 6 — Renseigner le CLAUDE.md
+## Étape 6 — Renseigner PowerPlatform.md
 
-Lister les sources ajoutées (table Dataverse, connecteurs + IDs ou connection refs) dans la section
-Power Platform du `CLAUDE.md`. Gabarit : `../../references/claude-md-template.md` (racine du plugin).
+Lister les sources ajoutées (table Dataverse, connecteurs + IDs ou connection refs) dans
+`PowerPlatform.md` à la racine du projet. Gabarit : `../../references/powerplatform-md-template.md`
+(racine du plugin).
 
 ## Limites connues (preview)
 
@@ -98,4 +110,6 @@ Power Platform du `CLAUDE.md`. Gabarit : `../../references/claude-md-template.md
 ## Ce que cette skill ne fait PAS
 
 - Elle ne crée pas le projet (→ `/pp-scaffold`) ni ne publie (→ `/pp-ship`).
+- Elle ne **crée pas** de table Dataverse : elle connecte des tables **existantes** (création =
+  maker portal / solution).
 - Elle ne code pas l'UI : elle fournit les services typés que l'UI consomme.

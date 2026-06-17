@@ -20,9 +20,10 @@ Contexte : VS Code sous Windows, shell **PowerShell**.
 
 ## Lire la config du projet
 
-Lire la section Power Platform du `CLAUDE.md` (gabarit : `../../references/claude-md-template.md`,
-racine du plugin) : environnement attendu, solution, dossier de l'app, certificat, sources de données.
-Si absente, le signaler : le diagnostic reste possible mais sans valeurs attendues à confronter.
+Lire le fichier `PowerPlatform.md` à la racine du projet (gabarit :
+`../../references/powerplatform-md-template.md`, racine du plugin) : environnement attendu, solution,
+dossier de l'app, certificat, sources de données. Si absent, le signaler : le diagnostic reste possible
+mais sans valeurs attendues à confronter (et recommander de le créer via `/pp-scaffold`).
 
 ## Les vérifications
 
@@ -74,7 +75,7 @@ npm ls @microsoft/power-apps 2>$null                 # le SDK est-il installé ?
 ### 4. Certificat CA corporate
 
 Sur réseau à interception TLS, les `npm install` à build natif échouent sur `unable to get local
-issuer certificate`. Si le `CLAUDE.md` indique un certificat :
+issuer certificate`. Si `PowerPlatform.md` indique un certificat :
 
 ```powershell
 Test-Path $env:NODE_EXTRA_CA_CERTS
@@ -90,7 +91,7 @@ pac auth list
 pac org who
 ```
 
-`pac org who` doit pointer l'URL attendue (celle du `CLAUDE.md`). Sinon :
+`pac org who` doit pointer l'URL attendue (celle de `PowerPlatform.md`). Sinon :
 
 ```powershell
 pac auth create --environment "<url-dynamics>"   # --deviceCode si shell non-interactif

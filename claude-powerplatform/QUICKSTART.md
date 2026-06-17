@@ -30,19 +30,22 @@ App ont besoin d'une licence **Power Apps Premium**.
 ## Étape 1 — Créer le dossier projet et l'ouvrir
 
 ```powershell
-cd d:\Perso        # ou ton dossier de travail
+cd d:\DevPowerPlatform        # ou ton dossier de travail
 npx degit github:microsoft/PowerAppsCodeApps/templates/vite test-codeapp
-code d:\Perso\test-codeapp
+code d:\DevPowerPlatform\test-codeapp
 ```
 
 Le template officiel Microsoft donne un SPA Vite/TS avec une `vite.config` conforme et le
 `PowerProvider` déjà en place — le point de départ le plus sûr.
 
-## Étape 2 — (Recommandé) pré-remplir le CLAUDE.md
+## Étape 2 — (Recommandé) créer le fichier PowerPlatform.md
 
-Créer/compléter la section Power Platform du `CLAUDE.md` du projet avec le gabarit
-[references/claude-md-template.md](references/claude-md-template.md) (environnement, solution, dossier
-de l'app…). Les skills la lisent au lieu de redemander les valeurs.
+La config du projet vit dans un fichier **`PowerPlatform.md`** à la racine (pas dans le `CLAUDE.md`).
+Le crée à la racine du projet en y collant le contenu du gabarit
+[references/powerplatform-md-template.md](references/powerplatform-md-template.md), puis remplace les
+valeurs d'exemple (environnement, solution, dossier de l'app…) par celles du projet. `/pp-scaffold`
+peut aussi le créer pour toi. Sans ce fichier, les skills n'ont aucune valeur à lire (`/pp-diag` le
+signalera).
 
 ## Étape 3 — Lancer Claude Code dans ce dossier et dérouler les skills
 

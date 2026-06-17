@@ -31,9 +31,11 @@ Code Apps, auth pac).
 
 ## Configuration par projet
 
-Les skills lisent leur config dans le `CLAUDE.md` du projet (environnement, solution, dossier de
-l'app, certificat, sources de données). Gabarit partagé prêt à coller :
-[references/claude-md-template.md](references/claude-md-template.md).
+Les skills lisent leur config dans un fichier **`PowerPlatform.md` à la racine du projet**
+(environnement, solution, dossier de l'app, certificat, sources de données) — pas dans le `CLAUDE.md`
+(plus clair pour un citizen dev, et pas injecté à chaque prompt). Un pointeur
+`Config Power Platform → voir PowerPlatform.md` peut être ajouté au `CLAUDE.md`. Gabarit très
+commenté, prêt à coller : [references/powerplatform-md-template.md](references/powerplatform-md-template.md).
 
 ## Périmètre
 
