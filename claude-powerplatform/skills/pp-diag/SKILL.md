@@ -18,6 +18,16 @@ développer et publier une Power App Code App, et pointer la cause exacte quand 
 
 Contexte : VS Code sous Windows, shell **PowerShell**.
 
+## Présentation (cette skill s'adresse à un citizen dev — rester sobre)
+
+- **Ne pas narrer** les étapes (« Je lance… », « Vérifions… »). Annoncer une seule ligne courte
+  (ex. « Diagnostic en cours… ») puis n'afficher **que le rapport final** (la checklist + le verdict).
+- Lancer les commandes ci-dessous **telles quelles** via l'outil PowerShell. Ce sont des commandes en
+  **lecture seule** ; elles sont allow-listées dans le `.claude/settings.json` du projet (créé par
+  `/pp-scaffold`) → normalement **aucune demande d'autorisation**. Garder les commandes **à
+  l'identique** pour que l'allow-list corresponde.
+- Ne montrer les commandes/sorties brutes que pour **expliquer un ❌** ou si l'utilisateur le demande.
+
 ## Lire la config du projet
 
 Lire le fichier `PowerPlatform.md` à la racine du projet (gabarit :
@@ -30,9 +40,10 @@ mais sans valeurs attendues à confronter (et recommander de le créer via `/pp-
 ### 0. Extensions VS Code
 
 ```powershell
-code --list-extensions | Select-String -Pattern "powerplatform-vscode|claude-code"
+code --list-extensions
 ```
 
+Chercher dans la sortie :
 - **`microsoft-IsvExpTools.powerplatform-vscode`** (Power Platform Tools) — fournit et embarque `pac`
   dans le terminal VS Code. **Requis.**
 - **`anthropic.claude-code`** (Claude Code for VS Code) — **requis.**
@@ -65,9 +76,11 @@ Puis refaire la vérif 1. Si les outils apparaissent, c'était bien le PATH pér
 Dans le dossier de l'app :
 
 ```powershell
-Test-Path power.config.json                          # le dossier est-il une Code App ?
-npm ls @microsoft/power-apps 2>$null                 # le SDK est-il installé ?
+Test-Path power.config.json; Test-Path PowerPlatform.md
+npm ls @microsoft/power-apps
 ```
+
+(`power.config.json` = marqueur Code App ; `PowerPlatform.md` = config projet ; puis le SDK.)
 
 - `power.config.json` absent → projet non initialisé (`pac code init`, voir `/pp-scaffold`).
 - SDK absent → `npm install @microsoft/power-apps` (voir `/pp-scaffold`).
@@ -87,8 +100,7 @@ pour `build`/`dev`/`push` — uniquement pour les installs.
 ### 5. Authentification pac sur le bon environnement
 
 ```powershell
-pac auth list
-pac org who
+pac auth list; pac org who
 ```
 
 `pac org who` doit pointer l'URL attendue (celle de `PowerPlatform.md`). Sinon :

@@ -56,6 +56,27 @@ car les étapes suivantes (`pac code init`, `/pp-data`, `/pp-ship`) ont besoin d
    `pac code init` (étape 4), qui consomme l'URL d'environnement.
 3. Si le projet a un `CLAUDE.md`, y ajouter un **pointeur** :
    `- Config Power Platform → voir PowerPlatform.md`.
+4. **Créer/fusionner** `.claude/settings.json` à la racine du projet avec une allow-list des commandes
+   de **diagnostic en lecture seule**, pour que `/pp-diag` tourne **sans demande d'autorisation**.
+   Si le fichier existe déjà, **fusionner** dans `permissions.allow` (ne pas écraser). Bloc à écrire :
+
+   ```json
+   {
+     "permissions": {
+       "allow": [
+         "PowerShell(code --list-extensions)",
+         "PowerShell(node --version; npm --version; pac --version; git --version)",
+         "PowerShell(Test-Path power.config.json; Test-Path PowerPlatform.md)",
+         "PowerShell(npm ls @microsoft/power-apps)",
+         "PowerShell(pac auth list; pac org who)"
+       ]
+     }
+   }
+   ```
+
+   N'allow-lister **que** ces commandes lecture seule. Les commandes qui modifient (`npm install`,
+   `pac code init`, `pac code push`…) doivent continuer à demander confirmation. Recharger la fenêtre
+   après création pour que l'allow-list s'applique.
 
 Ne jamais mettre de secrets ici ; l'URL d'environnement et le nom de solution ne sont pas sensibles.
 

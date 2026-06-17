@@ -62,9 +62,14 @@ Ouvrir une session Claude Code **dans ce projet**, puis dans l'ordre :
 |---|---|---|
 | 1 | `/pp-diag` | Vérifie extensions, toolchain, auth pac. Corriger les ❌ avant de continuer. |
 | 2 | `/pp-setup` (si diag rouge) | Guide sur ce qui manque (auth `pac auth create`, PATH, certificat…). |
-| 3 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env, solution…), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. |
+| 3 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env, solution…) et un `.claude/settings.json` (allow-list diag), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. |
 | 4 | `/pp-data` | Branche une source de test, ex. Dataverse : `pac code add-data-source -a dataverse -t account` → génère les services typés. |
 | 5 | `/pp-ship` | `npm run build` + `pac code push --solutionName "<TaSolution>"`. |
+
+> `/pp-scaffold` ajoute une **allow-list** des commandes de diagnostic en lecture seule dans
+> `.claude/settings.json`, pour que `/pp-diag` tourne **sans demande d'autorisation**. Les commandes
+> qui modifient (install, init, push) demandent toujours confirmation. Exemple complet (marketplace +
+> plugins + allow-list) : [examples/powerplatform.claude-settings.json](../examples/powerplatform.claude-settings.json).
 
 ## Étape 3 — Vérifier
 
