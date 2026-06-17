@@ -1,0 +1,10 @@
+{
+  "extraKnownMarketplaces": {
+    "dev-tools": {
+      "source": { "source": "github", "repo": "vynarim/ClaudePlugins" }
+    }
+  },
+  "enabledPlugins": {
+    "claude-utils@dev-tools": { "enabled": true, "scope": "project" }
+  }
+}

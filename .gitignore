@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / divers
+*.log
+node_modules/
+
+# État local du hook eco (ne doit jamais être committé)
+eco-window-state.json

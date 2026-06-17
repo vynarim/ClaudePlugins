@@ -1,0 +1,19 @@
+{
+  "name": "dev-tools",
+  "owner": {
+    "name": "Jean-Rémy",
+    "url": "https://github.com/vynarim"
+  },
+  "metadata": {
+    "description": "Marketplace interne de plugins Claude Code.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-utils",
+      "source": "./claude-utils",
+      "description": "Boîte à outils générique : skills internes réutilisables (eco + à venir) et hook d'alerte fenêtre 5 h.",
+      "keywords": ["utils", "toolkit", "tokens", "efficiency"]
+    }
+  ]
+}
