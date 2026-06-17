@@ -1,7 +1,7 @@
 {
   "name": "claude-utils",
-  "version": "1.1.0",
-  "description": "Boîte à outils générique pour Claude Code : skills internes réutilisables et hook d'alerte fenêtre 5 h. Skills disponibles : eco (discipline tokens/contexte), pr-draft (génération PR GitHub), session-brief (brief de reprise de session).",
+  "version": "1.2.0",
+  "description": "Boîte à outils générique pour Claude Code : skills internes réutilisables et hook d'alerte fenêtre 5 h. Skills disponibles : eco (discipline tokens/contexte), pr-draft (génération PR GitHub), session-brief (brief de reprise de session), update-plugins (mise à jour des plugins dev-tools).",
   "author": {
     "name": "Jean-Rémy"
   },

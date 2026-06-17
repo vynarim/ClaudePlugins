@@ -12,7 +12,7 @@
     {
       "name": "claude-utils",
       "source": "./claude-utils",
-      "description": "Boîte à outils générique : skills eco (tokens/contexte), pr-draft (PR GitHub), session-brief (reprise de session) et hook d'alerte fenêtre 5 h.",
+      "description": "Boîte à outils générique : skills eco (tokens/contexte), pr-draft (PR GitHub), session-brief (reprise de session), update-plugins (mise à jour des plugins dev-tools) et hook d'alerte fenêtre 5 h.",
       "keywords": ["utils", "toolkit", "tokens", "efficiency", "github", "pr", "session"]
     },
     {

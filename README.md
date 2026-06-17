@@ -18,6 +18,7 @@ Ce dépôt héberge plusieurs plugins Claude Code :
 | `eco` | `/eco` | Discipline tokens/contexte — limites 5 h et hebdo, choix de modèle, routines de session |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet |
+| `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`) |
 
 ### Hook
 
@@ -39,8 +40,9 @@ Pour démarrer de zéro, suivre le [QUICKSTART](claude-powerplatform/QUICKSTART.
 | `pp-diag` | `/pp-diag` | Diagnostic poste + projet : extensions, toolchain, SDK, auth, certificat |
 | `pp-ship` | `/pp-ship` | Publication : `npm run build` + `pac code push --solutionName` |
 
-La config par projet (environnement, solution, certificat, sources) est lue dans le `CLAUDE.md` du
-projet. Détails dans [claude-powerplatform/README.md](claude-powerplatform/README.md).
+La config par projet (environnement, solution, certificat, sources) est lue dans un fichier
+`PowerPlatform.md` à la racine du projet. Détails dans
+[claude-powerplatform/README.md](claude-powerplatform/README.md).
 
 ## Installation rapide
 
