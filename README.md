@@ -28,14 +28,18 @@ avant le reset, pour finir ou borner la tâche à temps.
 
 ### Skills
 
+Couvre le parcours complet : scaffold React → Dataverse/connecteurs → déploiement en Code App.
+
 | Skill | Invocation | Rôle |
 |---|---|---|
-| `pp-setup` | `/pp-setup` | Mise en place d'un poste de zéro : toolchain, certificat, activation Code Apps, auth, connexions OAuth |
-| `pp-diag` | `/pp-diag` | Diagnostic du poste : toolchain, PATH, certificat corporate, auth pac, Code Apps |
-| `pp-ship` | `/pp-ship` | Publication : recharge le PATH, `npm run build`, `pac code push`, traduction des erreurs |
+| `pp-setup` | `/pp-setup` | Mise en place du poste : extensions VS Code, toolchain, certificat, activation Code Apps, auth |
+| `pp-scaffold` | `/pp-scaffold` | Maquette React → Code App : Vite/TS, SDK, PowerProvider, `pac code init` |
+| `pp-data` | `/pp-data` | Brancher Dataverse et les connecteurs (Teams, O365) via `pac code add-data-source` |
+| `pp-diag` | `/pp-diag` | Diagnostic poste + projet : extensions, toolchain, SDK, auth, certificat |
+| `pp-ship` | `/pp-ship` | Publication : `npm run build` + `pac code push --solutionName` |
 
-La config par projet (environnement, solution, certificat, connexions) est lue dans le `CLAUDE.md`
-du projet. Détails dans [claude-powerplatform/README.md](claude-powerplatform/README.md).
+La config par projet (environnement, solution, certificat, sources) est lue dans le `CLAUDE.md` du
+projet. Détails dans [claude-powerplatform/README.md](claude-powerplatform/README.md).
 
 ## Installation rapide
 

@@ -18,8 +18,8 @@
     {
       "name": "claude-powerplatform",
       "source": "./claude-powerplatform",
-      "description": "Développement Power Apps (Code Apps) dans VS Code : skills pp-setup (mise en place du poste), pp-diag (diagnostic toolchain/auth/environnement) et pp-ship (build + pac code push).",
-      "keywords": ["power-platform", "power-apps", "code-apps", "pac", "dataverse"]
+      "description": "Assistant Power Apps (Code Apps) dans VS Code, du scaffold React au déploiement en solution : skills pp-setup, pp-scaffold, pp-data (Dataverse/connecteurs), pp-diag et pp-ship.",
+      "keywords": ["power-platform", "power-apps", "code-apps", "pac", "dataverse", "connectors"]
     }
   ]
 }

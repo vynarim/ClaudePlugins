@@ -1,117 +1,123 @@
 ---
 name: pp-diag
 description: >-
-  Diagnostic d'un poste pour le développement Power Apps (Code Apps) avec Claude Code dans VS Code :
-  vérifie la toolchain (node, npm, pac, git) dans le PATH, l'authentification pac sur le bon
-  environnement, la présence du certificat CA corporate, et signale les causes des erreurs courantes.
-  À utiliser quand l'utilisateur veut savoir si sa machine est prête pour Power Platform, quand une
-  commande pac/build échoue, ou avant un pac code push. Déclenche sur : « pp-diag », « diagnostic
-  power platform », « ma machine est prête pour pac ? », « pac ne marche pas », « pourquoi pac code
-  push échoue », « vérifie ma config power apps », « pac auth ».
+  Diagnostic d'un poste et d'un projet pour le développement Power Apps (Code Apps) avec Claude Code
+  dans VS Code : vérifie les extensions VS Code requises (Power Platform Tools, Claude Code), la
+  toolchain (node, npm, pac, git) dans le PATH, le SDK @microsoft/power-apps et power.config.json côté
+  projet, l'authentification pac sur le bon environnement, le certificat CA corporate, et signale les
+  causes des erreurs courantes. À utiliser quand l'utilisateur veut savoir si sa machine/son projet
+  est prêt pour Power Platform, quand une commande pac/build échoue, ou avant un pac code push.
+  Déclenche sur : « pp-diag », « diagnostic power platform », « ma machine est prête pour pac ? »,
+  « pac ne marche pas », « pourquoi pac code push échoue », « vérifie ma config power apps ».
 ---
 
-# pp-diag — Diagnostic d'un poste Power Platform (Code Apps)
+# pp-diag — Diagnostic poste + projet Power Platform (Code Apps)
 
-Objectif : vérifier en quelques commandes que le poste est opérationnel pour développer et publier
-une Power App Code App, et pointer la cause exacte quand quelque chose cloche.
+Objectif : vérifier en quelques commandes que le poste **et** le projet sont opérationnels pour
+développer et publier une Power App Code App, et pointer la cause exacte quand quelque chose cloche.
 
-Contexte : VS Code sous Windows, shell **PowerShell**. Toutes les commandes système ci-dessous sont
-en PowerShell.
+Contexte : VS Code sous Windows, shell **PowerShell**.
 
 ## Lire la config du projet
 
-Avant tout, lire la section Power Platform du `CLAUDE.md` du projet (voir
-`references/claude-md-template.md` pour le gabarit attendu). On y trouve :
+Lire la section Power Platform du `CLAUDE.md` (gabarit : `../../references/claude-md-template.md`,
+racine du plugin) : environnement attendu, solution, dossier de l'app, certificat, sources de données.
+Si absente, le signaler : le diagnostic reste possible mais sans valeurs attendues à confronter.
 
-- l'environnement cible (nom + URL Dynamics)
-- le nom de la solution (`--solutionName`)
-- le chemin du certificat CA corporate (ou « aucun »)
-- les connexions OAuth (SharePoint, Outlook…) et leurs IDs
-- le dossier de la code app
+## Les vérifications
 
-Si la section est absente, le signaler : le diagnostic reste possible mais l'étape « bon
-environnement » ne pourra pas être vérifiée contre une valeur attendue.
+### 0. Extensions VS Code
 
-## Les 5 vérifications
+```powershell
+code --list-extensions | Select-String -Pattern "powerplatform-vscode|claude-code"
+```
 
-### 1. Toolchain présente dans le PATH
+- **`microsoft-IsvExpTools.powerplatform-vscode`** (Power Platform Tools) — fournit et embarque `pac`
+  dans le terminal VS Code. **Requis.**
+- **`anthropic.claude-code`** (Claude Code for VS Code) — *identifiant présumé* ; si la ligne manque
+  alors que Claude Code fonctionne, vérifier l'ID réel dans la sortie complète de `code --list-extensions`
+  et l'ajuster. **Requis.**
+
+Si `code` n'est pas reconnu : la commande CLI VS Code n'est pas dans le PATH (Command Palette →
+« Shell Command: Install 'code' command in PATH »).
+
+### 1. Toolchain dans le PATH
 
 ```powershell
 node --version; npm --version; pac --version; git --version
 ```
 
-Versions de référence connues comme fonctionnelles : Node ≥ 20, pac ≥ 2.8. Si une commande renvoie
-« n'est pas reconnu », passer à la vérif 2 (PATH périmé) avant de conclure à une absence d'install.
+Références connues OK : Node LTS (≥ 18/20), pac ≥ 2.8 (≥ 1.46 minimum pour Dataverse). Si une commande
+n'est pas reconnue → vérif 2 avant de conclure à une absence d'install.
 
 ### 2. Quirk du PATH (cause n°1 des faux négatifs)
 
-Les outils ajoutés au PATH **après** le lancement de Claude Code ne sont pas visibles : les appels
-PowerShell héritent d'un environnement figé au démarrage. Recharger le PATH dans la session courante :
+Les outils ajoutés au PATH **après** le lancement de Claude Code ne sont pas visibles (environnement
+figé au démarrage). Recharger dans la session :
 
 ```powershell
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 ```
 
-Puis refaire la vérif 1. Si les outils apparaissent maintenant, c'était bien le PATH périmé — et non
-une install manquante. (Un terminal ouvert frais voit les outils automatiquement.)
+Puis refaire la vérif 1. Si les outils apparaissent, c'était bien le PATH périmé.
 
-### 3. Certificat CA corporate
+### 3. Projet : SDK et marqueur Code App
 
-Sur un réseau d'entreprise avec interception TLS, Node ne connaît pas la racine CA → les
-`npm install` de paquets à build natif (ex. `keytar`) échouent sur
-`unable to get local issuer certificate`.
-
-Si le `CLAUDE.md` indique un certificat :
+Dans le dossier de l'app :
 
 ```powershell
-Test-Path $env:NODE_EXTRA_CA_CERTS   # le .pem est-il pointé dans la session ?
+Test-Path power.config.json                          # le dossier est-il une Code App ?
+npm ls @microsoft/power-apps 2>$null                 # le SDK est-il installé ?
 ```
 
-Si vide ou faux, indiquer la commande pour le re-pointer (session-scopée) :
+- `power.config.json` absent → projet non initialisé (`pac code init`, voir `/pp-scaffold`).
+- SDK absent → `npm install @microsoft/power-apps` (voir `/pp-scaffold`).
+
+### 4. Certificat CA corporate
+
+Sur réseau à interception TLS, les `npm install` à build natif échouent sur `unable to get local
+issuer certificate`. Si le `CLAUDE.md` indique un certificat :
 
 ```powershell
-$env:NODE_EXTRA_CA_CERTS = "$env:USERPROFILE\corp-ca-bundle.pem"
+Test-Path $env:NODE_EXTRA_CA_CERTS
 ```
 
-⚠️ Variable **session-scopée** : à redéfinir à chaque nouveau shell. Elle n'est nécessaire que pour
-les `npm install` de dépendances — `npm run build`, `npm run dev` et `pac code push` n'en ont pas
-besoin.
+Si vide/faux, le re-pointer (session-scopée) : `$env:NODE_EXTRA_CA_CERTS = "<chemin .pem>"`. Inutile
+pour `build`/`dev`/`push` — uniquement pour les installs.
 
-### 4. Authentification pac sur le bon environnement
+### 5. Authentification pac sur le bon environnement
 
 ```powershell
 pac auth list
 pac org who
 ```
 
-`pac org who` doit pointer l'URL d'environnement attendue (celle du `CLAUDE.md`). Si aucune auth ou
-mauvais environnement :
+`pac org who` doit pointer l'URL attendue (celle du `CLAUDE.md`). Sinon :
 
 ```powershell
-pac auth create --environment "<url-dynamics-du-CLAUDE.md>"
+pac auth create --environment "<url-dynamics>"   # --deviceCode si shell non-interactif
+pac env select --environment "<url-ou-id>"
 ```
 
-### 5. Activation des Code Apps côté environnement
+### 6. Activation des Code Apps côté environnement
 
-Ne se vérifie pas en CLI (réglage web). Le symptôme d'une activation manquante est un échec au push :
-`HTTP 403 CodeAppOperationNotAllowedInEnvironment`. Si on l'a déjà rencontré, renvoyer vers :
-Power Platform Admin Center → environnement → Settings → Product → Features → « Power Apps code apps ».
+Non vérifiable en CLI (réglage web). Symptôme d'activation manquante au push :
+`HTTP 403 CodeAppOperationNotAllowedInEnvironment`. Renvoyer vers Admin Center → environnement →
+Settings → Product → Features → « Power Apps code apps » (voir `/pp-setup`).
 
 ## Sortie attendue
-
-Une checklist claire, une ligne par vérification :
 
 ```
 ## Diagnostic Power Platform — <projet>
 
+- [✅/❌] Extensions VS Code : Power Platform Tools, Claude Code
 - [✅/❌] Toolchain : node <v>, npm <v>, pac <v>, git <v>
 - [✅/❌] PATH : outils visibles (sinon : PATH rechargé → refaire)
+- [✅/❌] Projet : power.config.json présent, @microsoft/power-apps installé
 - [✅/❌] Certificat CA : <chemin> présent et pointé (ou « non requis »)
 - [✅/❌] Auth pac : connecté à <url> (attendu : <url>)
 - [ℹ️]   Code Apps activées : non vérifiable en CLI (symptôme = HTTP 403 au push)
 
 ### Verdict
-<Prêt à publier / Action requise : …>
+<Prêt / Action requise : … (commande exacte pour chaque ❌)>
 ```
-
-Rester factuel. Pour chaque ❌, donner la commande exacte qui corrige.

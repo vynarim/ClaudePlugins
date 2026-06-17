@@ -1,35 +1,39 @@
 ---
 name: pp-ship
 description: >-
-  Publie une Power App (Code App) sur l'environnement cible : recharge le PATH, build l'app
-  (npm run build) puis pousse avec pac code push --solutionName, et diagnostique les erreurs
-  courantes (PATH périmé, auth pac expirée, Code Apps non activées, certificat). À utiliser quand
-  l'utilisateur veut publier/déployer/pousser sa Power App ou sa Code App. Déclenche sur :
-  « pp-ship », « publie la code app », « déploie la power app », « pac code push », « pousse sur
-  l'environnement », « mets en ligne la code app », « build + push power apps ».
+  Publie une Power App (Code App) dans une solution Power Platform : vérifie que le projet est
+  initialisé, recharge le PATH, build l'app (npm run build) puis pousse avec
+  pac code push --solutionName, et diagnostique les erreurs courantes (PATH périmé, auth expirée,
+  Code Apps non activées, certificat). À utiliser quand l'utilisateur veut publier/déployer/pousser sa
+  Power App ou sa Code App. Déclenche sur : « pp-ship », « publie la code app », « déploie la power
+  app », « pac code push », « pousse sur l'environnement », « mets en ligne la code app », « build +
+  push power apps ».
 ---
 
-# pp-ship — Publier une Power App Code App
+# pp-ship — Publier une Power App Code App dans une solution
 
-Objectif : enchaîner build + push de façon fiable, en neutralisant d'abord les deux pièges du poste
-(PATH périmé, certificat) et en traduisant les erreurs `pac` en action concrète.
+Objectif : enchaîner build + push de façon fiable, en neutralisant d'abord les pièges du poste (PATH
+périmé, certificat), en associant l'app à la bonne solution, et en traduisant les erreurs `pac` en
+action concrète.
 
-Contexte : VS Code sous Windows, shell **PowerShell**.
+Contexte : VS Code sous Windows, shell **PowerShell**. Statut **preview**.
 
-## 1. Lire la config du projet
+## 1. Lire la config et vérifier les prérequis
 
-Lire la section Power Platform du `CLAUDE.md` (gabarit dans `references/claude-md-template.md`) :
+Lire la section Power Platform du `CLAUDE.md` (gabarit : `../../references/claude-md-template.md`,
+racine du plugin) : **nom de solution** (`--solutionName`), **dossier de l'app**, certificat.
 
-- **nom de solution** → `--solutionName` (obligatoire pour le push)
-- **dossier de la code app** → où lancer `npm run build` et `pac code push`
-- **certificat CA** → seulement utile si un `npm install` est nécessaire avant le build
+Vérifier que le projet est une Code App initialisée :
 
-Si le nom de solution ou le dossier manque, demander la valeur avant de continuer — ne pas deviner.
+```powershell
+Test-Path power.config.json
+```
+
+Si absent → le projet n'est pas initialisé : passer par `/pp-scaffold` (`pac code init`) avant de
+publier. Si le nom de solution ou le dossier manque dans le `CLAUDE.md`, demander la valeur — ne pas
+deviner.
 
 ## 2. Recharger le PATH (session-scopée)
-
-Les outils (`pac`, `node`) ajoutés au PATH après le lancement de Claude Code ne sont pas visibles
-sans ça :
 
 ```powershell
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
@@ -38,56 +42,62 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 ## 3. (Si besoin) Certificat pour les installs
 
 `npm run build` et `pac code push` n'ont **pas** besoin du certificat. Ne le poser que si un
-`npm install` est requis (dépendances manquantes) :
-
-```powershell
-$env:NODE_EXTRA_CA_CERTS = "<chemin .pem du CLAUDE.md>"
-```
+`npm install` est requis : `$env:NODE_EXTRA_CA_CERTS = "<chemin .pem du CLAUDE.md>"`.
 
 ## 4. Build
 
-Dans le dossier de la code app :
+Dans le dossier de l'app :
 
 ```powershell
 npm run build
 ```
 
-Si le build échoue sur une dépendance manquante → faire l'`npm install` (avec le certificat, étape 3)
-puis relancer le build. Ne pas pousser un build cassé.
+Build cassé → corriger (ou `npm install` manquant avec le certificat) avant de pousser. Ne jamais
+pousser un build en échec.
 
-## 5. Push
+## 5. Push dans la solution
 
 ```powershell
 pac code push --solutionName "<nom-de-solution>"
 ```
+
+Sans `--solutionName`, l'app n'est pas placée dans une solution donnée. Pour une app portable
+Dev/Test/Prod, s'assurer que les sources de données sont liées par **connection references** (voir
+`/pp-data`) plutôt que par `connectionId` utilisateur. Le préfixe éditeur vient de la solution cible.
+
+Le push renvoie une URL Power Apps en cas de succès.
 
 ## Traduction des erreurs courantes
 
 | Erreur | Cause | Action |
 |---|---|---|
 | `pac` non reconnu | PATH périmé | Refaire l'étape 2 |
-| `HTTP 403 CodeAppOperationNotAllowedInEnvironment` | Code Apps non activées sur l'environnement | Admin Center → environnement → Settings → Product → Features → « Power Apps code apps » |
-| Erreur d'auth / token expiré | Session pac expirée | `pac auth create --environment "<url>"` puis relancer |
+| `HTTP 403 CodeAppOperationNotAllowedInEnvironment` | Code Apps non activées sur l'environnement | Admin Center → environnement → Settings → Product → Features → « Power Apps code apps » (voir `/pp-setup`) |
+| Erreur d'auth / token expiré | Session pac expirée | `pac auth create --environment "<url>"` puis `pac env select`, relancer |
 | `unable to get local issuer certificate` (pendant npm install) | Certificat CA non pointé | Étape 3, puis refaire l'install |
+| `power.config.json` introuvable | Projet non initialisé | `/pp-scaffold` (`pac code init`) |
 
 ## Cycle complet de référence
 
 ```powershell
-# 1. PATH
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
-# 2. dans le dossier de l'app
 npm run build
 pac code push --solutionName "<nom-de-solution>"
 ```
 
 ## Ce que cette skill ne fait PAS
 
-- Elle n'active pas les Code Apps (réglage web, Admin Center).
-- Elle ne crée pas les connexions OAuth (SharePoint, Outlook) — faites une fois dans le maker portal.
-- Elle ne pousse jamais un build en échec.
-- Elle ne modifie pas le PATH de façon permanente (correctif session uniquement).
+- Elle n'initialise pas le projet (→ `/pp-scaffold`) ni n'ajoute de sources (→ `/pp-data`).
+- Elle n'active pas les Code Apps (réglage web, → `/pp-setup`).
+- Elle ne crée pas les connexions OAuth.
+- Elle ne pousse jamais un build en échec ; ne modifie pas le PATH de façon permanente.
+
+## Note de dépréciation
+
+Les commandes `pac code` sont transitoires : à terme remplacées par le CLI npm embarqué dans
+`@microsoft/power-apps` (v1.0.4+). Si `pac code push` change de comportement, vérifier la doc officielle.
 
 ## Sortie attendue
 
-À la fin : confirmer que le push a réussi (ou l'erreur exacte traduite en action), et rappeler
-l'environnement cible sur lequel la publication a eu lieu.
+À la fin : confirmer le succès du push (et l'URL retournée) ou l'erreur traduite en action, en
+rappelant l'environnement et la solution cibles.
