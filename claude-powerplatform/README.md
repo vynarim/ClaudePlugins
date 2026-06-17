@@ -23,7 +23,7 @@ Code Apps, auth pac).
 ## Extensions VS Code requises
 
 - **Power Platform Tools** (`microsoft-IsvExpTools.powerplatform-vscode`) — embarque le `pac` CLI.
-- **Claude Code for VS Code** (`anthropic.claude-code`, identifiant présumé — à confirmer sur le poste).
+- **Claude Code for VS Code** (`anthropic.claude-code`).
 
 `pp-setup` et `pp-diag` vérifient leur présence via `code --list-extensions`.
 

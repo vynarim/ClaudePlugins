@@ -34,9 +34,7 @@ code --list-extensions | Select-String -Pattern "powerplatform-vscode|claude-cod
 
 - **`microsoft-IsvExpTools.powerplatform-vscode`** (Power Platform Tools) — fournit et embarque `pac`
   dans le terminal VS Code. **Requis.**
-- **`anthropic.claude-code`** (Claude Code for VS Code) — *identifiant présumé* ; si la ligne manque
-  alors que Claude Code fonctionne, vérifier l'ID réel dans la sortie complète de `code --list-extensions`
-  et l'ajuster. **Requis.**
+- **`anthropic.claude-code`** (Claude Code for VS Code) — **requis.**
 
 Si `code` n'est pas reconnu : la commande CLI VS Code n'est pas dans le PATH (Command Palette →
 « Shell Command: Install 'code' command in PATH »).

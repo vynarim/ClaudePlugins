@@ -49,8 +49,8 @@ code --list-extensions | Select-String -Pattern "powerplatform-vscode|claude-cod
   ```powershell
   code --install-extension microsoft-IsvExpTools.powerplatform-vscode
   ```
-- **Claude Code for VS Code** (`anthropic.claude-code`, *ID présumé*) — **requis**. Si absent alors que
-  Claude Code tourne, relever l'ID réel dans `code --list-extensions` et l'ajuster.
+- **Claude Code for VS Code** (`anthropic.claude-code`) — **requis**. Installer via la vue Extensions
+  ou : `code --install-extension anthropic.claude-code`.
 
 ## 1. Installer la toolchain (sans droits admin)
 
