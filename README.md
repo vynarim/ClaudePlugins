@@ -29,6 +29,7 @@ avant le reset, pour finir ou borner la tâche à temps.
 ### Skills
 
 Couvre le parcours complet : scaffold React → Dataverse/connecteurs → déploiement en Code App.
+Pour démarrer de zéro, suivre le [QUICKSTART](claude-powerplatform/QUICKSTART.md).
 
 | Skill | Invocation | Rôle |
 |---|---|---|
