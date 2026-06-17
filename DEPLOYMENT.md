@@ -36,7 +36,7 @@ git push -u origin main
 > `git pull --rebase origin main` avant le `push`, ou écrase avec `git push -u --force origin main`
 > si le repo est encore vierge de ton côté.
 
-Alternative pour un futur repo, avec GitHub CLI : `gh repo create <nom> --private --source=. --remote=origin --push`.
+Alternative pour un futur repo, avec GitHub CLI : `gh repo create <nom> --public --source=. --remote=origin --push`.
 
 ## 3. Installer sur CE poste
 
@@ -49,8 +49,9 @@ Dans Claude Code (VS Code) :
 ```
 
 Notes :
-- Repo **privé** → `marketplace add` s'appuie sur ton authentification git/`gh` locale. En cas d'échec,
-  vérifie `gh auth status` ou utilise l'URL git : `/plugin marketplace add git@github.com:vynarim/ClaudePlugins.git`.
+- Repo **public** → `marketplace add` ne demande aucune authentification. En cas d'échec, vérifie
+  l'orthographe (`vynarim/ClaudePlugins`, sensible à la casse) et que le repo n'est pas vide ; au besoin
+  l'URL git complète marche aussi : `/plugin marketplace add https://github.com/vynarim/ClaudePlugins.git`.
 - Épingler une version : pointer un tag, ex. `git@github.com:vynarim/ClaudePlugins.git#v1.0.0`.
 
 ### Vérifier
@@ -117,7 +118,7 @@ imposée sans interaction passe par les *managed settings* d'entreprise, pas par
 /reload-plugins
 ```
 
-L'auto-update est **désactivé par défaut** pour une marketplace privée ; active-le par marketplace dans
+L'auto-update est **désactivé par défaut** pour une marketplace tierce (non officielle) ; active-le par marketplace dans
 `/plugin`, ou demande à l'équipe de lancer la commande ci-dessus après une release.
 
 ## 6. Sécurité — à dire à l'équipe
