@@ -1,9 +1,13 @@
-# ClaudePlugins — marketplace interne `dev-tools`
+# ClaudePlugins
 
-Dépôt-catalogue de plugins Claude Code. Contient le plugin **`claude-utils`** : une boîte à outils
-de skills génériques pour travailler efficacement avec Claude Code dans VS Code et GitHub.
+Marketplace interne `dev-tools` — catalogue de plugins Claude Code.
 
-## Skills disponibles
+Ce dépôt peut héberger plusieurs plugins. Pour l'instant il en contient un seul : **`claude-utils`**,
+une boîte à outils générique pour travailler avec Claude Code dans VS Code et GitHub.
+
+## Plugin `claude-utils`
+
+### Skills
 
 | Skill | Invocation | Rôle |
 |---|---|---|
@@ -11,8 +15,10 @@ de skills génériques pour travailler efficacement avec Claude Code dans VS Cod
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet |
 
-Le plugin embarque aussi un hook `UserPromptSubmit` qui estime l'âge de la fenêtre 5 h glissante
-et affiche une alerte ~30 min avant le reset, pour finir ou borner la tâche à temps.
+### Hook
+
+Un hook `UserPromptSubmit` estime l'âge de la fenêtre 5 h glissante et affiche une alerte ~30 min
+avant le reset, pour finir ou borner la tâche à temps.
 
 ## Installation rapide
 
