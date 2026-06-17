@@ -26,11 +26,14 @@ Contenu à mettre dans `PowerPlatform.md` :
 # Remplace chaque valeur d'exemple par celle de TON projet. Garde les commentaires (lignes « # ») :
 # ils servent de mémo. Les lignes inutiles peuvent être supprimées.
 
-- Environnement : Nom de l'environnement — https://exemple.crm.dynamics.com/
-  # L'environnement Power Platform où vivra ton app.
-  # • Le NOM est celui affiché dans le centre d'administration Power Platform.
-  # • L'URL est l'adresse de ton organisation, visible dans la barre d'adresse quand tu es sur
-  #   make.powerapps.com (du type https://orgXXXX.crm.dynamics.com/).
+- Nom de l'environnement : Nom de l'environnement
+  # Nom lisible, celui affiché dans le centre d'administration Power Platform. Sert juste à t'y
+  # retrouver (pas utilisé par les commandes).
+- URL de l'environnement : https://exemple.crm.dynamics.com/
+  # L'adresse de ton organisation Dynamics — c'est CE QUE pac utilise (auth, env select, init).
+  # ⚠️ Ne la devine pas : récupère-la avec « pac env list » (ou la barre d'adresse sur
+  #   make.powerapps.com). Attention à la région : .crm.dynamics.com (Amérique du Nord),
+  #   .crm12.dynamics.com (France), etc.
 
 - Solution : NomDeLaSolution
   # Une « solution » est le conteneur qui regroupe ton app et ses éléments dans Power Platform.

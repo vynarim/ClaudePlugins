@@ -29,25 +29,32 @@ App ont besoin d'une licence **Power Apps Premium**.
 
 ## Étape 1 — Créer le dossier projet et l'ouvrir
 
+Lance ces commandes **dans le terminal intégré d'une nouvelle fenêtre VS Code** (menu *Terminal →
+Nouveau terminal*, profil **PowerShell**). C'est important : le terminal VS Code hérite du PATH à jour
+(notamment `pac`, fourni par l'extension Power Platform Tools), contrairement à un terminal ouvert
+avant l'installation des outils.
+
 ```powershell
 cd d:\DevPowerPlatform        # ou ton dossier de travail
 npx degit github:microsoft/PowerAppsCodeApps/templates/vite test-codeapp
 code d:\DevPowerPlatform\test-codeapp
 ```
 
+> Si `code` n'ouvre rien (« code n'est pas reconnu… »), c'est que le CLI VS Code n'est pas dans le
+> PATH. Deux options : **Fichier → Ouvrir le dossier** depuis VS Code, ou installer le CLI via
+> `Ctrl+Shift+P` → **« Shell Command: Install 'code' command in PATH »** puis relancer la commande.
+
+À l'ouverture, **fais confiance au dossier** et accepte l'installation du plugin si elle est proposée,
+puis recharge la fenêtre (*Developer: Reload Window*).
+
 Le template officiel Microsoft donne un SPA Vite/TS avec une `vite.config` conforme et le
 `PowerProvider` déjà en place — le point de départ le plus sûr.
 
-## Étape 2 — (Recommandé) créer le fichier PowerPlatform.md
+## Étape 2 — Lancer Claude Code dans ce dossier et dérouler les skills
 
-La config du projet vit dans un fichier **`PowerPlatform.md`** à la racine (pas dans le `CLAUDE.md`).
-Le crée à la racine du projet en y collant le contenu du gabarit
-[references/powerplatform-md-template.md](references/powerplatform-md-template.md), puis remplace les
-valeurs d'exemple (environnement, solution, dossier de l'app…) par celles du projet. `/pp-scaffold`
-peut aussi le créer pour toi. Sans ce fichier, les skills n'ont aucune valeur à lire (`/pp-diag` le
-signalera).
-
-## Étape 3 — Lancer Claude Code dans ce dossier et dérouler les skills
+La config du projet vivra dans un fichier **`PowerPlatform.md`** à la racine (pas dans le `CLAUDE.md`).
+Tu n'as pas à le créer à la main : **`/pp-scaffold` le crée** avec des valeurs d'exemple commentées,
+puis te demande d'aller le remplir avant de continuer.
 
 Ouvrir une session Claude Code **dans ce projet**, puis dans l'ordre :
 
@@ -55,11 +62,11 @@ Ouvrir une session Claude Code **dans ce projet**, puis dans l'ordre :
 |---|---|---|
 | 1 | `/pp-diag` | Vérifie extensions, toolchain, auth pac. Corriger les ❌ avant de continuer. |
 | 2 | `/pp-setup` (si diag rouge) | Guide sur ce qui manque (auth `pac auth create`, PATH, certificat…). |
-| 3 | `/pp-scaffold` | `npm install`, vérifie SDK/PowerProvider, `pac code init --displayName "Test Code App"` → crée `power.config.json`. |
+| 3 | `/pp-scaffold` | Crée **`PowerPlatform.md`** (tu le remplis : env, solution…), `npm install`, vérifie SDK/PowerProvider, `pac code init` → `power.config.json`. |
 | 4 | `/pp-data` | Branche une source de test, ex. Dataverse : `pac code add-data-source -a dataverse -t account` → génère les services typés. |
 | 5 | `/pp-ship` | `npm run build` + `pac code push --solutionName "<TaSolution>"`. |
 
-## Étape 4 — Vérifier
+## Étape 3 — Vérifier
 
 - **En local** : `npm run dev` (port 3000) — l'app tourne avec le SDK.
   Gotcha (déc. 2025) : Chrome/Edge peuvent bloquer public→localhost ; autoriser l'accès réseau local

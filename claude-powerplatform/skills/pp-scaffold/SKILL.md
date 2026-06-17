@@ -36,12 +36,30 @@ npm install
 ```
 
 **B. Depuis une maquette React existante / from scratch** : s'assurer que c'est un **SPA Vite +
-TypeScript**, puis ajouter les pièces Power Platform (étape 2).
+TypeScript**, puis ajouter les pièces Power Platform (étape 3).
 
 > Si un `npm install` échoue sur `unable to get local issuer certificate` (réseau corporate), pointer
 > le certificat avant de relancer : `$env:NODE_EXTRA_CA_CERTS = "<chemin .pem>"` (voir `/pp-setup`).
 
-## Étape 2 — Les pièces Power Platform (si départ B)
+## Étape 2 — Créer PowerPlatform.md (et demander à l'utilisateur de le remplir)
+
+**Dès que le dossier projet existe**, créer le fichier `PowerPlatform.md` à la racine — sans attendre,
+car les étapes suivantes (`pac code init`, `/pp-data`, `/pp-ship`) ont besoin de ses valeurs
+(environnement, solution…). Le template officiel ne le fournit pas.
+
+1. **Créer** `PowerPlatform.md` à la racine du projet en y collant le contenu du gabarit
+   `../../references/powerplatform-md-template.md` (racine du plugin) — donc avec les **valeurs
+   d'exemple commentées**.
+2. **Dire explicitement à l'utilisateur d'aller le modifier** : ouvrir `PowerPlatform.md` et remplacer
+   les valeurs d'exemple par les siennes (environnement nom + URL, solution, dossier de l'app,
+   displayName, tables/connecteurs). **Marquer une pause** et attendre sa confirmation avant de lancer
+   `pac code init` (étape 4), qui consomme l'URL d'environnement.
+3. Si le projet a un `CLAUDE.md`, y ajouter un **pointeur** :
+   `- Config Power Platform → voir PowerPlatform.md`.
+
+Ne jamais mettre de secrets ici ; l'URL d'environnement et le nom de solution ne sont pas sensibles.
+
+## Étape 3 — Les pièces Power Platform (si départ B)
 
 1. **SDK** : `npm install @microsoft/power-apps` (ne pas figer la version — preview).
 2. **PowerProvider** : ajouter `src/PowerProvider.tsx` (provider qui initialise le SDK ; repris du dépôt
@@ -52,9 +70,9 @@ TypeScript**, puis ajouter les pièces Power Platform (étape 2).
    - `dev` lance le serveur SDK local **et** Vite (ex. `"dev": "start pac code run && vite"`).
    - `build` = `"tsc -b && vite build"`.
 
-## Étape 3 — Initialiser la Code App
+## Étape 4 — Initialiser la Code App
 
-À la racine du projet :
+À la racine du projet (utiliser le displayName et l'URL d'environnement de `PowerPlatform.md`) :
 
 ```powershell
 pac code init --displayName "<nom affiché de l'app>"
@@ -63,7 +81,7 @@ pac code init --displayName "<nom affiché de l'app>"
 
 Génère `power.config.json` (métadonnées de l'app) — c'est le marqueur que le dossier est une Code App.
 
-## Étape 4 — Générer / adapter la maquette React
+## Étape 5 — Générer / adapter la maquette React
 
 Claude génère ici les composants React de la maquette selon le besoin métier. Contraintes Code Apps à
 respecter :
@@ -73,7 +91,7 @@ respecter :
 - L'arbre de rendu reste enveloppé par `PowerProvider`.
 - Garder l'UI découplée de l'accès données (composants ↔ services typés) pour faciliter le câblage.
 
-## Étape 5 — Exécution locale
+## Étape 6 — Exécution locale
 
 ```powershell
 npm run dev   # lance pac code run + Vite (port 3000)
@@ -82,22 +100,6 @@ npm run dev   # lance pac code run + Vite (port 3000)
 > Gotcha (depuis déc. 2025) : Chrome/Edge bloquent par défaut les requêtes public→localhost. Le dev
 > local peut nécessiter d'autoriser l'accès réseau local dans le navigateur (ou `allow="local-network-access"`
 > sur les iframes).
-
-## Étape 6 — Créer PowerPlatform.md
-
-La config du projet vit dans un fichier **`PowerPlatform.md` à la racine du projet** (pas dans le
-`CLAUDE.md`). Le template officiel ne le fournit pas : il faut le créer (sinon les autres skills n'ont
-aucune valeur à lire — c'est le ⚠️ que remonte `/pp-diag`).
-
-1. **Créer** `PowerPlatform.md` à la racine en y collant le contenu du gabarit
-   `../../references/powerplatform-md-template.md` (racine du plugin).
-2. Remplacer les valeurs d'exemple par celles du projet : environnement (nom + URL Dynamics),
-   solution, dossier de l'app, displayName, sources de données.
-3. Si le projet a un `CLAUDE.md`, y ajouter un **pointeur** :
-   `- Config Power Platform → voir PowerPlatform.md`.
-
-Ne jamais committer de secrets ici ; l'URL d'environnement et le nom de solution ne sont pas
-sensibles.
 
 ## Suite
 
