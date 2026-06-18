@@ -11,6 +11,10 @@ Ce dépôt héberge plusieurs plugins Claude Code :
 
 ## Plugin `claude-utils`
 
+Boîte à outils générique, disponible dans tous tes projets une fois installée.
+Pour l'installer sur un poste neuf et prendre en main les skills, suivre le
+[QUICKSTART](claude-utils/QUICKSTART.md).
+
 ### Skills
 
 | Skill | Invocation | Rôle |

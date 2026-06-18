@@ -3,6 +3,8 @@
 Boîte à outils générique pour Claude Code : un conteneur de **skills internes réutilisables**, plus des
 hooks transverses. Pensé pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 
+> Installer sur un poste neuf et prendre en main les skills : [QUICKSTART.md](QUICKSTART.md).
+
 ## Skills
 
 | Skill | Invocation | Rôle |
