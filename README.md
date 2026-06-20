@@ -1,5 +1,7 @@
 # ClaudePlugins
 
+> 📖 **[Tutoriel : Claude Code + VS Code (PWA → Firebase)](https://vynarim.github.io/ClaudePlugins/)** — l'essentiel en ~30 min, du démarrage du PC jusqu'au déploiement, avec une section « Consommation » qui complète le skill `eco`.
+
 Marketplace interne `dev-tools` — catalogue de plugins Claude Code.
 
 Ce dépôt héberge plusieurs plugins Claude Code :
@@ -64,6 +66,7 @@ Installe seulement les plugins voulus. Les projets configurés (qui déclarent l
 
 ## Documentation
 
+- [**Tutoriel HTML**](https://vynarim.github.io/ClaudePlugins/) — prise en main Claude Code + VS Code, construction d'un site puis d'une PWA, déploiement Firebase, et bonnes pratiques de consommation de tokens
 - [INSTALL.md](INSTALL.md) — installer, vérifier, mettre à jour, dépanner
 - [DEPLOYMENT.md](DEPLOYMENT.md) — ajouter une skill, publier une version, activer dans un projet
 - [claude-utils/README.md](claude-utils/README.md) — détails du plugin générique
