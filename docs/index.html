@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide — Claude Code + VS Code en 30 min</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16202C;
+    --ink-soft:#475569;
+    --paper:#F7F8FA;
+    --surface:#FFFFFF;
+    --line:#E5E9F0;
+    --primary:#4F46E5;
+    --primary-soft:#EEF0FE;
+    --teal:#0D9488;
+    --teal-soft:#E5F6F4;
+    --tip:#16A34A;
+    --tip-soft:#E9F8EE;
+    --warn:#D97706;
+    --warn-soft:#FDF3E3;
+    --danger:#DC2626;
+    --danger-soft:#FCEEEE;
+    --term-bg:#0F172A;
+    --term-line:#1E293B;
+    --term-txt:#E2E8F0;
+    --term-green:#4ADE80;
+    --term-cyan:#67E8F9;
+    --radius:14px;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    font-size:16.5px;
+    line-height:1.66;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 22px 90px;}
+
+  /* ---------- Header ---------- */
+  .doc-header{
+    background:
+      radial-gradient(120% 140% at 88% -10%, rgba(79,70,229,.18), transparent 55%),
+      radial-gradient(120% 140% at 0% 0%, rgba(13,148,136,.16), transparent 50%),
+      var(--term-bg);
+    color:#fff;
+    border-radius:0 0 26px 26px;
+    padding:54px 40px 46px;
+    margin-bottom:34px;
+  }
+  .doc-header .kicker{
+    font-family:var(--mono);
+    font-size:.78rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--term-green);
+    margin:0 0 14px;
+  }
+  .doc-header h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:2.35rem;
+    line-height:1.12;
+    margin:0 0 10px;
+    letter-spacing:-.01em;
+  }
+  .doc-header .sub{
+    font-size:1.12rem;
+    color:#C7D0DE;
+    margin:0 0 22px;
+    font-weight:500;
+  }
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .meta{
+    font-family:var(--mono);
+    font-size:.8rem;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.14);
+    padding:7px 12px;border-radius:999px;color:#E2E8F0;
+  }
+  .meta b{color:#fff;font-weight:600;}
+
+  /* ---------- TOC ---------- */
+  .toc{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 24px;
+    margin-bottom:38px;
+  }
+  .toc h2{font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);}
+  .toc ol{margin:0;padding-left:0;list-style:none;counter-reset:toc;}
+  .toc li{counter-increment:toc;margin:7px 0;}
+  .toc a{
+    text-decoration:none;color:var(--ink);font-weight:500;
+    display:flex;align-items:baseline;gap:12px;
+  }
+  .toc a:hover{color:var(--primary);}
+  .toc a::before{
+    content:counter(toc,decimal-leading-zero);
+    font-family:var(--mono);font-size:.82rem;color:var(--primary);
+    min-width:26px;font-weight:600;
+  }
+
+  /* ---------- Sections ---------- */
+  section{margin:0 0 46px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--primary);margin:0 0 6px;font-weight:600;
+  }
+  h2.sect{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:1.7rem;line-height:1.2;
+    margin:0 0 18px;letter-spacing:-.01em;
+    padding-bottom:12px;border-bottom:2px solid var(--line);
+  }
+  h2.sect .emoji{margin-right:8px;}
+  h3{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;font-size:1.22rem;margin:30px 0 10px;color:var(--ink);
+  }
+  h4{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;font-size:1.02rem;margin:22px 0 8px;color:var(--ink);
+  }
+  p{margin:0 0 14px;}
+  ul,ol{margin:0 0 16px;padding-left:22px;}
+  li{margin:6px 0;}
+  strong{color:var(--ink);font-weight:600;}
+  a{color:var(--primary);}
+  code{
+    font-family:var(--mono);font-size:.86em;
+    background:#EEF1F6;color:#3730A3;
+    padding:2px 6px;border-radius:6px;
+  }
+  .lead{
+    font-size:1.05rem;color:var(--ink-soft);
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout{
+    border-radius:var(--radius);
+    padding:16px 18px 16px 20px;
+    margin:18px 0;
+    border-left:5px solid var(--primary);
+    background:var(--primary-soft);
+  }
+  .callout .label{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.92rem;
+    display:block;margin-bottom:4px;
+  }
+  .callout p:last-child,.callout ul:last-child{margin-bottom:0;}
+  .callout.tip{border-color:var(--tip);background:var(--tip-soft);}
+  .callout.tip .label{color:#15803D;}
+  .callout.warn{border-color:var(--warn);background:var(--warn-soft);}
+  .callout.warn .label{color:#B45309;}
+  .callout.danger{border-color:var(--danger);background:var(--danger-soft);}
+  .callout.danger .label{color:#B91C1C;}
+  .callout.info .label{color:var(--primary);}
+  .callout.teal{border-color:var(--teal);background:var(--teal-soft);}
+  .callout.teal .label{color:#0F766E;}
+
+  /* ---------- Terminal blocks ---------- */
+  .terminal{
+    background:var(--term-bg);
+    border-radius:12px;
+    margin:16px 0;
+    overflow:hidden;
+    box-shadow:0 10px 28px -16px rgba(15,23,42,.5);
+  }
+  .terminal .bar{
+    display:flex;align-items:center;gap:7px;
+    padding:11px 14px;background:var(--term-line);
+    border-bottom:1px solid #0b1220;
+  }
+  .terminal .bar .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.r{background:#FF5F57;} .dot.y{background:#FEBC2E;} .dot.g{background:#28C840;}
+  .terminal .bar .tt{
+    margin-left:8px;font-family:var(--mono);font-size:.74rem;color:#94A3B8;letter-spacing:.03em;
+  }
+  .terminal pre{
+    margin:0;padding:16px 18px;
+    font-family:var(--mono);font-size:.84rem;line-height:1.62;
+    color:var(--term-txt);overflow-x:auto;
+  }
+  .terminal pre .c{color:#64748B;}            /* comment */
+  .terminal pre .p{color:var(--term-green);}  /* prompt $ */
+  .terminal pre .k{color:var(--term-cyan);}   /* keyword/cmd */
+  .terminal pre .s{color:#FDE68A;}            /* string */
+
+  /* ---------- Prompt-to-Claude boxes ---------- */
+  .prompt{
+    background:#fff;
+    border:1.5px solid var(--primary);
+    border-radius:12px;
+    margin:16px 0;
+    overflow:hidden;
+  }
+  .prompt .phead{
+    display:flex;align-items:center;gap:9px;
+    background:var(--primary-soft);
+    padding:9px 16px;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.84rem;
+    color:var(--primary);letter-spacing:.02em;
+    border-bottom:1px solid var(--line);
+  }
+  .prompt .phead .star{font-size:1rem;}
+  .prompt pre{
+    margin:0;padding:15px 18px;
+    font-family:var(--mono);font-size:.85rem;line-height:1.6;
+    white-space:pre-wrap;color:#1E293B;
+  }
+
+  /* ---------- Tables ---------- */
+  .table-wrap{overflow-x:auto;margin:18px 0;border:1px solid var(--line);border-radius:12px;}
+  table{border-collapse:collapse;width:100%;font-size:.92rem;}
+  th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+  thead th{
+    background:var(--term-bg);color:#fff;
+    font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.86rem;
+    letter-spacing:.02em;
+  }
+  tbody tr:nth-child(even){background:#FAFBFD;}
+  tbody tr:last-child td{border-bottom:none;}
+  td code{white-space:nowrap;}
+  .dur{
+    font-family:var(--mono);font-size:.82rem;font-weight:600;color:var(--teal);
+    background:var(--teal-soft);padding:2px 8px;border-radius:999px;white-space:nowrap;
+  }
+
+  /* ---------- Step cards ---------- */
+  .step{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 24px;
+    margin:18px 0;
+    position:relative;
+  }
+  .step .num{
+    position:absolute;top:-14px;left:22px;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.8rem;
+    background:var(--primary);color:#fff;
+    padding:5px 12px;border-radius:999px;letter-spacing:.04em;
+  }
+  .step h3{margin-top:8px;}
+
+  /* ---------- Conclusion ---------- */
+  .finale{
+    background:var(--term-bg);
+    color:#fff;border-radius:18px;padding:34px 36px;
+  }
+  .finale .eyebrow{color:var(--term-green);}
+  .finale h2{font-family:'Space Grotesk',sans-serif;border:none;color:#fff;margin-top:0;}
+  .finale .flow{
+    font-family:var(--mono);font-size:.95rem;color:var(--term-cyan);
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;padding:14px 16px;margin:14px 0;line-height:1.9;
+  }
+  .finale p{color:#CBD5E1;}
+  .finale strong{color:#fff;}
+
+  hr{border:none;border-top:1px dashed var(--line);margin:30px 0;}
+
+  /* ---------- Deep dive (Pour aller plus loin) ---------- */
+  .deepdive{
+    border:1.5px dashed var(--primary);
+    background:linear-gradient(180deg, rgba(79,70,229,.05), rgba(13,148,136,.04));
+    border-radius:var(--radius);
+    padding:18px 22px 14px;
+    margin:26px 0 10px;
+  }
+  .deepdive .dd-head{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.02rem;
+    color:var(--primary);margin:0 0 2px;display:flex;align-items:center;gap:8px;
+  }
+  .deepdive .dd-note{
+    font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--ink-soft);margin:0 0 12px;
+  }
+  .deepdive ul{margin:0;padding-left:20px;}
+  .deepdive li{margin:7px 0;}
+  .deepdive li b{color:var(--ink);}
+
+  /* ---------- Links section ---------- */
+  .links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px;margin:18px 0;}
+  .link-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 20px;
+  }
+  .link-card h3{
+    margin:0 0 12px;font-size:1.05rem;display:flex;align-items:center;gap:8px;
+    padding-bottom:8px;border-bottom:2px solid var(--primary-soft);
+  }
+  .link-card ul{margin:0;padding:0;list-style:none;}
+  .link-card li{margin:9px 0;line-height:1.4;}
+  .link-card a{font-weight:600;text-decoration:none;}
+  .link-card a:hover{text-decoration:underline;}
+  .link-card .desc{display:block;font-size:.82rem;color:var(--ink-soft);font-weight:400;margin-top:1px;}
+
+  /* ---------- Section time badge ---------- */
+  .sect-time{
+    font-family:var(--mono);font-size:.72rem;font-weight:600;
+    color:var(--teal);background:var(--teal-soft);
+    padding:3px 10px;border-radius:999px;margin-left:10px;
+    vertical-align:middle;white-space:nowrap;
+  }
+
+  /* ---------- Why Firebase box ---------- */
+  .whybox{
+    background:linear-gradient(180deg,#FFF8EC,#FFFDF9);
+    border:1.5px solid #EFC987;border-radius:var(--radius);
+    padding:20px 22px 16px;margin:20px 0;
+  }
+  .whybox h4{margin:0 0 8px;color:#B45309;font-size:1.1rem;font-family:'Space Grotesk',sans-serif;}
+  .whybox .free{color:#15803D;font-weight:600;}
+  .whybox table{margin:14px 0 4px;}
+
+  /* ---------- Sticky bottom nav ---------- */
+  body{padding-bottom:66px;}
+  .navbar{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(15,23,42,.97);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border-top:1px solid rgba(255,255,255,.12);
+    display:flex;gap:2px;overflow-x:auto;padding:6px 8px;
+    scrollbar-width:none;
+  }
+  .navbar::-webkit-scrollbar{display:none;}
+  .navbar a{
+    flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;
+    text-decoration:none;color:#94A3B8;font-size:.66rem;font-weight:600;
+    padding:5px 11px;border-radius:10px;white-space:nowrap;letter-spacing:.01em;
+    transition:background .15s,color .15s;
+  }
+  .navbar a .ic{font-size:1.05rem;line-height:1;}
+  .navbar a:hover{color:#fff;background:rgba(255,255,255,.07);}
+  .navbar a.active{color:#fff;background:var(--primary);}
+
+  @media (max-width:600px){
+    body{font-size:16px;}
+    .doc-header{padding:38px 20px 34px;}
+    .doc-header h1{font-size:1.75rem;}
+    .doc-header .sub{font-size:1rem;}
+    .wrap{padding:0 15px 60px;}
+    h2.sect{font-size:1.35rem;}
+    h3{font-size:1.12rem;}
+    .sect-time{display:inline-block;margin:6px 0 0 0;}
+
+    /* le code ne déborde plus */
+    code{word-break:break-word;}
+    .terminal pre,.prompt pre{font-size:.74rem;padding:13px 13px;line-height:1.6;}
+    .terminal .bar .tt{font-size:.66rem;}
+
+    /* callouts & cartes : un peu plus compacts */
+    .callout,.deepdive,.whybox,.step{padding-left:16px;padding-right:16px;}
+    .step{padding-top:20px;}
+
+    /* === Tableaux empilés en cartes (lisibles sur téléphone) === */
+    .table-wrap{overflow-x:visible;border:none;border-radius:0;margin:16px 0;}
+    table{font-size:.95rem;}
+    thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+    tbody tr,
+    tbody tr:nth-child(even){
+      display:block;background:var(--surface);
+      border:1px solid var(--line);border-radius:12px;
+      margin:0 0 12px;padding:6px 14px;
+    }
+    tbody td{
+      display:block;border:none;padding:8px 0;
+      border-bottom:1px solid var(--line);white-space:normal;
+    }
+    tbody tr td:last-child{border-bottom:none;}
+    tbody td::before{
+      content:attr(data-label);
+      display:block;font-family:var(--mono);
+      font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;
+      color:var(--primary);font-weight:700;margin-bottom:3px;
+    }
+    td code{white-space:normal;word-break:break-word;}
+    .dur{display:inline-block;}
+
+    /* navbar : onglets un poil plus serrés */
+    .navbar a{font-size:.62rem;padding:5px 9px;}
+    .navbar a .ic{font-size:1rem;}
+  }
+  @media print{
+    body{background:#fff;font-size:11pt;padding-bottom:0;}
+    .doc-header{border-radius:0;}
+    .navbar{display:none;}
+    .terminal,.prompt,.step,.callout,.finale,.whybox,.deepdive{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+
+<header class="doc-header" id="top">
+  <div class="wrap" style="padding-bottom:0;">
+    <p class="kicker">// Tutoriel d'auto-formation</p>
+    <h1>Claude Code&nbsp;+&nbsp;VS Code 🚀</h1>
+    <p class="sub">Construire des sites web et des applications mobiles (PWA) — du démarrage du PC jusqu'à la prod sur Firebase</p>
+    <div class="meta-row">
+      <span class="meta">🧩 Niveau&nbsp;: <b>initiation</b></span>
+      <span class="meta">⏱️ Durée&nbsp;: <b>~1 h</b> (cœur ~30 min)</span>
+      <span class="meta">🎯 But&nbsp;: <b>possibilités + fondamentaux</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <p class="lead">Dans ce tutoriel, vous allez <strong>comprendre ce qu'est Claude Code</strong>, <strong>construire un site puis une PWA</strong> de bout en bout, et repartir avec les <strong>fondamentaux</strong> pour continuer seul. Comptez environ 30&nbsp;minutes&nbsp;; ce n'est pas exhaustif, c'est une porte d'entrée.</p>
+
+  <nav class="toc">
+    <h2>📑 Sommaire</h2>
+    <ol>
+      <li><a href="#plan">Le parcours (vue d'ensemble)</a></li>
+      <li><a href="#detail">Le tutoriel pas à pas</a></li>
+      <li><a href="#pratique">Cas pratique de bout en bout 🛴</a></li>
+      <li><a href="#antiseche">Antisèche — commandes &amp; raccourcis</a></li>
+      <li><a href="#conso">Maîtriser sa consommation (tokens &amp; contexte) ⚡</a></li>
+      <li><a href="#liens">Liens utiles — sites, docs &amp; tutos 🔗</a></li>
+      <li><a href="#finale">À retenir</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ 1. PLAN ============ -->
+  <section id="plan">
+    <p class="eyebrow">// Partie 01</p>
+    <h2 class="sect"><span class="emoji">🗺️</span>Le parcours<span class="sect-time">⏱️ ~3 min</span></h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Étape</th><th>Temps</th><th>Type</th><th>Ce que vous y gagnez</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="#">1</td><td data-label="Étape">Découvrir Claude Code (et ce qui le distingue)</td><td data-label="Temps"><span class="dur">4 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Comprendre en quoi c'est différent de l'autocomplétion (Copilot)</td></tr>
+          <tr><td data-label="#">2</td><td data-label="Étape">Installation &amp; branchement à VS Code</td><td data-label="Temps"><span class="dur">4 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Mettre en place l'environnement (rapide)</td></tr>
+          <tr><td data-label="#">3</td><td data-label="Étape">Les 5 fondamentaux d'interaction</td><td data-label="Temps"><span class="dur">6 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Apprendre le vocabulaire pour piloter l'outil</td></tr>
+          <tr><td data-label="#">4</td><td data-label="Étape">Construire un site web de zéro</td><td data-label="Temps"><span class="dur">8 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Voir l'agent lire, créer, modifier, et un diff à valider</td></tr>
+          <tr><td data-label="#">5</td><td data-label="Étape">Transformer le site en PWA installable</td><td data-label="Temps"><span class="dur">6 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Comprendre les briques d'une app mobile web</td></tr>
+          <tr><td data-label="#">6</td><td data-label="Étape">Bonnes pratiques, limites &amp; pour aller plus loin</td><td data-label="Temps"><span class="dur">2 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Adopter un usage sain et lucide</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <span class="label">💡 Conseil</span>
+      <p>Installez d'abord tout le nécessaire (étape 2) et gardez VS Code et un terminal ouverts. Une fois l'environnement prêt, vous enchaînez les fondamentaux et la pratique sans accroc.</p>
+    </div>
+
+    <div class="callout info">
+      <span class="label">🧵 Fil rouge</span>
+      <p>Pour voir tout ça sur un projet réel — du démarrage du PC jusqu'à la prod —, la <strong>partie 3</strong> déroule un cas concret&nbsp;: une app de location/vente de trottinettes déployée sur Firebase.</p>
+    </div>
+
+    <div class="deepdive">
+      <p class="dd-head">🔭 Pour aller plus loin</p>
+      <p class="dd-note">Non abordé dans les 30 min — du contenu &amp; des ressources pour creuser</p>
+      <ul>
+        <li><b>Cours officiel gratuit «&nbsp;Claude Code in Action&nbsp;»</b> (Anthropic Academy, certificat à la clé)&nbsp;: un parcours pas-à-pas pour passer de l'intro à un usage réel, structuré autour du workflow <em>Explore → Plan → Code → Commit</em>. → <a href="https://anthropic.skilljar.com/claude-code-in-action">anthropic.skilljar.com</a></li>
+        <li><b>Anthropic Academy</b>&nbsp;: catalogue de cours gratuits et self-paced (Claude Code 101, Introduction aux sous-agents, MCP…), accessibles sur simple inscription e-mail. → <a href="https://anthropic.skilljar.com">anthropic.skilljar.com</a></li>
+        <li><b>Best practices Claude Code</b>&nbsp;: les patterns recommandés par Anthropic pour bien configurer son environnement et passer à l'échelle (sessions parallèles, CLAUDE.md, etc.). → <a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs</a></li>
+        <li><b>Guide de prompt engineering</b>&nbsp;: la compétence qui fait toute la différence avec un agent — apprendre à formuler des prompts précis et contraints. → <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview">docs.claude.com</a></li>
+        <li><b>Décliner le format</b>&nbsp;: au-delà des 30 min, un TP de 2–3 h (chacun installe puis déploie une mini-PWA) ou un mini-hackathon ancrent vraiment le cycle prompt → diff → test. Bon réflexe d'évaluation&nbsp;: faire expliquer un diff accepté plutôt que noter le seul résultat.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 2. DÉTAIL ============ -->
+  <section id="detail">
+    <p class="eyebrow">// Partie 02</p>
+    <h2 class="sect"><span class="emoji">🎬</span>Le tutoriel pas à pas<span class="sect-time">⏱️ ~30 min</span></h2>
+
+    <h3>1️⃣ Découvrir Claude Code <span style="color:var(--teal);font-size:.8rem;">(4 min)</span></h3>
+    <div class="callout teal">
+      <span class="label">🎯 L’idée clé en une phrase</span>
+      <p>«&nbsp;Claude Code n'est pas une autocomplétion intelligente ligne par ligne. C'est un <strong>agent</strong> qui voit tout votre projet, lit vos fichiers, exécute des commandes, crée des fichiers et propose des modifications que <strong>vous validez</strong>.&nbsp;»</p>
+    </div>
+    <p><strong>La distinction clé à comprendre</strong> (souvent confondue)&nbsp;:</p>
+    <ul>
+      <li>🟡 <strong>Copilot / autocomplétion</strong> → travaille <em>au curseur</em>, complète la ligne que vous tapez. Vous restez pilote ligne à ligne.</li>
+      <li>🟣 <strong>Claude Code</strong> → travaille <em>sur le dépôt entier</em>. Vous décrivez une intention («&nbsp;ajoute une page de contact avec validation du formulaire&nbsp;»), il planifie, touche plusieurs fichiers, lance des commandes, et présente le résultat à valider.</li>
+    </ul>
+    <p><strong>Où vit Claude Code&nbsp;?</strong> D'abord dans le terminal (CLI). L'extension VS Code est une surface graphique par-dessus <em>le même moteur</em>&nbsp;: mêmes modèles, même authentification, mêmes fichiers de config. <strong>L'extension n'est pas un produit différent</strong>, c'est le même agent avec une vue intégrée (diffs visuels, navigation).</p>
+    <div class="callout info">
+      <span class="label">🧠 Analogie</span>
+      <p>«&nbsp;Pensez à un développeur junior très rapide et infatigable à qui vous donnez des tâches. Il fait le travail, vous montre son diff, et c'est <em>vous</em> qui faites la code review et qui validez. Vous restez le tech lead.&nbsp;»</p>
+    </div>
+
+    <h3>2️⃣ Installation &amp; branchement à VS Code <span style="color:var(--teal);font-size:.8rem;">(4 min)</span></h3>
+    <p>Vous n'installez tout ceci qu'une seule fois sur votre machine. À la fin, vérifiez que tout est bon avec <code>claude --version</code> et <code>claude doctor</code>.</p>
+    <div class="callout warn">
+      <span class="label">💳 Bon à savoir</span>
+      <p>Claude Code est un <strong>outil payant</strong>&nbsp;: abonnement Claude (Pro 20&nbsp;$/mois, Max 100/200&nbsp;$/mois, Team, Enterprise) <strong>ou</strong> crédits API. Une clé API en pay-as-you-go suffit pour expérimenter.</p>
+    </div>
+    <h4>Installer le CLI — deux méthodes <span style="font-weight:400;font-size:.85rem;">(page officielle&nbsp;: <a href="https://claude.com/download">claude.com/download</a>)</span></h4>
+    <div class="terminal">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 1 [Recommandé] — installeur natif (aucune dépendance)</span></div>
+<pre><span class="c"># Windows 11 — PowerShell (clic droit sur Démarrer → Terminal)</span>
+<span class="p">PS&gt;</span> <span class="k">irm</span> https://claude.ai/install.ps1 | iex
+
+<span class="c"># (Mac/Linux, pour info :  curl -fsSL https://claude.ai/install.sh | bash)</span></pre>
+    </div>
+    <div class="terminal">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 2 — via npm (nécessite Node.js 18+)</span></div>
+<pre><span class="p">PS&gt;</span> <span class="k">npm</span> install -g @anthropic-ai/claude-code</pre>
+    </div>
+    <div class="callout warn">
+      <span class="label">⚠️ Pièges classiques (Windows 11)</span>
+      <p>Si la commande PowerShell est bloquée, c'est la <strong>politique d'exécution</strong> — ouvrir PowerShell et l'autoriser. Après l'installation, <strong>fermer puis rouvrir le terminal</strong> pour que le <code>PATH</code> se mette à jour (sinon <code>claude</code> n'est «&nbsp;pas reconnu&nbsp;»). En cas de doute, <code>claude doctor</code> diagnostique l'installation.</p>
+    </div>
+    <div class="terminal">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">vérifier que ça marche</span></div>
+<pre><span class="p">PS&gt;</span> <span class="k">claude</span> --version   <span class="c"># affiche un numéro de version</span>
+<span class="p">PS&gt;</span> <span class="k">claude</span> doctor      <span class="c"># diagnostic de l'installation</span></pre>
+    </div>
+    <h4>L'extension VS Code</h4>
+    <ol>
+      <li>Ouvrez VS Code (version <strong>1.98.0 ou supérieure</strong>).</li>
+      <li>Dans le panneau Extensions (<code>Ctrl+Shift+X</code>), cherchez <strong>«&nbsp;Claude Code&nbsp;»</strong> et installez celle de l'éditeur <strong>anthropic</strong> (<a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">lien direct Marketplace</a>). Le CLI doit être installé au préalable&nbsp;: l'extension l'enrobe.</li>
+      <li>Lancez-la&nbsp;: icône <strong>étincelle ✱</strong> en haut à droite quand un fichier est ouvert, ou Palette <code>Ctrl+Shift+P</code> → «&nbsp;Claude Code&nbsp;».</li>
+      <li>À la <strong>première connexion</strong>, un onglet navigateur s'ouvre pour vous authentifier avec votre compte Anthropic. (Variante&nbsp;: définir <code>ANTHROPIC_API_KEY</code> et lancer VS Code via <code>code .</code>.)</li>
+    </ol>
+    <div class="callout tip">
+      <span class="label">⌨️ Astuce de confort</span>
+      <p>Dans une session, taper <code>/terminal-setup</code> active <code>Shift+Entrée</code> pour aller à la ligne (au lieu d'envoyer le message) — indispensable pour les prompts multi-lignes.</p>
+    </div>
+
+    <h3>3️⃣ Les 5 fondamentaux d'interaction <span style="color:var(--teal);font-size:.8rem;">(6 min)</span></h3>
+    <p>Cinq notions suffisent pour piloter l'outil&nbsp;:</p>
+    <ul>
+      <li><strong>1. Le prompt = une intention claire 🎯.</strong> Pas «&nbsp;fais un truc&nbsp;». On décrit le quoi, le contexte, la contrainte. <em>Ex.&nbsp;: «&nbsp;Crée une landing page responsive en HTML/CSS/JS vanilla, avec header, hero et formulaire de contact. Pas de framework.&nbsp;»</em></li>
+      <li><strong>2. Les mentions <code>@fichier</code> 📎.</strong> Taper <code>@</code> ouvre un sélecteur de fichiers&nbsp;; le fichier choisi entre dans le contexte. C'est ainsi qu'on dit «&nbsp;regarde <em>ce</em> fichier&nbsp;».</li>
+      <li><strong>3. Le fichier <code>CLAUDE.md</code> 🧠.</strong> À la racine du projet&nbsp;: les règles persistantes (conventions, stack imposée, commandes de build…). Claude le relit à chaque session. «&nbsp;La mémoire de projet.&nbsp;»</li>
+      <li><strong>4. Le diff = la code review 🔍.</strong> Avant d'écrire, l'extension ouvre un diff (vert = ajouts, rouge = suppressions). On <strong>accepte, rejette, ou demande une révision</strong>. <em>On ne valide jamais à l'aveugle.</em></li>
+      <li><strong>5. Les checkpoints ⏪.</strong> Des points de restauration pour <strong>revenir en arrière</strong> si une modif casse quelque chose. À combiner avec Git&nbsp;: un filet de sécurité de plus.</li>
+    </ul>
+    <div class="callout teal">
+      <span class="label">➡️ À vous de jouer</span>
+      <p>Avec ces cinq notions — prompt clair, <code>@</code>, <code>CLAUDE.md</code>, diff, checkpoint — vous savez déjà piloter l'outil. Le reste, c'est de la pratique&nbsp;: passons-y.</p>
+    </div>
+
+    <h3>4️⃣ Construire un site web de zéro <span style="color:var(--teal);font-size:.8rem;">(8 min)</span></h3>
+    <p>Ouvrez un dossier vide dans VS Code, puis le panneau Claude Code. Saisissez ce premier prompt&nbsp;:</p>
+    <div class="prompt">
+      <div class="phead"><span class="star">✱</span> Prompt 1 — générer la structure</div>
+<pre>Crée un petit site vitrine pour un café fictif "Café Latitude".
+Stack : HTML, CSS et JavaScript vanilla, sans framework.
+Sections : header avec navigation, hero avec titre + bouton,
+section menu avec 3 produits, et un footer.
+Design responsive et propre. Mets le CSS dans un fichier séparé.</pre>
+    </div>
+    <p><strong>Pendant que Claude travaille, observez&nbsp;:</strong> il <strong>annonce un plan</strong> avant d'agir, puis crée les <strong>fichiers</strong> (<code>index.html</code>, <code>style.css</code>, <code>script.js</code>). <strong>Ouvrez le diff</strong> pour lire ce qu'il propose (c'est votre code review), acceptez, puis ouvrez la page dans le navigateur.</p>
+    <div class="prompt">
+      <div class="phead"><span class="star">✱</span> Prompt 2 — itération ciblée</div>
+<pre>Bien. Maintenant rends le header collant au scroll, ajoute un effet
+de survol sur les cartes du menu, et passe la palette en tons
+chauds (brun/crème).</pre>
+    </div>
+    <div class="callout info">
+      <span class="label">📌 Le point clé</span>
+      <p>La qualité du résultat est proportionnelle à la qualité du prompt&nbsp;: vague → générique, précis et contraint → exploitable. Soigner son prompt est le réflexe n°1 à acquérir.</p>
+    </div>
+    <div class="callout warn">
+      <span class="label">🐞 Si vous tombez sur un bug</span>
+      <p>Dites-le simplement&nbsp;: «&nbsp;il y a un bug, le menu déborde sur mobile, corrige-le&nbsp;». L'agent lit, diagnostique et propose un correctif. À retenir&nbsp;: <em>l'agent se trompe parfois</em> — d'où l'importance de relire le diff et de tester.</p>
+    </div>
+
+    <h3>5️⃣ Transformer le site en PWA installable <span style="color:var(--teal);font-size:.8rem;">(6 min)</span></h3>
+    <div class="callout teal">
+      <span class="label">📱 C'est quoi une PWA&nbsp;? (3 briques à connaître)</span>
+      <p>Une <strong>PWA</strong> (Progressive Web App) est un site web qui s'installe sur le téléphone et se comporte comme une app native. Trois ingrédients&nbsp;:</p>
+      <ul>
+        <li>📄 <strong>Un manifeste</strong> (<code>manifest.json</code>)&nbsp;: nom, icônes, couleurs, <code>display: standalone</code>. → rend l'app «&nbsp;installable&nbsp;».</li>
+        <li>⚙️ <strong>Un service worker</strong>&nbsp;: script en arrière-plan qui intercepte le réseau et met en cache → <strong>hors-ligne</strong> + démarrage rapide.</li>
+        <li>🔒 <strong>HTTPS</strong>&nbsp;: obligatoire (sauf <code>localhost</code>). Pas de service worker sans contexte sécurisé.</li>
+      </ul>
+    </div>
+    <div class="prompt">
+      <div class="phead"><span class="star">✱</span> Prompt — laisser l'agent faire le travail</div>
+<pre>Transforme ce site en PWA installable.
+- Crée un manifest.json (nom, nom court, couleur de thème,
+  display standalone) et lie-le dans le HTML.
+- Génère un service worker qui met en cache les fichiers statiques
+  pour un fonctionnement hors-ligne, et enregistre-le dans script.js.
+- Ajoute les meta nécessaires (theme-color, viewport, apple-touch-icon).
+Explique-moi à la fin comment tester l'installabilité.</pre>
+    </div>
+    <p><strong>Après avoir accepté le diff, vérifiez&nbsp;:</strong> le nouveau <code>manifest.json</code> et <code>service-worker.js</code>&nbsp;; dans les DevTools → onglet <em>Application</em> (Manifest reconnu, Service Worker «&nbsp;activated&nbsp;»)&nbsp;; et l'icône d'installation dans la barre d'adresse.</p>
+    <div class="callout tip">
+      <span class="label">✨ Effet «&nbsp;waouh&nbsp;» garanti</span>
+      <p>DevTools → Network → <em>Offline</em>, puis rechargez&nbsp;: la page se charge toujours. Vous venez de voir qu'«&nbsp;app mobile&nbsp;» ≠ forcément Swift/Kotlin/React Native — une PWA bien faite s'installe, marche hors-ligne, et part d'un simple site.</p>
+    </div>
+
+    <h3>6️⃣ Bonnes pratiques, limites &amp; pour aller plus loin <span style="color:var(--teal);font-size:.8rem;">(2 min)</span></h3>
+    <div class="callout tip">
+      <span class="label">✅ Bonnes pratiques</span>
+      <ul>
+        <li><strong>Toujours lire le diff.</strong> L'outil accélère, il ne dispense pas de comprendre.</li>
+        <li><strong>Travailler sous Git.</strong> Committez avant les grosses tâches&nbsp;; les checkpoints complètent, ne remplacent pas.</li>
+        <li><strong>Découper.</strong> Une grosse demande mal cadrée échoue&nbsp;; une série de petites tâches réussit.</li>
+        <li><strong>Un <code>CLAUDE.md</code> par projet</strong> pour fixer stack et conventions une fois pour toutes.</li>
+      </ul>
+    </div>
+    <div class="callout danger">
+      <span class="label">🚧 Limites à garder en tête</span>
+      <ul>
+        <li>L'agent <strong>peut se tromper</strong>, inventer une API, produire du code qui «&nbsp;a l'air&nbsp;» correct. La responsabilité reste humaine.</li>
+        <li>Outil <strong>payant</strong> qui envoie le code aux serveurs d'Anthropic (à prendre en compte pour les projets sensibles).</li>
+        <li>Il ne remplace pas la compréhension des fondamentaux — il l'<strong>amplifie</strong>.</li>
+      </ul>
+    </div>
+    <div class="callout info">
+      <span class="label">🔭 Ouvertures</span>
+      <ul>
+        <li>Connecter des <strong>serveurs MCP</strong> pour donner à l'agent l'accès à des outils externes (bases, API…).</li>
+        <li>Le mode <strong>headless</strong> (<code>claude -p "…"</code>) pour scripter dans des hooks Git ou pipelines CI/CD.</li>
+        <li>Doc officielle&nbsp;: <a href="https://docs.claude.com/en/docs/claude-code/overview">docs.claude.com/en/docs/claude-code/overview</a></li>
+      </ul>
+    </div>
+
+    <div class="deepdive">
+      <p class="dd-head">🔭 Pour aller plus loin</p>
+      <p class="dd-note">Non abordé dans les 30 min — concepts avancés &amp; docs pour creuser</p>
+      <ul>
+        <li><b>Toute la «&nbsp;stack d'extension&nbsp;»</b> (skills, sous-agents, hooks, MCP, plugins) expliquée d'un coup&nbsp;: quand utiliser quoi. → <a href="https://code.claude.com/docs/en/features-overview">Vue d'ensemble (docs)</a></li>
+        <li><b>Skills &amp; slash commands</b>&nbsp;: des instructions et raccourcis réutilisables (dans <code>.claude/</code>) que Claude applique automatiquement aux bonnes tâches — pour industrialiser des workflows récurrents. → <a href="https://code.claude.com/docs/en/commands">Commandes (docs)</a></li>
+        <li><b>Sous-agents (subagents)</b>&nbsp;: des instances spécialisées avec leur propre contexte, à qui déléguer une sous-tâche (revue de code, exploration) sans polluer la conversation principale. → <a href="https://anthropic.skilljar.com">Cours «&nbsp;Introduction to Subagents&nbsp;»</a></li>
+        <li><b>Hooks</b>&nbsp;: exécuter automatiquement un script à un moment précis (avant/après une édition, en fin de tâche) pour brancher lint, tests, ou des garde-fous de sécurité. → <a href="https://code.claude.com/docs/en/hooks-guide">Guide des hooks (docs)</a></li>
+        <li><b>MCP (Model Context Protocol)</b>&nbsp;: le standard ouvert qui connecte l'agent à des outils externes — GitHub, bases de données, API internes. → <a href="https://code.claude.com/docs/en/mcp">MCP (docs)</a> · <a href="https://modelcontextprotocol.io">modelcontextprotocol.io</a></li>
+        <li><b>Permissions &amp; modes</b>&nbsp;: une <em>allow-list</em> de commandes (<code>.claude/settings.json</code>), le <em>plan mode</em> (réfléchir avant d'agir) et l'<em>auto mode</em> pour réduire les confirmations. → <a href="https://code.claude.com/docs/en/permissions">Permissions (docs)</a></li>
+        <li><b>Mémoire &amp; contexte</b>&nbsp;: le <code>CLAUDE.md</code> hiérarchique (global + projet + sous-dossier), la compaction (<code>/compact</code>) et les checkpoints pour revenir en arrière. → <a href="https://code.claude.com/docs/en/memory">Mémoire</a> · <a href="https://code.claude.com/docs/en/checkpointing">Checkpoints</a></li>
+        <li><b>Mode headless &amp; Agent SDK</b>&nbsp;: piloter Claude Code par script (<code>claude -p "…"</code>) pour des hooks Git ou des pipelines CI/CD. → <a href="https://code.claude.com/docs/en/headless">Headless (docs)</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 3. CAS PRATIQUE ============ -->
+  <section id="pratique">
+    <p class="eyebrow">// Partie 03</p>
+    <h2 class="sect"><span class="emoji">🛴</span>Cas pratique de bout en bout<span class="sect-time">⏱️ ~25 min</span></h2>
+    <div class="callout teal">
+      <span class="label">🎙️ Le scénario fil rouge</span>
+      <p>«&nbsp;J'allume mon PC, je veux faire une app web pour téléphone — de la <strong>location et vente de trottinettes</strong>. Qu'est-ce que j'installe&nbsp;? Comment je maquette les écrans&nbsp;? Comment je commence à coder&nbsp;? Et comment je déploie une version de prod, sachant que côté back j'ai choisi <strong>Firebase</strong>&nbsp;?&nbsp;» — un parcours linéaire en 4 étapes.</p>
+    </div>
+
+    <div class="whybox">
+      <h4>💚 Pourquoi Firebase pour un projet modeste&nbsp;?</h4>
+      <p>Firebase est un <strong>back «&nbsp;clé en main&nbsp;»</strong> (BaaS, <em>Backend as a Service</em>) édité par Google&nbsp;: au lieu d'installer et de maintenir un serveur, vous assemblez des <strong>briques managées</strong>. Pour notre app, les briques utiles sont&nbsp;:</p>
+      <ul>
+        <li>🔐 <strong>Authentication</strong> — comptes &amp; connexion (e-mail, Google…), sans gérer de mots de passe vous-même.</li>
+        <li>🗄️ <strong>Firestore</strong> — base de données NoSQL <strong>temps réel</strong> (les trottinettes, les locations).</li>
+        <li>🖼️ <strong>Cloud Storage</strong> — fichiers volumineux (photos des trottinettes).</li>
+        <li>🚀 <strong>Hosting</strong> — déploiement du front en <strong>HTTPS</strong> sur un CDN mondial (parfait pour une PWA).</li>
+        <li>⚙️ <strong>Cloud Functions</strong> — un peu de logique côté serveur, à la demande (paiement, e-mails…), sans serveur permanent.</li>
+        <li>🔔 <strong>Cloud Messaging (FCM)</strong> — notifications push. <strong>🛡️ App Check</strong> — anti-abus. <strong>📊 Analytics / Crashlytics</strong> — mesure &amp; crashs.</li>
+      </ul>
+      <p><strong>L'intérêt financier (le point clé pour un petit projet)&nbsp;:</strong> tant que le trafic reste modeste, vous restez dans les <strong>quotas gratuits</strong> et l'addition est de <span class="free">~0&nbsp;€/mois</span>. Surtout, le modèle est <strong>serverless</strong>&nbsp;: aucune machine ne tourne 24&nbsp;h/24, donc <strong>pas de coût fixe</strong> — vous ne payez qu'à l'usage réel. Sur le plan Blaze, ces mêmes quotas gratuits sont <strong>déduits en premier</strong>&nbsp;: une petite app paie donc quelques centimes, pas des dizaines d'euros.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Service</th><th>Inclus gratuitement</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Service">Firestore</td><td data-label="Inclus gratuitement" class="free">~50 000 lectures/jour · 20 000 écritures · 20 000 suppressions · 1 Gio stockés</td></tr>
+            <tr><td data-label="Service">Authentication</td><td data-label="Inclus gratuitement" class="free">50 000 utilisateurs actifs/mois (e-mail, Google…)</td></tr>
+            <tr><td data-label="Service">Hosting</td><td data-label="Inclus gratuitement" class="free">10 Go stockés + bande passante incluse · HTTPS + CDN</td></tr>
+            <tr><td data-label="Service">Cloud Functions</td><td data-label="Inclus gratuitement" class="free">2 M d'invocations/mois</td></tr>
+            <tr><td data-label="Service">Cloud Messaging</td><td data-label="Inclus gratuitement" class="free">gratuit, illimité</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-bottom:0;">⚠️ <strong>Changements récents à connaître&nbsp;:</strong> <strong>Cloud Storage</strong> n'est plus inclus dans le plan gratuit Spark — il faut le plan Blaze (qui offre tout de même ~5 Go gratuits). Et Blaze n'a <strong>pas de plafond «&nbsp;dur&nbsp;»</strong>&nbsp;: d'où l'importance des alertes de budget (voir Étape&nbsp;0). Pour des quotas chiffrés à jour, voir <a href="https://firebase.google.com/pricing">firebase.google.com/pricing</a>.</p>
+    </div>
+
+    <div class="step">
+      <span class="num">ÉTAPE 0</span>
+      <h3>🖥️ «&nbsp;J'allume mon PC&nbsp;»&nbsp;: qu'est-ce que j'installe&nbsp;?</h3>
+      <ol>
+        <li><strong>VS Code</strong> (l'éditeur) — <strong>[Recommandé]</strong> <code>winget install Microsoft.VisualStudioCode</code> (ou téléchargement&nbsp;: <a href="https://code.visualstudio.com/download">code.visualstudio.com/download</a>).</li>
+        <li><strong>Node.js 18+</strong> (<code>node --version</code>) — <strong>[Recommandé]</strong> <code>winget install OpenJS.NodeJS.LTS</code> (ou téléchargement&nbsp;: <a href="https://nodejs.org/en/download">nodejs.org/en/download</a>).</li>
+        <li><strong>Git</strong> (<code>git --version</code>) — <strong>[Recommandé]</strong> <code>winget install Git.Git</code> (ou téléchargement&nbsp;: <a href="https://git-scm.com/download/win">git-scm.com/download/win</a>).</li>
+        <li><strong>Claude Code</strong> — <strong>[Recommandé]</strong> installeur natif dans PowerShell (<code>irm https://claude.ai/install.ps1 | iex</code>), ou <a href="https://claude.com/download">claude.com/download</a>&nbsp;; puis l'extension VS Code&nbsp;: <a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">anthropic.claude-code</a>. Détails en partie 2.</li>
+        <li><strong>Firebase CLI</strong> — doc&nbsp;: <a href="https://firebase.google.com/docs/cli">firebase.google.com/docs/cli</a> :</li>
+      </ol>
+      <div class="terminal">
+        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">outils Firebase</span></div>
+<pre><span class="p">PS&gt;</span> <span class="k">npm</span> install -g firebase-tools
+<span class="p">PS&gt;</span> <span class="k">firebase</span> login          <span class="c"># connexion au compte Google (navigateur)</span>
+<span class="p">PS&gt;</span> <span class="k">firebase</span> projects:list  <span class="c"># vérifie la connexion</span></pre>
+      </div>
+      <p>6. <strong>Un projet Firebase</strong> (<a href="https://console.firebase.google.com">console.firebase.google.com</a>) sur le <strong>plan Blaze (pay-as-you-go)</strong>, avec des <strong>alertes / limites de dépenses déjà configurées</strong>. Vous y activez <strong>Authentication</strong>, <strong>Firestore</strong> et éventuellement <strong>Storage</strong>. Blaze conserve les quotas gratuits de Spark et débloque App Hosting, Cloud Functions et les montées en charge.</p>
+      <div class="callout warn">
+        <span class="label">💰 Bon à savoir sur Blaze</span>
+        <p>Dans Google Cloud, un <strong>budget = une alerte</strong> (notification e-mail à 50/90/100&nbsp;%) mais <strong>ne coupe pas</strong> la facturation. Un vrai plafond «&nbsp;dur&nbsp;» demande un mécanisme en plus (Cloud Function déclenchée par l'alerte qui désactive la facturation). Pour un projet pédagogique, des alertes basses + des <strong>règles Firestore strictes</strong> suffisent à garder le contrôle.</p>
+      </div>
+      <div class="callout tip">
+        <span class="label">💡 Astuce</span>
+        <p>Déléguez une partie de la mise en route à Claude Code&nbsp;: «&nbsp;Vérifie que Node, Git et Firebase CLI sont installés et dis-moi ce qui manque avec les commandes pour corriger.&nbsp;»</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="num">ÉTAPE 1</span>
+      <h3>🎨 «&nbsp;Comment je maquette mes écrans&nbsp;?&nbsp;»</h3>
+      <p>D'abord, <strong>lister les écrans</strong>&nbsp;: accueil/carte des trottinettes dispo, liste/recherche, fiche d'une trottinette, location <em>ou</em> achat, panier/paiement, connexion, profil/mes locations.</p>
+      <p>Deux approches&nbsp;:</p>
+      <ul>
+        <li>⚡ <strong>[Recommandé] Rapide, dans VS Code&nbsp;:</strong> demandez à Claude Code un <strong>prototype HTML/CSS cliquable</strong> mobile-first. La maquette est déjà du code&nbsp;: la transition vers le vrai développement est naturelle.</li>
+        <li>🖌️ <strong>Plus visuel&nbsp;:</strong> <strong>Claude Design</strong> (canevas) pour des maquettes léchées, puis <em>handoff</em> vers Claude Code pour les transformer en code.</li>
+      </ul>
+      <div class="prompt">
+        <div class="phead"><span class="star">✱</span> Prompt — maquette cliquable</div>
+<pre>Crée une maquette cliquable mobile-first (HTML + CSS, sans framework)
+pour une app de location et vente de trottinettes. Un fichier HTML
+par écran : accueil avec liste (carte + bouton "Louer"/"Acheter"),
+fiche détaillée, écran de réservation, connexion, et profil
+"mes locations". Relie les écrans par des liens. Données fictives
+en dur. Style épuré, palette verte.</pre>
+      </div>
+      <div class="callout info">
+        <span class="label">📌 Le point clé</span>
+        <p>Vous maquettez pour valider les écrans et la navigation <em>avant</em> de coder la logique. La maquette est jetable ou recyclable, mais elle évite de coder dans le flou.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="num">ÉTAPE 2</span>
+      <h3>⌨️ «&nbsp;Comment je commence à coder&nbsp;?&nbsp;»</h3>
+      <p>Stack&nbsp;: un <strong>front PWA</strong> — <strong>[Recommandé]</strong> React + Vite, ou vanilla pour rester très simple — qui parle à <strong>Firebase</strong> (Auth + Firestore). Pas de serveur à écrire&nbsp;: Firebase <em>est</em> le back.</p>
+      <div class="prompt">
+        <div class="phead"><span class="star">✱</span> Prompt — initialiser le projet</div>
+<pre>Initialise un projet React avec Vite configuré en PWA (manifeste +
+service worker). Installe et configure le SDK Firebase (Auth et
+Firestore). Crée un firebase.js qui lit les clés depuis des variables
+d'environnement (.env), et NE commite pas le .env (ajoute-le au
+.gitignore). Crée une structure claire : pages, composants, services.</pre>
+      </div>
+      <p><strong>Poser les règles dans <code>CLAUDE.md</code>&nbsp;:</strong> stack imposée (React + Vite + Firebase), conventions, «&nbsp;les écrans s'inspirent des maquettes du dossier /maquettes&nbsp;». Claude le relit à chaque session.</p>
+      <div class="prompt">
+        <div class="phead"><span class="star">✱</span> Prompt — construire un écran depuis la maquette</div>
+<pre>À partir de @maquettes/accueil.html, code la page d'accueil React :
+récupère la liste des trottinettes depuis la collection "scooters"
+de Firestore et affiche-les en cartes. Ajoute un état de chargement
+et un cas "aucune trottinette".</pre>
+      </div>
+      <p>Puis vous itérez&nbsp;: connexion (Firebase Auth), fiche détaillée, réservation (écriture dans <code>rentals</code>)… À chaque étape&nbsp;: <strong>lisez le diff, testez en local</strong> (<code>npm run dev</code>), corrigez.</p>
+      <div class="callout danger">
+        <span class="label">🔑 Réflexe sécurité</span>
+        <p>Avancez par <strong>petites tâches cadrées</strong>, pas «&nbsp;code-moi toute l'app&nbsp;». Et les <strong>clés Firebase vont dans <code>.env</code>, jamais dans un commit</strong> — bonne occasion de parler secrets et <code>.gitignore</code>.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <span class="num">ÉTAPE 3</span>
+      <h3>🚀 «&nbsp;Comment je déploie une version de prod&nbsp;?&nbsp;»</h3>
+      <p>Pour une PWA (front statique + services Firebase), <strong>Firebase Hosting [Recommandé]</strong> est le bon choix&nbsp;: il sert tout en HTTPS depuis un CDN mondial — et le HTTPS est justement requis par une PWA. (L'alternative App Hosting est évoquée plus bas.)</p>
+      <div class="terminal">
+        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">déploiement, étape par étape</span></div>
+<pre><span class="c"># 1. Construire la version de prod (Vite → dossier dist/)</span>
+<span class="p">PS&gt;</span> <span class="k">npm</span> run build
+
+<span class="c"># 2. Initialiser l'hébergement (une seule fois)</span>
+<span class="p">PS&gt;</span> <span class="k">firebase</span> init hosting
+<span class="c">#    → projet : votre projet Firebase</span>
+<span class="c">#    → dossier public : dist</span>
+<span class="c">#    → single-page app : OUI (réécrit les routes vers index.html)</span>
+<span class="c">#    crée firebase.json (config) et .firebaserc (alias)</span>
+
+<span class="c"># 3. Déployer</span>
+<span class="p">PS&gt;</span> <span class="k">firebase</span> deploy --only hosting
+<span class="c">#    → en ligne sur votreprojet.web.app + .firebaseapp.com</span></pre>
+      </div>
+
+      <h4>🔐 Règles de sécurité Firestore (le garde-fou le plus oublié)</h4>
+      <p>Exemple concret pour l'app trottinettes&nbsp;:</p>
+      <div class="terminal">
+        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">firestore.rules</span></div>
+<pre><span class="k">rules_version</span> = <span class="s">'2'</span>;
+<span class="k">service</span> cloud.firestore {
+  match /databases/{database}/documents {
+
+    <span class="c">// Catalogue : lecture publique, écriture client interdite</span>
+    match /scooters/{scooterId} {
+      <span class="k">allow read</span>:  <span class="k">if</span> true;
+      <span class="k">allow write</span>: <span class="k">if</span> false;
+    }
+
+    <span class="c">// Locations : chacun ne gère QUE les siennes</span>
+    match /rentals/{rentalId} {
+      <span class="k">allow read</span>:   <span class="k">if</span> request.auth != null
+                    &amp;&amp; resource.data.userId == request.auth.uid;
+      <span class="k">allow create</span>: <span class="k">if</span> request.auth != null
+                    &amp;&amp; request.resource.data.userId == request.auth.uid;
+      <span class="k">allow update, delete</span>: <span class="k">if</span> request.auth != null
+                    &amp;&amp; resource.data.userId == request.auth.uid;
+    }
+  }
+}</pre>
+      </div>
+      <p>Lecture des trottinettes publique (<code>read: if true</code>), mais écriture bloquée côté client (<code>write: if false</code>) — pas question qu'un utilisateur invente des trottinettes. Pour les locations, <code>request.auth.uid</code> garantit qu'on ne touche que <strong>ses propres</strong> documents. On déploie avec&nbsp;:</p>
+      <div class="terminal">
+        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">déployer les règles</span></div>
+<pre><span class="p">PS&gt;</span> <span class="k">firebase</span> deploy --only firestore:rules</pre>
+      </div>
+      <div class="callout danger">
+        <span class="label">🛡️ Le double bénéfice à souligner</span>
+        <p>Ces règles protègent les <strong>données</strong> (pas de fuite ni de modification non autorisée) <em>et</em> le <strong>budget</strong>&nbsp;: une base ouverte en écriture, c'est la porte ouverte à l'abus et aux coûts qui s'envolent — bien plus que l'hébergement lui-même.</p>
+      </div>
+
+      <div class="callout tip">
+        <span class="label">🧪 Tester avant de publier</span>
+        <p>Firebase fournit un émulateur local qui sert l'app à une URL locale (souvent <code>localhost:5000</code>), et des URL de prévisualisation temporaires pour partager ses changements avant le live.</p>
+      </div>
+      <div class="callout info">
+        <span class="label">🏗️ Bon à savoir</span>
+        <p>Comme on est sur Blaze, l'option <strong>App Hosting</strong> (full-stack, rendu serveur) est disponible si besoin. Mais pour cette app — PWA front + Firebase Auth/Firestore — <strong>Hosting classique</strong> reste plus simple et largement suffisant.</p>
+      </div>
+    </div>
+
+    <div class="callout teal">
+      <span class="label">🧭 Le résumé du parcours</span>
+      <p><code>Installer (VS Code + Claude Code + Firebase CLI)</code> → <code>Maquetter les écrans</code> → <code>Scaffolder + coder écran par écran (PWA + Firebase)</code> → <code>npm run build</code> → <code>firebase deploy</code>. Une intention de départ, une app installable en prod à l'arrivée.</p>
+    </div>
+
+    <div class="deepdive">
+      <p class="dd-head">🔭 Pour aller plus loin</p>
+      <p class="dd-note">Non abordé dans les 30 min — approfondir la stack PWA + Firebase</p>
+      <ul>
+        <li><b>Cours «&nbsp;Learn PWA&nbsp;» (web.dev)</b>&nbsp;: un cours gratuit et complet pour vraiment comprendre manifeste, service workers, cache et installabilité. → <a href="https://web.dev/learn/pwa">web.dev/learn/pwa</a></li>
+        <li><b><code>vite-plugin-pwa</code></b>&nbsp;: génère le manifeste et le service worker (via Workbox) automatiquement, au lieu de tout écrire à la main. → <a href="https://vite-pwa-org.netlify.app">vite-pwa-org.netlify.app</a></li>
+        <li><b>Service workers en profondeur</b>&nbsp;: cycle de vie, stratégies de cache, mises à jour. → <a href="https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API">MDN</a> · <a href="https://developer.chrome.com/docs/workbox">Workbox</a></li>
+        <li><b>Firestore avancé</b>&nbsp;: modélisation des données et persistance hors-ligne pour une vraie expérience offline. → <a href="https://firebase.google.com/docs/firestore/data-model">Modèle de données</a> · <a href="https://firebase.google.com/docs/firestore/manage-data/enable-offline">Mode hors-ligne</a></li>
+        <li><b>Authentification</b>&nbsp;: connexion Google ou e-mail/mot de passe + protection des routes selon l'état de connexion. → <a href="https://firebase.google.com/docs/auth/web/start">Firebase Auth (web)</a></li>
+        <li><b>Règles de sécurité testées</b>&nbsp;: écrire des tests automatisés sur ses règles Firestore avec l'émulateur. → <a href="https://firebase.google.com/docs/rules/unit-tests">Tester les règles</a></li>
+        <li><b>App Check</b>&nbsp;: bloquer les appels de clients illégitimes — protège les données <em>et</em> le budget. → <a href="https://firebase.google.com/docs/app-check">App Check</a></li>
+        <li><b>Déploiement automatique (CI/CD)</b>&nbsp;: publier à chaque <code>push</code> via l'intégration GitHub de Firebase. → <a href="https://firebase.google.com/docs/hosting/github-integration">Hosting + GitHub</a></li>
+        <li><b>Notifications push</b>&nbsp;: Firebase Cloud Messaging côté web («&nbsp;votre trottinette est réservée&nbsp;»). → <a href="https://firebase.google.com/docs/cloud-messaging/js/client">FCM (web)</a></li>
+        <li><b>Carte &amp; géoloc</b>&nbsp;: afficher les trottinettes sur une carte avec la position de l'utilisateur. → <a href="https://leafletjs.com">Leaflet</a> <em>[Recommandé&nbsp;: gratuit, sans clé]</em> · <a href="https://developers.google.com/maps/documentation/javascript">Google Maps JS</a></li>
+        <li><b>Vers le natif</b>&nbsp;: empaqueter la PWA en app de store (iOS/Android) avec Capacitor. → <a href="https://capacitorjs.com/docs">Capacitor</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 4. ANTISÈCHE ============ -->
+  <section id="antiseche">
+    <p class="eyebrow">// Partie 04</p>
+    <h2 class="sect"><span class="emoji">📋</span>Antisèche — commandes &amp; raccourcis<span class="sect-time">📌 référence</span></h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Élément</th><th>Commande / action</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Élément">Installer le CLI (natif, <strong>PowerShell</strong>)</td><td data-label="Commande / action"><code>irm https://claude.ai/install.ps1 | iex</code></td></tr>
+          <tr><td data-label="Élément">Installer le CLI (npm, Node 18+)</td><td data-label="Commande / action"><code>npm install -g @anthropic-ai/claude-code</code></td></tr>
+          <tr><td data-label="Élément">Vérifier l'installation</td><td data-label="Commande / action"><code>claude --version</code></td></tr>
+          <tr><td data-label="Élément">Diagnostic</td><td data-label="Commande / action"><code>claude doctor</code></td></tr>
+          <tr><td data-label="Élément">Lancer dans le terminal</td><td data-label="Commande / action"><code>claude</code></td></tr>
+          <tr><td data-label="Élément">Extension VS Code</td><td data-label="Commande / action">Marketplace → «&nbsp;Claude Code&nbsp;» (éditeur <em>anthropic</em>), VS Code ≥ 1.98</td></tr>
+          <tr><td data-label="Élément">Ouvrir le panneau</td><td data-label="Commande / action">Icône ✱ (fichier ouvert) ou <code>Ctrl/Cmd+Shift+P</code> → «&nbsp;Claude Code&nbsp;»</td></tr>
+          <tr><td data-label="Élément">Référencer un fichier</td><td data-label="Commande / action"><code>@</code> dans le prompt</td></tr>
+          <tr><td data-label="Élément">Multi-lignes dans le terminal</td><td data-label="Commande / action"><code>/terminal-setup</code> (active <code>Shift+Entrée</code>)</td></tr>
+          <tr><td data-label="Élément">Mémoire de projet</td><td data-label="Commande / action">fichier <code>CLAUDE.md</code> à la racine</td></tr>
+          <tr><td data-label="Élément">Installer Firebase CLI</td><td data-label="Commande / action"><code>npm install -g firebase-tools</code></td></tr>
+          <tr><td data-label="Élément">Se connecter à Firebase</td><td data-label="Commande / action"><code>firebase login</code></td></tr>
+          <tr><td data-label="Élément">Vérifier la connexion</td><td data-label="Commande / action"><code>firebase projects:list</code></td></tr>
+          <tr><td data-label="Élément">Build de prod (Vite)</td><td data-label="Commande / action"><code>npm run build</code> (dossier <code>dist/</code>)</td></tr>
+          <tr><td data-label="Élément">Initialiser l'hébergement</td><td data-label="Commande / action"><code>firebase init hosting</code> (public&nbsp;: <code>dist</code>, SPA&nbsp;: oui)</td></tr>
+          <tr><td data-label="Élément">Déployer en prod</td><td data-label="Commande / action"><code>firebase deploy --only hosting</code></td></tr>
+          <tr><td data-label="Élément">Déployer les règles Firestore</td><td data-label="Commande / action"><code>firebase deploy --only firestore:rules</code></td></tr>
+          <tr><td data-label="Élément">Tester en local</td><td data-label="Commande / action"><code>firebase serve</code> / émulateur (≈ <code>localhost:5000</code>)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ 5. CONSOMMATION ============ -->
+  <section id="conso">
+    <p class="eyebrow">// Partie 05</p>
+    <h2 class="sect"><span class="emoji">⚡</span>Maîtriser sa consommation (tokens &amp; contexte)<span class="sect-time">⏱️ ~6 min</span></h2>
+
+    <div class="callout info">
+      <span class="label">🧠 Pourquoi c'est important</span>
+      <p>Claude Code raisonne à partir d'une <strong>fenêtre de contexte</strong> de taille limitée&nbsp;: vos messages, les fichiers qu'il lit, les sorties de commandes… s'y accumulent. Deux conséquences&nbsp;: chaque token a un <strong>coût</strong> (sur un compte facturé à l'usage ou via l'API), et surtout, quand la fenêtre se remplit, l'agent <strong>«&nbsp;oublie&nbsp;»</strong>, devient moins précis et plus lent. Maîtriser le contexte, c'est obtenir des réponses <strong>plus justes, plus rapides et moins chères</strong>.</p>
+    </div>
+
+    <h3>Les bons réflexes</h3>
+    <ul>
+      <li><strong>Ne donnez que les fichiers utiles</strong> avec <code>@fichier</code>, au lieu de laisser l'agent explorer tout le dépôt&nbsp;: c'est le plus gros levier d'économie.</li>
+      <li><strong>Gardez un <code>CLAUDE.md</code> court.</strong> Des règles brèves et toujours vraies évitent de tout réexpliquer… mais un <code>CLAUDE.md</code> trop long se paie à <em>chaque</em> message. Restez concis.</li>
+      <li><strong>Découpez en tâches courtes.</strong> Une nouvelle tâche = un contexte frais. Les longues sessions traînent un historique inutile qui coûte des tokens à chaque tour.</li>
+      <li><strong>Surveillez et nettoyez.</strong> <code>/context</code> montre où part la fenêtre, <code>/compact</code> la résume quand elle se remplit, <code>/clear</code> repart à zéro entre deux tâches sans rapport.</li>
+      <li><strong>Déléguez aux sous-agents.</strong> Confier une sous-tâche (exploration, revue) à un sous-agent garde la conversation principale légère.</li>
+      <li><strong>Choisissez le bon modèle.</strong> Un modèle léger (type Haiku) suffit pour des tâches simples&nbsp;; gardez un modèle puissant (type Opus) pour les tâches complexes. Coupez le raisonnement étendu quand il est inutile.</li>
+      <li><strong>Évitez de coller de gros blocs</strong> (logs entiers, fichiers volumineux)&nbsp;: résumez, ou pointez le fichier avec <code>@</code>.</li>
+    </ul>
+
+    <div class="callout tip">
+      <span class="label">⌨️ Les commandes à connaître</span>
+      <p><code>/context</code> — voir ce qui occupe la fenêtre · <code>/compact</code> — résumer/compacter le contexte · <code>/clear</code> — repartir d'un contexte vierge · <code>/model</code> — changer de modèle.</p>
+    </div>
+
+    <div class="deepdive">
+      <p class="dd-head">🔭 Pour aller plus loin</p>
+      <p class="dd-note">Docs officielles pour creuser</p>
+      <ul>
+        <li><b>Maîtriser les coûts</b>&nbsp;: suivre l'usage, fixer des limites, réduire la consommation. → <a href="https://code.claude.com/docs/en/costs">code.claude.com/docs — Costs</a></li>
+        <li><b>La fenêtre de contexte</b>&nbsp;: ce qui se charge automatiquement, ce que coûte chaque lecture, quand la compaction se déclenche. → <a href="https://code.claude.com/docs/en/context-window">Context window</a></li>
+        <li><b>Mémoire &amp; <code>CLAUDE.md</code></b>&nbsp;: bien doser les instructions persistantes. → <a href="https://code.claude.com/docs/en/memory">Memory</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 6. LIENS UTILES ============ -->
+  <section id="liens">
+    <p class="eyebrow">// Partie 06</p>
+    <h2 class="sect"><span class="emoji">🔗</span>Liens utiles — sites, docs &amp; tutos<span class="sect-time">🧭 à explorer</span></h2>
+    <p class="lead">Toutes les ressources officielles pour creuser après la présentation.</p>
+
+    <div class="links-grid">
+
+      <div class="link-card">
+        <h3>🤖 Claude Code &amp; Anthropic</h3>
+        <ul>
+          <li><a href="https://docs.claude.com/en/docs/claude-code/overview">Documentation Claude Code</a><span class="desc">Le point de départ officiel</span></li>
+          <li><a href="https://claude.com/product/claude-code">Page produit Claude Code</a><span class="desc">Présentation &amp; cas d'usage</span></li>
+          <li><a href="https://claude.com/download">Téléchargements (CLI + appli bureau)</a></li>
+          <li><a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">Extension VS Code</a><span class="desc">éditeur anthropic</span></li>
+          <li><a href="https://github.com/anthropics/claude-code">Dépôt GitHub</a><span class="desc">Issues, exemples, plugins</span></li>
+          <li><a href="https://anthropic.skilljar.com">Anthropic Academy</a><span class="desc">Cours gratuits (Claude Code in Action, 101…)</span></li>
+          <li><a href="https://code.claude.com/docs/en/best-practices">Best practices Claude Code</a><span class="desc">Patterns recommandés</span></li>
+          <li><a href="https://code.claude.com/docs/en/features-overview">Skills, sous-agents, hooks, MCP, plugins</a><span class="desc">La stack d'extension</span></li>
+          <li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview">Guide de prompt engineering</a><span class="desc">Écrire de meilleurs prompts</span></li>
+          <li><a href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a><span class="desc">Connecter des outils externes</span></li>
+          <li><a href="https://support.claude.com">Centre d'aide</a></li>
+        </ul>
+      </div>
+
+      <div class="link-card">
+        <h3>📱 Front &amp; PWA</h3>
+        <ul>
+          <li><a href="https://web.dev/learn/pwa">web.dev — Learn PWA (cours)</a><span class="desc">Cours gratuit complet</span></li>
+          <li><a href="https://vite.dev">Vite</a><span class="desc">Build tool front (dev + prod)</span></li>
+          <li><a href="https://vite-pwa-org.netlify.app">vite-plugin-pwa</a><span class="desc">Manifeste + service worker auto</span></li>
+          <li><a href="https://web.dev/explore/progressive-web-apps">web.dev — PWA</a><span class="desc">La référence (Google)</span></li>
+          <li><a href="https://developer.mozilla.org/fr/docs/Web/Progressive_web_apps">MDN — PWA</a></li>
+          <li><a href="https://developer.mozilla.org/fr/docs/Web/API/Service_Worker_API">MDN — Service Workers</a></li>
+          <li><a href="https://developer.chrome.com/docs/workbox">Workbox</a><span class="desc">Stratégies de cache hors-ligne</span></li>
+          <li><a href="https://developer.chrome.com/docs/lighthouse/overview">Lighthouse</a><span class="desc">Auditer l'installabilité PWA</span></li>
+          <li><a href="https://capacitorjs.com">Capacitor</a><span class="desc">Empaqueter une PWA en app de store</span></li>
+        </ul>
+      </div>
+
+      <div class="link-card">
+        <h3>🔥 Firebase (back)</h3>
+        <ul>
+          <li><a href="https://firebase.google.com/docs/hosting">Hosting</a><span class="desc">Déployer la PWA en HTTPS</span></li>
+          <li><a href="https://firebase.google.com/docs/firestore">Firestore</a><span class="desc">Base de données</span></li>
+          <li><a href="https://firebase.google.com/docs/firestore/security/get-started">Règles de sécurité</a><span class="desc">Le garde-fou essentiel</span></li>
+          <li><a href="https://firebase.google.com/docs/auth">Authentication</a></li>
+          <li><a href="https://firebase.google.com/docs/emulator-suite">Emulator Suite</a><span class="desc">Tester en local</span></li>
+          <li><a href="https://firebase.google.com/docs/cloud-messaging">Cloud Messaging (push)</a></li>
+          <li><a href="https://firebase.google.com/docs/app-check">App Check</a><span class="desc">Anti-abus</span></li>
+          <li><a href="https://firebase.google.com/docs/cli">Firebase CLI</a> · <a href="https://console.firebase.google.com">Console</a></li>
+          <li><a href="https://cloud.google.com/billing/docs/how-to/budgets">Budgets &amp; alertes (Google Cloud)</a><span class="desc">Maîtriser le plan Blaze</span></li>
+        </ul>
+      </div>
+
+      <div class="link-card">
+        <h3>🧰 Outils de base</h3>
+        <ul>
+          <li><a href="https://code.visualstudio.com">VS Code</a></li>
+          <li><a href="https://nodejs.org">Node.js</a></li>
+          <li><a href="https://git-scm.com">Git</a></li>
+          <li><a href="https://learn.microsoft.com/windows/package-manager/winget/">winget (Windows 11)</a><span class="desc">Installer les outils en une commande</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 7. FINALE ============ -->
+  <section id="finale">
+    <div class="finale">
+      <p class="eyebrow">// Partie 07</p>
+      <h2>🎯 Le fil rouge à retenir<span class="sect-time" style="color:#fff;background:rgba(255,255,255,.12);">⏱️ ~1 min</span></h2>
+      <p class="flow">Prompt clair → l'agent agit sur tout le projet → vous lisez le diff → vous validez.</p>
+      <p>Claude Code&nbsp;+&nbsp;VS Code permet de passer d'une <strong>intention</strong> à un site web fonctionnel, puis à une PWA installable déployée en prod, en restant celui qui <strong>comprend et valide</strong> le code. L'outil amplifie le développeur&nbsp;; il ne le remplace pas.</p>
+    </div>
+  </section>
+
+</div>
+
+<nav class="navbar" aria-label="Navigation des sections">
+  <a href="#top"><span class="ic">📑</span>Haut</a>
+  <a href="#plan" data-sec="plan"><span class="ic">🗺️</span>Parcours</a>
+  <a href="#detail" data-sec="detail"><span class="ic">🎬</span>Tutoriel</a>
+  <a href="#pratique" data-sec="pratique"><span class="ic">🛴</span>Pratique</a>
+  <a href="#antiseche" data-sec="antiseche"><span class="ic">📋</span>Antisèche</a>
+  <a href="#conso" data-sec="conso"><span class="ic">⚡</span>Conso</a>
+  <a href="#liens" data-sec="liens"><span class="ic">🔗</span>Liens</a>
+  <a href="#finale" data-sec="finale"><span class="ic">🎯</span>Retenir</a>
+</nav>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navbar a[data-sec]'));
+  var map = {};
+  links.forEach(function(l){ map[l.getAttribute('data-sec')] = l; });
+  if(!('IntersectionObserver' in window)) return;
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        var a = map[e.target.id];
+        if(a){ a.classList.add('active'); a.scrollIntoView({block:'nearest', inline:'nearest'}); }
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  ['plan','detail','pratique','antiseche','conso','liens','finale'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) obs.observe(el);
+  });
+})();
+</script>
+
+</body>
+</html>
