@@ -140,15 +140,16 @@
   }
   .learning-card ul{margin:0;padding-left:20px;}
   .checkpoint{
-    border:1.5px solid var(--teal);
-    background:var(--teal-soft);
+    border:1px solid var(--line);
+    background:#F4F6F9;
+    border-left:4px solid #94A3B8;
     border-radius:var(--radius);
     padding:15px 18px;
     margin:18px 0;
   }
   .checkpoint .label{
     font-family:'Space Grotesk',sans-serif;font-weight:700;
-    color:#0F766E;display:block;margin-bottom:4px;
+    color:#334155;display:block;margin-bottom:4px;
   }
   .path-note{
     display:inline-block;
@@ -177,8 +178,22 @@
   .callout.danger{border-color:var(--danger);background:var(--danger-soft);}
   .callout.danger .label{color:#B91C1C;}
   .callout.info .label{color:var(--primary);}
-  .callout.teal{border-color:var(--teal);background:var(--teal-soft);}
-  .callout.teal .label{color:#0F766E;}
+
+  /* ---------- Légende des couleurs d'encarts ---------- */
+  .legend-intro{font-size:.9rem;color:var(--ink-soft);margin:14px 0 8px;}
+  .legend-colors{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 32px;}
+  .legend-colors .lc{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:.82rem;color:var(--ink-soft);
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:999px;padding:5px 13px 5px 9px;
+  }
+  .legend-colors .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto;}
+  .legend-colors b{color:var(--ink);font-weight:600;}
+  .legend-colors .dot.info{background:var(--primary);}
+  .legend-colors .dot.tip{background:var(--tip);}
+  .legend-colors .dot.warn{background:var(--warn);}
+  .legend-colors .dot.danger{background:var(--danger);}
 
   /* ---------- Terminal blocks ---------- */
   .terminal{
@@ -229,6 +244,28 @@
     margin:0;padding:15px 18px;
     font-family:var(--mono);font-size:.85rem;line-height:1.6;
     white-space:pre-wrap;color:#1E293B;
+  }
+
+  /* ---------- Bouton copier (terminaux & prompts) ---------- */
+  .copy-btn{
+    margin-left:auto;flex:0 0 auto;
+    display:inline-flex;align-items:center;gap:5px;
+    background:rgba(255,255,255,.08);color:#CBD5E1;
+    border:1px solid rgba(255,255,255,.18);border-radius:7px;
+    padding:3px 9px;cursor:pointer;line-height:1;
+    font-family:var(--mono);font-size:.7rem;font-weight:600;
+    transition:background .15s,color .15s,border-color .15s;
+  }
+  .copy-btn:hover{background:rgba(255,255,255,.16);color:#fff;}
+  .copy-btn svg{width:13px;height:13px;}
+  .copy-btn.copied{color:var(--term-green);border-color:var(--term-green);}
+  /* variante claire dans l'en-tête des prompts (fond clair) */
+  .prompt .copy-btn{background:#fff;color:var(--primary);border-color:#C7D2FE;}
+  .prompt .copy-btn:hover{background:var(--primary-soft);color:var(--primary);}
+  .prompt .copy-btn.copied{color:#15803D;border-color:#15803D;}
+  @media (max-width:600px){
+    .copy-btn .cl{display:none;}   /* icône seule sur téléphone */
+    .copy-btn{padding:4px 7px;}
   }
 
   /* ---------- Tables ---------- */
@@ -631,9 +668,9 @@
     <h1>Agents IA de développement 🚀</h1>
     <p class="sub">Prise en main un assistant de code agentique puis construire un site, une PWA et comprendre le chemin jusqu'à la mise en production</p>
     <div class="meta-row">
-      <span class="meta">🧩 Niveau&nbsp;: <b>débutant accompagné</b></span>
-      <span class="meta">⏱️ Durée&nbsp;: <b>~1 h</b> (Parties 1 à 3)</span>
-      <span class="meta">🎯 Livrable&nbsp;: <b>site + PWA déployable</b></span>
+      <span class="meta">🧩 <b>débutant accompagné</b></span>
+      <span class="meta">⏱️ <b>~1h15</b> (Parties 1 à 3)</span>
+      <span class="meta">🎯 <b>Site + PWA déployable</b></span>
     </div>
   </div>
 </header>
@@ -669,6 +706,14 @@
   <div class="callout info">
     <span class="label">🧭 Comment suivre ce cours</span>
     <p>Le <strong>parcours court</strong> vous donne les fondamentaux et une première PWA. Les commandes affichées sont celles de Claude Code, mais chaque fois que vous voyez «&nbsp;l'agent&nbsp;», pensez «&nbsp;votre assistant de développement&nbsp;». Les blocs <strong>Pour aller plus loin</strong>, Firebase, sécurité et liens utiles sont des bonus à faire ensuite, ou à garder comme référence.</p>
+  </div>
+
+  <p class="legend-intro">🎨 <strong>Code couleur des encarts</strong> (pour s'y repérer)&nbsp;:</p>
+  <div class="legend-colors" aria-label="Code couleur des encarts">
+    <span class="lc"><span class="dot info"></span><b>Violet</b>&nbsp;— pédagogie</span>
+    <span class="lc"><span class="dot tip"></span><b>Vert</b>&nbsp;— réalisation</span>
+    <span class="lc"><span class="dot warn"></span><b>Orange</b>&nbsp;— à surveiller</span>
+    <span class="lc"><span class="dot danger"></span><b>Rouge</b>&nbsp;— sécurité</span>
   </div>
 
   <!-- ============ 1. PLAN ============ -->
@@ -730,7 +775,7 @@
     <h2 class="sect"><span class="emoji">🎬</span>Le tutoriel pas à pas<span class="sect-time">⏱️ ~30 min</span></h2>
 
     <h3>1️⃣ Comprendre les agents IA de développement <span style="color:var(--teal);font-size:.8rem;">(4 min)</span></h3>
-    <div class="callout teal">
+    <div class="callout info">
       <span class="label">🎯 L’idée clé en une phrase</span>
       <p>«&nbsp;Un assistant agentique de développement n'est pas une autocomplétion intelligente ligne par ligne. C'est un <strong>agent</strong> qui peut comprendre un projet, lire des fichiers, proposer ou appliquer des modifications, lancer des commandes selon ses permissions, puis vous présenter un résultat que <strong>vous validez</strong>.&nbsp;»</p>
     </div>
@@ -845,7 +890,7 @@
       <li><strong>4. Le diff 🔍</strong> — votre code review&nbsp;: vert = ajouts, rouge = suppressions. On accepte, rejette ou révise, <em>jamais à l'aveugle.</em></li>
       <li><strong>5. Les checkpoints ⏪</strong> — des points de restauration pour revenir en arrière si une modif casse&nbsp;; à combiner avec Git.</li>
     </ul>
-    <div class="callout teal">
+    <div class="callout info">
       <span class="label">➡️ À vous de jouer</span>
       <p>Avec ces cinq notions — prompt clair, contexte ciblé, mémoire de projet, diff, checkpoint — vous savez déjà piloter un agent de développement. Le reste, c'est de la pratique&nbsp;: passons-y.</p>
     </div>
@@ -875,7 +920,7 @@ chauds (brun/crème).</pre>
       <span class="label">📌 Le point clé</span>
       <p>La qualité du résultat est proportionnelle à la qualité du prompt&nbsp;: vague → générique, précis et contraint → exploitable. Soigner son prompt est le réflexe n°1 à acquérir.</p>
     </div>
-    <div class="callout warn">
+    <div class="callout info">
       <span class="label">🐞 Si vous tombez sur un bug</span>
       <p>Dites-le simplement&nbsp;: «&nbsp;il y a un bug, le menu déborde sur mobile, corrige-le&nbsp;». L'agent lit, diagnostique et propose un correctif. À retenir&nbsp;: <em>l'agent se trompe parfois</em> — d'où l'importance de relire le diff et de tester.</p>
     </div>
@@ -885,7 +930,7 @@ chauds (brun/crème).</pre>
     </div>
 
     <h3>5️⃣ Transformer le site en PWA installable <span style="color:var(--teal);font-size:.8rem;">(6 min)</span></h3>
-    <div class="callout teal">
+    <div class="callout info">
       <span class="label">📱 C'est quoi une PWA&nbsp;? (3 briques à connaître)</span>
       <p>Une <strong>PWA</strong> (Progressive Web App) est un site web qui s'installe sur le téléphone et se comporte comme une app native. Trois ingrédients&nbsp;:</p>
       <ul>
@@ -945,7 +990,7 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
     </div>
 
     <h3>6️⃣ Bonnes pratiques, limites &amp; pour aller plus loin <span style="color:var(--teal);font-size:.8rem;">(2 min)</span></h3>
-    <div class="callout tip">
+    <div class="callout info">
       <span class="label">✅ Bonnes pratiques</span>
       <ul>
         <li><strong>Toujours lire le diff.</strong> L'outil accélère, il ne dispense pas de comprendre.</li>
@@ -993,7 +1038,7 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
   <section id="pratique">
     <p class="eyebrow">// Partie 03</p>
     <h2 class="sect"><span class="emoji">🛴</span>Cas pratique de bout en bout<span class="sect-time">⏱️ ~25 min</span></h2>
-    <div class="callout teal">
+    <div class="callout info">
       <span class="label">🎙️ Le scénario fil rouge</span>
       <p>«&nbsp;J'allume mon PC, je veux faire une app web pour téléphone — de la <strong>location et vente de trottinettes</strong>. Qu'est-ce que j'installe&nbsp;? Comment je maquette les écrans&nbsp;? Comment je commence à coder&nbsp;? Et comment je déploie une version de prod, sachant que côté back j'ai choisi <strong>Firebase</strong>&nbsp;?&nbsp;» — un parcours linéaire en 4 étapes.</p>
     </div>
@@ -1216,7 +1261,7 @@ et un cas "aucune trottinette".</pre>
         <p>Firebase fournit un émulateur local qui sert l'app à une URL locale (souvent <code>localhost:5000</code>), et des URL de prévisualisation temporaires pour partager ses changements avant le live.</p>
       </div>
       <div class="callout info">
-        <span class="label">🏗️ Bon à savoir</span>
+        <span class="label">🏗️ En option : App Hosting</span>
         <p>Comme on est sur Blaze, l'option <strong>App Hosting</strong> (full-stack, rendu serveur) est disponible si besoin. Mais pour cette app — PWA front + Firebase Auth/Firestore — <strong>Hosting classique</strong> reste plus simple et largement suffisant.</p>
       </div>
     </div>
@@ -1256,7 +1301,7 @@ et un cas "aucune trottinette".</pre>
       <figcaption>Une intention de départ&nbsp;: une app installable en prod à l'arrivée.</figcaption>
     </figure>
 
-    <div class="callout teal">
+    <div class="callout info">
       <span class="label">🧭 Le résumé du parcours</span>
       <p><code>Installer (VS Code + assistant agentique + Firebase CLI)</code> → <code>Maquetter les écrans</code> → <code>Scaffolder + coder écran par écran (PWA + Firebase)</code> → <code>npm run build</code> → <code>firebase deploy</code>. Une intention de départ, une app installable en prod à l'arrivée.</p>
     </div>
@@ -1616,6 +1661,61 @@ et un cas "aucune trottinette".</pre>
   ['plan','detail','pratique','antiseche','conso','liens','validation'].forEach(function(id){
     var el = document.getElementById(id);
     if(el) obs.observe(el);
+  });
+})();
+</script>
+
+<script>
+/* Bouton « copier » sur chaque bloc terminal (commandes) et chaque prompt. */
+(function(){
+  var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+
+  // Pour un terminal : retire le prompt « PS> » en tête de ligne pour un collage propre.
+  function terminalText(pre){
+    return pre.textContent.split('\n')
+      .map(function(l){ return l.replace(/^\s*PS>\s?/, ''); })
+      .join('\n').replace(/\s+$/, '');
+  }
+
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  function addButton(host, getText){
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'copy-btn';
+    b.setAttribute('aria-label', 'Copier');
+    b.innerHTML = ICON + '<span class="cl">Copier</span>';
+    b.addEventListener('click', function(){
+      var text = getText();
+      var ok = function(){
+        b.classList.add('copied');
+        b.querySelector('.cl').textContent = 'Copié !';
+        setTimeout(function(){
+          b.classList.remove('copied');
+          b.querySelector('.cl').textContent = 'Copier';
+        }, 1600);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(ok, function(){ fallbackCopy(text); ok(); });
+      } else { fallbackCopy(text); ok(); }
+    });
+    host.appendChild(b);
+  }
+
+  document.querySelectorAll('.terminal').forEach(function(t){
+    var bar = t.querySelector('.bar'), pre = t.querySelector('pre');
+    if(bar && pre) addButton(bar, function(){ return terminalText(pre); });
+  });
+  document.querySelectorAll('.prompt').forEach(function(p){
+    var head = p.querySelector('.phead'), pre = p.querySelector('pre');
+    if(head && pre) addButton(head, function(){ return pre.textContent.replace(/\s+$/, ''); });
   });
 })();
 </script>

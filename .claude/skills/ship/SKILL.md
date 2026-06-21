@@ -15,10 +15,13 @@ les envoie sur demande.
 
 ## Procédure
 
+> Toutes les commandes s'exécutent depuis la racine du repo (le répertoire de travail courant) —
+> chemins relatifs, pas de `-C "<chemin absolu>"`.
+
 1. **Montrer ce qui va partir** :
    ```
-   git -C "d:\Perso\ClaudePlugins" status --short
-   git -C "d:\Perso\ClaudePlugins" diff --stat
+   git status --short
+   git diff --stat
    ```
    Résumer en une ligne ce qui change. S'il n'y a rien à committer, le dire et s'arrêter.
 
@@ -36,7 +39,7 @@ les envoie sur demande.
 
 4. **Committer** (heredoc pour un message multi-lignes) :
    ```bash
-   git -C "d:\Perso\ClaudePlugins" commit -m "$(cat <<'EOF'
+   git commit -m "$(cat <<'EOF'
    type(scope): description
 
    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
@@ -44,7 +47,7 @@ les envoie sur demande.
    )"
    ```
 
-5. **Pousser** : `git -C "d:\Perso\ClaudePlugins" push`. Confirmer le résultat (branche, hash court).
+5. **Pousser** : `git push`. Confirmer le résultat (branche, hash court).
 
 ## Notes
 
