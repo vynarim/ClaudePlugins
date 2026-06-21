@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guide — Claude Code + VS Code en 30 min</title>
+<title>Autoformation — Agents IA de développement + VS Code</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -89,28 +89,6 @@
   }
   .meta b{color:#fff;font-weight:600;}
 
-  /* ---------- TOC ---------- */
-  .toc{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:20px 24px;
-    margin-bottom:38px;
-  }
-  .toc h2{font-family:'Space Grotesk',sans-serif;font-size:.95rem;margin:0 0 12px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);}
-  .toc ol{margin:0;padding-left:0;list-style:none;counter-reset:toc;}
-  .toc li{counter-increment:toc;margin:7px 0;}
-  .toc a{
-    text-decoration:none;color:var(--ink);font-weight:500;
-    display:flex;align-items:baseline;gap:12px;
-  }
-  .toc a:hover{color:var(--primary);}
-  .toc a::before{
-    content:counter(toc,decimal-leading-zero);
-    font-family:var(--mono);font-size:.82rem;color:var(--primary);
-    min-width:26px;font-weight:600;
-  }
-
   /* ---------- Sections ---------- */
   section{margin:0 0 46px;}
   .eyebrow{
@@ -145,6 +123,38 @@
   }
   .lead{
     font-size:1.05rem;color:var(--ink-soft);
+  }
+
+  /* ---------- Learning aids ---------- */
+  .learning-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:16px;margin:22px 0 34px;
+  }
+  .learning-card{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:18px 20px;
+  }
+  .learning-card h2,.learning-card h3{
+    margin:0 0 10px;font-size:1.05rem;
+    display:flex;align-items:center;gap:8px;
+  }
+  .learning-card ul{margin:0;padding-left:20px;}
+  .checkpoint{
+    border:1.5px solid var(--teal);
+    background:var(--teal-soft);
+    border-radius:var(--radius);
+    padding:15px 18px;
+    margin:18px 0;
+  }
+  .checkpoint .label{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;
+    color:#0F766E;display:block;margin-bottom:4px;
+  }
+  .path-note{
+    display:inline-block;
+    font-family:var(--mono);font-size:.76rem;font-weight:600;
+    color:#334155;background:#F1F5F9;border:1px solid var(--line);
+    padding:3px 9px;border-radius:999px;margin-left:8px;
   }
 
   /* ---------- Callouts ---------- */
@@ -280,6 +290,33 @@
     padding:18px 22px 14px;
     margin:26px 0 10px;
   }
+  details.deepdive summary,
+  details.whybox summary{
+    cursor:pointer;
+    list-style:none;
+  }
+  details.deepdive summary::-webkit-details-marker,
+  details.whybox summary::-webkit-details-marker{display:none;}
+  details.deepdive summary .dd-head,
+  details.whybox summary h4{margin-bottom:2px;}
+  details.deepdive summary::after,
+  details.whybox summary::after{
+    content:"Ouvrir";
+    display:inline-block;
+    font-family:var(--mono);font-size:.72rem;font-weight:700;
+    color:var(--primary);background:#fff;border:1px solid #C7D2FE;
+    border-radius:999px;padding:3px 9px;margin:8px 0 0;
+  }
+  details.deepdive[open] summary::after,
+  details.whybox[open] summary::after{content:"Réduire";}
+  .short-version{
+    background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 18px;margin:18px 0;
+  }
+  .short-version .label{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;
+    display:block;margin-bottom:4px;color:var(--teal);
+  }
   .deepdive .dd-head{
     font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.02rem;
     color:var(--primary);margin:0 0 2px;display:flex;align-items:center;gap:8px;
@@ -326,33 +363,145 @@
   .whybox .free{color:#15803D;font-weight:600;}
   .whybox table{margin:14px 0 4px;}
 
+  /* ---------- Infographie : boucle agentique ---------- */
+  .loopviz{
+    margin:22px 0 30px;
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:
+      radial-gradient(120% 120% at 100% 0%, rgba(79,70,229,.06), transparent 55%),
+      linear-gradient(180deg,#FFFFFF,#FBFBFE);
+    padding:24px 20px 16px;
+  }
+  .loopviz-steps{
+    display:flex;align-items:stretch;justify-content:center;gap:6px;flex-wrap:wrap;
+  }
+  .lv-step{
+    flex:1 1 150px;min-width:138px;max-width:215px;
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:15px 13px;text-align:center;
+    display:flex;flex-direction:column;gap:5px;
+    box-shadow:0 10px 22px -18px rgba(15,23,42,.55);
+  }
+  .lv-step .lv-ico{font-size:1.75rem;line-height:1;}
+  .lv-step .lv-t{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.96rem;line-height:1.2;}
+  .lv-step .lv-d{font-size:.79rem;color:var(--ink-soft);line-height:1.4;}
+  .lv-step.lv-you{border-color:var(--primary);background:var(--primary-soft);}
+  .lv-step.lv-you .lv-t{color:var(--primary);}
+  .lv-step.lv-end{border-color:var(--teal);background:var(--teal-soft);}
+  .lv-step.lv-end .lv-t{color:#0F766E;}
+  .lv-arrow{
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.25rem;font-weight:700;color:var(--primary);
+    align-self:center;min-width:18px;
+  }
+  .lv-loop{
+    margin:18px auto 0;max-width:560px;text-align:center;
+    font-size:.85rem;color:#0F766E;
+    background:var(--teal-soft);border:1px dashed var(--teal);border-radius:999px;
+    padding:9px 16px;
+  }
+  .lv-loop strong{color:#0F766E;}
+  .loopviz figcaption{
+    margin-top:13px;text-align:center;
+    font-size:.78rem;font-style:italic;color:var(--ink-soft);
+  }
+  @media (max-width:600px){
+    .lv-step{max-width:none;flex-basis:100%;}
+    .lv-arrow{transform:rotate(90deg);min-height:14px;}
+  }
+
+  /* ---------- Infographie : jauge de fenêtre de contexte ---------- */
+  .ctxgauge{
+    margin:20px 0 26px;
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:linear-gradient(180deg,#FFFFFF,#FBFBFE);
+    padding:20px 20px 16px;
+  }
+  .ctxgauge .cg-head{
+    font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.96rem;
+    margin:0 0 12px;display:flex;align-items:center;gap:8px;
+  }
+  .cg-bar{
+    display:flex;height:38px;border-radius:9px;overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .cg-seg{
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-family:var(--mono);font-size:.72rem;font-weight:600;
+    white-space:nowrap;overflow:hidden;padding:0 4px;
+  }
+  .cg-seg.s1{flex:0 0 26%;background:var(--primary);}
+  .cg-seg.s2{flex:0 0 24%;background:var(--teal);}
+  .cg-seg.s3{flex:0 0 22%;background:var(--warn);}
+  .cg-seg.s-free{
+    flex:1 1 auto;background:repeating-linear-gradient(45deg,#F1F5F9,#F1F5F9 9px,#E9EEF5 9px,#E9EEF5 18px);
+    color:var(--ink-soft);
+  }
+  .cg-legend{
+    display:flex;flex-wrap:wrap;gap:7px 16px;margin:12px 0 0;
+    font-size:.8rem;color:var(--ink-soft);
+  }
+  .cg-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .cg-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  .cg-legend .k1{background:var(--primary);} .cg-legend .k2{background:var(--teal);}
+  .cg-legend .k3{background:var(--warn);}
+  .ctxgauge figcaption{
+    margin-top:13px;font-size:.82rem;color:var(--ink);
+    border-top:1px dashed var(--line);padding-top:11px;
+  }
+  .ctxgauge figcaption b{color:var(--danger);}
+  @media (max-width:600px){
+    .cg-seg{font-size:0;}            /* étiquettes en légende seulement sur mobile */
+    .cg-seg.s-free{font-size:.7rem;}
+  }
+
   /* ---------- Sticky bottom nav ---------- */
-  body{padding-bottom:66px;}
+  body{padding-bottom:86px;}
   .navbar{
     position:fixed;left:0;right:0;bottom:0;z-index:60;
-    background:rgba(15,23,42,.97);
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
-    border-top:1px solid rgba(255,255,255,.12);
-    display:flex;gap:2px;overflow-x:auto;padding:6px 8px;
+    background:rgba(247,248,250,.94);
+    -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+    border-top:1px solid rgba(15,23,42,.12);
+    box-shadow:0 -14px 34px -26px rgba(15,23,42,.55);
+    padding:11px 0 13px;
+  }
+  .navbar-inner{
+    display:flex;gap:10px;overflow-x:auto;
+    max-width:880px;margin:0 auto;padding:0 22px;
     scrollbar-width:none;
   }
-  .navbar::-webkit-scrollbar{display:none;}
+  .navbar-inner::-webkit-scrollbar{display:none;}
   .navbar a{
-    flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;
-    text-decoration:none;color:#94A3B8;font-size:.66rem;font-weight:600;
-    padding:5px 11px;border-radius:10px;white-space:nowrap;letter-spacing:.01em;
-    transition:background .15s,color .15s;
+    flex:0 0 auto;display:flex;align-items:center;gap:7px;
+    min-height:42px;
+    text-decoration:none;color:#334155;font-size:.78rem;font-weight:700;
+    padding:9px 14px;border-radius:999px;white-space:nowrap;letter-spacing:0;
+    background:#fff;border:1px solid var(--line);
+    box-shadow:0 8px 18px -16px rgba(15,23,42,.45);
+    transition:background .15s,color .15s,border-color .15s,box-shadow .15s,transform .15s;
   }
-  .navbar a .ic{font-size:1.05rem;line-height:1;}
-  .navbar a:hover{color:#fff;background:rgba(255,255,255,.07);}
-  .navbar a.active{color:#fff;background:var(--primary);}
+  .navbar a .ic{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:24px;height:24px;border-radius:50%;
+    font-size:1rem;line-height:1;background:#F1F5F9;
+  }
+  .navbar a:hover{
+    color:var(--primary);border-color:#C7D2FE;
+    box-shadow:0 10px 24px -18px rgba(79,70,229,.75);
+    transform:translateY(-1px);
+  }
+  .navbar a.active{
+    color:#fff;background:var(--primary);border-color:var(--primary);
+    box-shadow:0 14px 26px -18px rgba(79,70,229,.9);
+  }
+  .navbar a.active .ic{background:rgba(255,255,255,.18);}
 
   @media (max-width:600px){
     body{font-size:16px;}
     .doc-header{padding:38px 20px 34px;}
     .doc-header h1{font-size:1.75rem;}
     .doc-header .sub{font-size:1rem;}
-    .wrap{padding:0 15px 60px;}
+    .wrap{padding:0 15px 76px;}
     h2.sect{font-size:1.35rem;}
     h3{font-size:1.12rem;}
     .sect-time{display:inline-block;margin:6px 0 0 0;}
@@ -363,7 +512,7 @@
     .terminal .bar .tt{font-size:.66rem;}
 
     /* callouts & cartes : un peu plus compacts */
-    .callout,.deepdive,.whybox,.step{padding-left:16px;padding-right:16px;}
+    .callout,.deepdive,.whybox,.step,.learning-card,.checkpoint{padding-left:16px;padding-right:16px;}
     .step{padding-top:20px;}
 
     /* === Tableaux empilés en cartes (lisibles sur téléphone) === */
@@ -390,54 +539,144 @@
     td code{white-space:normal;word-break:break-word;}
     .dur{display:inline-block;}
 
-    /* navbar : onglets un poil plus serrés */
-    .navbar a{font-size:.62rem;padding:5px 9px;}
-    .navbar a .ic{font-size:1rem;}
+    /* navbar : onglets lisibles sur téléphone */
+    body{padding-bottom:86px;}
+    .navbar{padding:10px 0 12px;}
+    .navbar-inner{gap:8px;padding:0 12px;}
+    .navbar a{font-size:.74rem;min-height:40px;padding:8px 12px;}
+    .navbar a .ic{width:22px;height:22px;font-size:.95rem;}
   }
   @media print{
     body{background:#fff;font-size:11pt;padding-bottom:0;}
     .doc-header{border-radius:0;}
     .navbar{display:none;}
     .terminal,.prompt,.step,.callout,.finale,.whybox,.deepdive{break-inside:avoid;}
+    .gloss{display:none;}
   }
+
+  /* ---------- Glossaire : pastilles « ? » + tooltip / notification ---------- */
+  .gloss{
+    -webkit-appearance:none;appearance:none;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:16px;height:16px;margin:0 1px 0 3px;padding:0;
+    vertical-align:super;
+    font-family:var(--mono);font-size:.62rem;font-weight:700;line-height:1;
+    color:var(--primary);background:var(--primary-soft);
+    border:1px solid #C7D2FE;border-radius:50%;
+    cursor:help;position:relative;
+    transition:background .15s,color .15s,transform .15s;
+  }
+  .gloss:hover,.gloss:focus-visible{
+    background:var(--primary);color:#fff;outline:none;transform:translateY(-1px);
+  }
+  /* Tooltip : seulement sur les appareils qui savent survoler (PC) */
+  @media (hover:hover) and (pointer:fine){
+    .gloss::after{
+      content:attr(data-tip);
+      position:absolute;left:50%;bottom:calc(100% + 10px);
+      transform:translate(-50%,4px);
+      width:max-content;max-width:288px;
+      background:var(--term-bg);color:#E6EBF3;
+      font-family:'Inter',system-ui,sans-serif;font-weight:400;
+      font-size:.82rem;line-height:1.5;text-align:left;letter-spacing:0;
+      padding:11px 13px;border-radius:11px;
+      box-shadow:0 16px 36px -14px rgba(15,23,42,.62);
+      opacity:0;visibility:hidden;pointer-events:none;z-index:90;
+      transition:opacity .16s,transform .16s,visibility .16s;
+    }
+    .gloss::before{
+      content:"";position:absolute;left:50%;bottom:calc(100% + 4px);
+      transform:translate(-50%,4px);
+      border:6px solid transparent;border-top-color:var(--term-bg);
+      opacity:0;visibility:hidden;z-index:90;
+      transition:opacity .16s,transform .16s,visibility .16s;
+    }
+    .gloss:hover::after,.gloss:focus-visible::after,
+    .gloss:hover::before,.gloss:focus-visible::before{
+      opacity:1;visibility:visible;transform:translate(-50%,0);
+    }
+  }
+  /* Notification bas d'écran (téléphone / tactile) */
+  .gloss-toast{
+    position:fixed;left:14px;right:14px;bottom:94px;z-index:140;
+    margin:0 auto;max-width:540px;
+    background:var(--term-bg);color:#E6EBF3;
+    border:1px solid rgba(255,255,255,.13);border-radius:15px;
+    box-shadow:0 20px 44px -16px rgba(15,23,42,.72);
+    padding:15px 40px 15px 17px;
+    font-family:'Inter',system-ui,sans-serif;font-size:.92rem;line-height:1.52;
+    transform:translateY(150%);opacity:0;pointer-events:none;
+    transition:transform .3s cubic-bezier(.2,.85,.25,1),opacity .3s;
+  }
+  .gloss-toast.show{transform:translateY(0);opacity:1;pointer-events:auto;}
+  .gloss-toast .gt-term{
+    display:flex;align-items:center;gap:7px;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;
+    color:#fff;margin-bottom:4px;
+  }
+  .gloss-toast .gt-term::before{content:"💡";font-size:.95em;}
+  .gloss-toast .gt-close{
+    position:absolute;top:9px;right:11px;
+    background:none;border:none;color:#94A3B8;
+    font-size:1.25rem;line-height:1;cursor:pointer;padding:2px 4px;
+  }
+  .gloss-toast .gt-close:hover{color:#fff;}
 </style>
 </head>
 <body>
 
 <header class="doc-header" id="top">
   <div class="wrap" style="padding-bottom:0;">
-    <p class="kicker">// Tutoriel d'auto-formation</p>
-    <h1>Claude Code&nbsp;+&nbsp;VS Code 🚀</h1>
-    <p class="sub">Construire des sites web et des applications mobiles (PWA) — du démarrage du PC jusqu'à la prod sur Firebase</p>
+    <p class="kicker">// Auto-formation</p>
+    <h1>Agents IA de développement 🚀</h1>
+    <p class="sub">Prise en main un assistant de code agentique puis construire un site, une PWA et comprendre le chemin jusqu'à la mise en production</p>
     <div class="meta-row">
-      <span class="meta">🧩 Niveau&nbsp;: <b>initiation</b></span>
-      <span class="meta">⏱️ Durée&nbsp;: <b>~1 h</b> (cœur ~30 min)</span>
-      <span class="meta">🎯 But&nbsp;: <b>possibilités + fondamentaux</b></span>
+      <span class="meta">🧩 Niveau&nbsp;: <b>débutant accompagné</b></span>
+      <span class="meta">⏱️ Durée&nbsp;: <b>~1 h</b> (Parties 1 à 3)</span>
+      <span class="meta">🎯 Livrable&nbsp;: <b>site + PWA déployable</b></span>
     </div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <p class="lead">Dans ce tutoriel, vous allez <strong>comprendre ce qu'est Claude Code</strong>, <strong>construire un site puis une PWA</strong> de bout en bout, et repartir avec les <strong>fondamentaux</strong> pour continuer seul. Comptez environ 30&nbsp;minutes&nbsp;; ce n'est pas exhaustif, c'est une porte d'entrée.</p>
+  <p class="lead">Pour <strong>s'initier au développement avec un agent IA</strong> sans rester dans la démo magique. Les exercices utilisent <strong>Claude Code</strong> pour rester concrets, mais les réflexes appris — prompt, contexte, diff, validation, tests — peuvent s'appliquer aussi à Codex, Gemini, Cursor, Copilot...</p>
 
-  <nav class="toc">
-    <h2>📑 Sommaire</h2>
-    <ol>
-      <li><a href="#plan">Le parcours (vue d'ensemble)</a></li>
-      <li><a href="#detail">Le tutoriel pas à pas</a></li>
-      <li><a href="#pratique">Cas pratique de bout en bout 🛴</a></li>
-      <li><a href="#antiseche">Antisèche — commandes &amp; raccourcis</a></li>
-      <li><a href="#conso">Maîtriser sa consommation (tokens &amp; contexte) ⚡</a></li>
-      <li><a href="#liens">Liens utiles — sites, docs &amp; tutos 🔗</a></li>
-      <li><a href="#finale">À retenir</a></li>
-    </ol>
-  </nav>
+  <div class="learning-grid" aria-label="Objectifs et prérequis">
+    <div class="learning-card">
+      <h2>🎯 À la fin, vous saurez</h2>
+      <ul>
+        <li>expliquer la différence entre autocomplétion et agent de code&nbsp;;</li>
+        <li>demander une modification claire à un assistant de code&nbsp;;</li>
+        <li>lire un diff avant validation&nbsp;;</li>
+        <li>créer un petit site, puis une PWA installable&nbsp;;</li>
+        <li>identifier les points de vigilance&nbsp;: sécurité, coût, contexte.</li>
+      </ul>
+    </div>
+    <div class="learning-card">
+      <h2>🧰 Avant de commencer</h2>
+      <ul>
+        <li>un ordinateur Windows, macOS ou Linux avec VS Code&nbsp;;</li>
+        <li>un assistant agentique installé&nbsp;: Claude Code pour suivre exactement le pas à pas, ou un équivalent (Codex/Gemini/Cursor...)&nbsp;;</li>
+        <li>une <strong>licence Claude Pro</strong> (~20&nbsp;€/mois) — le compte gratuit ne donne pas accès à Claude Code&nbsp;; Pro suffit largement pour ce cours (à défaut&nbsp;: Max, ou une clé API en pay-as-you-go)&nbsp;;</li>
+        <li>Node.js 18+ — facultatif pour installer Claude Code (l'installeur natif suffit), mais nécessaire pour le cas pratique (Firebase CLI, Vite, <code>npm</code>)&nbsp;;</li>
+        <li>un compte Firebase pour aller jusqu'au déploiement&nbsp;;</li>
+        <li>comptez <strong>~1 h</strong> pour la formation (Parties 1 à 3)&nbsp;; les Parties 4 à 7 sont des mémos à garder pour plus tard, hors temps.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <span class="label">🧭 Comment suivre ce cours</span>
+    <p>Le <strong>parcours court</strong> vous donne les fondamentaux et une première PWA. Les commandes affichées sont celles de Claude Code, mais chaque fois que vous voyez «&nbsp;l'agent&nbsp;», pensez «&nbsp;votre assistant de développement&nbsp;». Les blocs <strong>Pour aller plus loin</strong>, Firebase, sécurité et liens utiles sont des bonus à faire ensuite, ou à garder comme référence.</p>
+  </div>
 
   <!-- ============ 1. PLAN ============ -->
   <section id="plan">
     <p class="eyebrow">// Partie 01</p>
-    <h2 class="sect"><span class="emoji">🗺️</span>Le parcours<span class="sect-time">⏱️ ~3 min</span></h2>
+    <h2 class="sect"><span class="emoji">🗺️</span>Vue d'ensemble<span class="sect-time">⏱️ ~3 min de lecture</span></h2>
+
+    <p class="lead">Avant de plonger, voici la carte du cours&nbsp;: les 7 étapes, leur durée et ce que chacune vous apporte. Survolez-la maintenant, et revenez-y si vous vous perdez. Le détail vient juste après (Partie 02).</p>
 
     <div class="table-wrap">
       <table>
@@ -445,12 +684,13 @@
           <tr><th>#</th><th>Étape</th><th>Temps</th><th>Type</th><th>Ce que vous y gagnez</th></tr>
         </thead>
         <tbody>
-          <tr><td data-label="#">1</td><td data-label="Étape">Découvrir Claude Code (et ce qui le distingue)</td><td data-label="Temps"><span class="dur">4 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Comprendre en quoi c'est différent de l'autocomplétion (Copilot)</td></tr>
-          <tr><td data-label="#">2</td><td data-label="Étape">Installation &amp; branchement à VS Code</td><td data-label="Temps"><span class="dur">4 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Mettre en place l'environnement (rapide)</td></tr>
-          <tr><td data-label="#">3</td><td data-label="Étape">Les 5 fondamentaux d'interaction</td><td data-label="Temps"><span class="dur">6 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Apprendre le vocabulaire pour piloter l'outil</td></tr>
-          <tr><td data-label="#">4</td><td data-label="Étape">Construire un site web de zéro</td><td data-label="Temps"><span class="dur">8 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Voir l'agent lire, créer, modifier, et un diff à valider</td></tr>
-          <tr><td data-label="#">5</td><td data-label="Étape">Transformer le site en PWA installable</td><td data-label="Temps"><span class="dur">6 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Comprendre les briques d'une app mobile web</td></tr>
-          <tr><td data-label="#">6</td><td data-label="Étape">Bonnes pratiques, limites &amp; pour aller plus loin</td><td data-label="Temps"><span class="dur">2 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Adopter un usage sain et lucide</td></tr>
+          <tr><td data-label="#">1</td><td data-label="Étape">Comprendre les agents IA de développement <span class="path-note">cœur</span></td><td data-label="Temps"><span class="dur">4 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Comprendre en quoi c'est différent de l'autocomplétion classique</td></tr>
+          <tr><td data-label="#">2</td><td data-label="Étape">Installation &amp; branchement à VS Code — exemple Claude Code <span class="path-note">cœur</span></td><td data-label="Temps"><span class="dur">8 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Mettre en place un environnement concret et vérifier qu'il fonctionne</td></tr>
+          <tr><td data-label="#">3</td><td data-label="Étape">Les 5 fondamentaux d'interaction <span class="path-note">cœur</span></td><td data-label="Temps"><span class="dur">6 min</span></td><td data-label="Type">Lecture + essai</td><td data-label="Ce que vous y gagnez">Apprendre le vocabulaire pour piloter l'outil</td></tr>
+          <tr><td data-label="#">4</td><td data-label="Étape">Construire un site web de zéro <span class="path-note">cœur</span></td><td data-label="Temps"><span class="dur">8 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Voir l'agent lire, créer, modifier, et un diff à valider</td></tr>
+          <tr><td data-label="#">5</td><td data-label="Étape">Transformer le site en PWA installable <span class="path-note">cœur</span></td><td data-label="Temps"><span class="dur">6 min</span></td><td data-label="Type">Pratique</td><td data-label="Ce que vous y gagnez">Comprendre les briques d'une app mobile web</td></tr>
+          <tr><td data-label="#">6</td><td data-label="Étape">Cas Firebase, règles et déploiement <span class="path-note">bonus guidé</span></td><td data-label="Temps"><span class="dur">25 min</span></td><td data-label="Type">Cas pratique</td><td data-label="Ce que vous y gagnez">Comprendre le chemin vers une vraie mise en production</td></tr>
+          <tr><td data-label="#">7</td><td data-label="Étape">Bonnes pratiques, limites, consommation et auto-évaluation <span class="path-note">référence</span></td><td data-label="Temps"><span class="dur">10 min</span></td><td data-label="Type">Lecture</td><td data-label="Ce que vous y gagnez">Adopter un usage sain, lucide et durable</td></tr>
         </tbody>
       </table>
     </div>
@@ -462,20 +702,26 @@
 
     <div class="callout info">
       <span class="label">🧵 Fil rouge</span>
-      <p>Pour voir tout ça sur un projet réel — du démarrage du PC jusqu'à la prod —, la <strong>partie 3</strong> déroule un cas concret&nbsp;: une app de location/vente de trottinettes déployée sur Firebase.</p>
+      <p>Pour voir tout ça sur un projet réel — du démarrage du PC jusqu'à la prod —, la <strong>partie 3</strong> déroule un cas concret&nbsp;: une app de location/vente de trottinettes déployée sur Firebase. Claude Code sert ici de véhicule pédagogique, mais la méthode reste valable avec d'autres agents.</p>
     </div>
 
-    <div class="deepdive">
-      <p class="dd-head">🔭 Pour aller plus loin</p>
-      <p class="dd-note">Non abordé dans les 30 min — du contenu &amp; des ressources pour creuser</p>
+    <div class="checkpoint">
+      <span class="label">✅ Point de contrôle avant de continuer</span>
+      <p>Vous savez ce que vous allez produire&nbsp;: un premier site, une version PWA, puis éventuellement un déploiement Firebase. Si vous manquez de temps, faites les étapes marquées <strong>cœur</strong> et revenez aux bonus plus tard.</p>
+    </div>
+
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">🔭 Pour aller plus loin</p>
+        <p class="dd-note">Optionnel — ressources à consulter après le parcours court</p>
+      </summary>
       <ul>
         <li><b>Cours officiel gratuit «&nbsp;Claude Code in Action&nbsp;»</b> (Anthropic Academy, certificat à la clé)&nbsp;: un parcours pas-à-pas pour passer de l'intro à un usage réel, structuré autour du workflow <em>Explore → Plan → Code → Commit</em>. → <a href="https://anthropic.skilljar.com/claude-code-in-action">anthropic.skilljar.com</a></li>
         <li><b>Anthropic Academy</b>&nbsp;: catalogue de cours gratuits et self-paced (Claude Code 101, Introduction aux sous-agents, MCP…), accessibles sur simple inscription e-mail. → <a href="https://anthropic.skilljar.com">anthropic.skilljar.com</a></li>
         <li><b>Best practices Claude Code</b>&nbsp;: les patterns recommandés par Anthropic pour bien configurer son environnement et passer à l'échelle (sessions parallèles, CLAUDE.md, etc.). → <a href="https://code.claude.com/docs/en/best-practices">code.claude.com/docs</a></li>
         <li><b>Guide de prompt engineering</b>&nbsp;: la compétence qui fait toute la différence avec un agent — apprendre à formuler des prompts précis et contraints. → <a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview">docs.claude.com</a></li>
-        <li><b>Décliner le format</b>&nbsp;: au-delà des 30 min, un TP de 2–3 h (chacun installe puis déploie une mini-PWA) ou un mini-hackathon ancrent vraiment le cycle prompt → diff → test. Bon réflexe d'évaluation&nbsp;: faire expliquer un diff accepté plutôt que noter le seul résultat.</li>
       </ul>
-    </div>
+    </details>
   </section>
 
   <!-- ============ 2. DÉTAIL ============ -->
@@ -483,29 +729,75 @@
     <p class="eyebrow">// Partie 02</p>
     <h2 class="sect"><span class="emoji">🎬</span>Le tutoriel pas à pas<span class="sect-time">⏱️ ~30 min</span></h2>
 
-    <h3>1️⃣ Découvrir Claude Code <span style="color:var(--teal);font-size:.8rem;">(4 min)</span></h3>
+    <h3>1️⃣ Comprendre les agents IA de développement <span style="color:var(--teal);font-size:.8rem;">(4 min)</span></h3>
     <div class="callout teal">
       <span class="label">🎯 L’idée clé en une phrase</span>
-      <p>«&nbsp;Claude Code n'est pas une autocomplétion intelligente ligne par ligne. C'est un <strong>agent</strong> qui voit tout votre projet, lit vos fichiers, exécute des commandes, crée des fichiers et propose des modifications que <strong>vous validez</strong>.&nbsp;»</p>
+      <p>«&nbsp;Un assistant agentique de développement n'est pas une autocomplétion intelligente ligne par ligne. C'est un <strong>agent</strong> qui peut comprendre un projet, lire des fichiers, proposer ou appliquer des modifications, lancer des commandes selon ses permissions, puis vous présenter un résultat que <strong>vous validez</strong>.&nbsp;»</p>
     </div>
     <p><strong>La distinction clé à comprendre</strong> (souvent confondue)&nbsp;:</p>
     <ul>
-      <li>🟡 <strong>Copilot / autocomplétion</strong> → travaille <em>au curseur</em>, complète la ligne que vous tapez. Vous restez pilote ligne à ligne.</li>
-      <li>🟣 <strong>Claude Code</strong> → travaille <em>sur le dépôt entier</em>. Vous décrivez une intention («&nbsp;ajoute une page de contact avec validation du formulaire&nbsp;»), il planifie, touche plusieurs fichiers, lance des commandes, et présente le résultat à valider.</li>
+      <li>🟡 <strong>Autocomplétion</strong> → travaille <em>au curseur</em>, complète la ligne que vous tapez. Vous restez pilote ligne à ligne.</li>
+      <li>🟣 <strong>Agent de développement</strong> → travaille <em>sur une tâche et un contexte projet</em>. Vous décrivez une intention («&nbsp;ajoute une page de contact avec validation du formulaire&nbsp;»), il planifie, touche plusieurs fichiers, lance éventuellement des commandes, et présente le résultat à valider.</li>
     </ul>
-    <p><strong>Où vit Claude Code&nbsp;?</strong> D'abord dans le terminal (CLI). L'extension VS Code est une surface graphique par-dessus <em>le même moteur</em>&nbsp;: mêmes modèles, même authentification, mêmes fichiers de config. <strong>L'extension n'est pas un produit différent</strong>, c'est le même agent avec une vue intégrée (diffs visuels, navigation).</p>
+    <p><strong>Où vit l'agent&nbsp;?</strong> Selon l'outil, il peut vivre dans un terminal, une extension VS Code, un éditeur dédié ou une interface web. Dans ce cours, l'exemple principal est <strong>Claude Code</strong>&nbsp;: un CLI relié à VS Code via une extension. Avec Codex, Gemini, Cursor ou Copilot, l'interface change, mais les gestes essentiels restent les mêmes.</p>
     <div class="callout info">
       <span class="label">🧠 Analogie</span>
       <p>«&nbsp;Pensez à un développeur junior très rapide et infatigable à qui vous donnez des tâches. Il fait le travail, vous montre son diff, et c'est <em>vous</em> qui faites la code review et qui validez. Vous restez le tech lead.&nbsp;»</p>
     </div>
 
-    <h3>2️⃣ Installation &amp; branchement à VS Code <span style="color:var(--teal);font-size:.8rem;">(4 min)</span></h3>
-    <p>Vous n'installez tout ceci qu'une seule fois sur votre machine. À la fin, vérifiez que tout est bon avec <code>claude --version</code> et <code>claude doctor</code>.</p>
+    <figure class="loopviz" aria-label="La boucle de travail avec un agent de développement : vous décrivez, l'agent agit, il présente un diff, vous validez, et on recommence.">
+      <div class="loopviz-steps">
+        <div class="lv-step">
+          <span class="lv-ico">📝</span>
+          <span class="lv-t">Vous décrivez</span>
+          <span class="lv-d">une intention claire&nbsp;: le prompt</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step">
+          <span class="lv-ico">🤖</span>
+          <span class="lv-t">L'agent agit</span>
+          <span class="lv-d">lit, planifie, modifie, lance des commandes</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step">
+          <span class="lv-ico">🔍</span>
+          <span class="lv-t">Il présente un diff</span>
+          <span class="lv-d">ce qu'il propose de changer</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step lv-you">
+          <span class="lv-ico">✅</span>
+          <span class="lv-t">Vous validez</span>
+          <span class="lv-d">accepter, corriger ou refuser</span>
+        </div>
+      </div>
+      <div class="lv-loop">↻&nbsp; On recommence — <strong>vous gardez la main à chaque tour</strong></div>
+      <figcaption>La boucle agentique&nbsp;: une intention en entrée, du code que <em>vous</em> validez en sortie.</figcaption>
+    </figure>
+
+    <h4>Ce qui est transférable d'un assistant à l'autre</h4>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Compétence durable</th><th>Dans ce cours avec Claude Code</th><th>Avec Codex, Gemini, Cursor, Copilot...</th></tr>
+        </thead>
+        <tbody>
+          <tr><td data-label="Compétence durable">Donner une intention claire</td><td data-label="Dans ce cours avec Claude Code">Prompt dans le panneau Claude Code ou le terminal</td><td data-label="Avec d'autres assistants">Même logique&nbsp;: objectif, contexte, contraintes, critères de réussite</td></tr>
+          <tr><td data-label="Compétence durable">Limiter le contexte</td><td data-label="Dans ce cours avec Claude Code"><code>@fichier</code>, <code>CLAUDE.md</code>, <code>/context</code></td><td data-label="Avec d'autres assistants">Fichiers attachés, contexte de workspace, règles de projet ou instructions persistantes</td></tr>
+          <tr><td data-label="Compétence durable">Valider les changements</td><td data-label="Dans ce cours avec Claude Code">Diff proposé par l'extension, acceptation ou révision</td><td data-label="Avec d'autres assistants">Diff Git, patch, aperçu d'édition ou pull request générée</td></tr>
+          <tr><td data-label="Compétence durable">Travailler par étapes</td><td data-label="Dans ce cours avec Claude Code">Prompt court, checkpoint, nouvelle demande</td><td data-label="Avec d'autres assistants">Même discipline&nbsp;: petites tâches, tests fréquents, commits réguliers</td></tr>
+          <tr><td data-label="Compétence durable">Tester le résultat</td><td data-label="Dans ce cours avec Claude Code">L'agent peut proposer ou lancer des commandes</td><td data-label="Avec d'autres assistants">Le principe reste humain&nbsp;: vérifier, tester, lire les erreurs, demander une correction ciblée</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>2️⃣ Installation &amp; branchement à VS Code — exemple Claude Code <span style="color:var(--teal);font-size:.8rem;">(8 min)</span></h3>
+    <p>Pour que le cours reste actionnable, le pas à pas utilise Claude Code. Si vous utilisez Codex, Gemini ou un autre assistant, gardez la même logique et remplacez simplement les commandes et menus par ceux de votre outil.</p>
     <div class="callout warn">
       <span class="label">💳 Bon à savoir</span>
-      <p>Claude Code est un <strong>outil payant</strong>&nbsp;: abonnement Claude (Pro 20&nbsp;$/mois, Max 100/200&nbsp;$/mois, Team, Enterprise) <strong>ou</strong> crédits API. Une clé API en pay-as-you-go suffit pour expérimenter.</p>
+      <p>Claude Code est un <strong>outil payant</strong>&nbsp;: abonnement Claude (Pro 20&nbsp;$/mois, Max 100/200&nbsp;$/mois, Team, Enterprise) <strong>ou</strong> crédits API. <strong>⚠️ Le compte Claude gratuit ne suffit pas</strong> — il faut au minimum <strong>Pro</strong> (le palier suffisant pour ce cours)&nbsp;; <strong>Max</strong> ne se justifie que pour un usage quotidien intensif. Pour seulement expérimenter, une clé API en pay-as-you-go (quelques centimes d'usage réel) fait aussi l'affaire.</p>
     </div>
-    <h4>Installer le CLI — deux méthodes <span style="font-weight:400;font-size:.85rem;">(page officielle&nbsp;: <a href="https://claude.com/download">claude.com/download</a>)</span></h4>
+    <h4>Installer le CLI — deux méthodes à lancer depuis le terminal VS Code <span style="font-weight:400;font-size:.85rem;">(page officielle&nbsp;: <a href="https://claude.com/download">claude.com/download</a>)</span></h4>
     <div class="terminal">
       <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 1 [Recommandé] — installeur natif (aucune dépendance)</span></div>
 <pre><span class="c"># Windows 11 — PowerShell (clic droit sur Démarrer → Terminal)</span>
@@ -519,12 +811,18 @@
     </div>
     <div class="callout warn">
       <span class="label">⚠️ Pièges classiques (Windows 11)</span>
-      <p>Si la commande PowerShell est bloquée, c'est la <strong>politique d'exécution</strong> — ouvrir PowerShell et l'autoriser. Après l'installation, <strong>fermer puis rouvrir le terminal</strong> pour que le <code>PATH</code> se mette à jour (sinon <code>claude</code> n'est «&nbsp;pas reconnu&nbsp;»). En cas de doute, <code>claude doctor</code> diagnostique l'installation.</p>
+      <p><strong>1. La commande est refusée&nbsp;?</strong> Windows bloque par défaut l'exécution des scripts PowerShell. Autorisez-les pour votre compte en lançant une fois&nbsp;: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code>, puis relancez l'installation.<br>
+      <strong>2. <code>claude</code> n'est «&nbsp;pas reconnu&nbsp;» après l'installation&nbsp;?</strong> Le <code>PATH</code> n'est pas encore à jour&nbsp;: <strong>fermez puis rouvrez le terminal</strong> (voire VS Code).<br>
+      <strong>3. En cas de doute&nbsp;:</strong> <code>claude doctor</code> diagnostique l'installation.</p>
     </div>
     <div class="terminal">
       <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">vérifier que ça marche</span></div>
 <pre><span class="p">PS&gt;</span> <span class="k">claude</span> --version   <span class="c"># affiche un numéro de version</span>
 <span class="p">PS&gt;</span> <span class="k">claude</span> doctor      <span class="c"># diagnostic de l'installation</span></pre>
+    </div>
+    <div class="checkpoint">
+      <span class="label">✅ Point de contrôle installation</span>
+      <p>Vous pouvez continuer avec Claude Code si <code>claude --version</code> affiche un numéro de version et si <code>claude doctor</code> ne remonte pas d'erreur bloquante. Avec un autre assistant, l'équivalent est simple&nbsp;: il doit être connecté, voir votre dossier projet, pouvoir proposer des modifications et vous montrer un diff.</p>
     </div>
     <h4>L'extension VS Code</h4>
     <ol>
@@ -541,19 +839,23 @@
     <h3>3️⃣ Les 5 fondamentaux d'interaction <span style="color:var(--teal);font-size:.8rem;">(6 min)</span></h3>
     <p>Cinq notions suffisent pour piloter l'outil&nbsp;:</p>
     <ul>
-      <li><strong>1. Le prompt = une intention claire 🎯.</strong> Pas «&nbsp;fais un truc&nbsp;». On décrit le quoi, le contexte, la contrainte. <em>Ex.&nbsp;: «&nbsp;Crée une landing page responsive en HTML/CSS/JS vanilla, avec header, hero et formulaire de contact. Pas de framework.&nbsp;»</em></li>
-      <li><strong>2. Les mentions <code>@fichier</code> 📎.</strong> Taper <code>@</code> ouvre un sélecteur de fichiers&nbsp;; le fichier choisi entre dans le contexte. C'est ainsi qu'on dit «&nbsp;regarde <em>ce</em> fichier&nbsp;».</li>
-      <li><strong>3. Le fichier <code>CLAUDE.md</code> 🧠.</strong> À la racine du projet&nbsp;: les règles persistantes (conventions, stack imposée, commandes de build…). Claude le relit à chaque session. «&nbsp;La mémoire de projet.&nbsp;»</li>
-      <li><strong>4. Le diff = la code review 🔍.</strong> Avant d'écrire, l'extension ouvre un diff (vert = ajouts, rouge = suppressions). On <strong>accepte, rejette, ou demande une révision</strong>. <em>On ne valide jamais à l'aveugle.</em></li>
-      <li><strong>5. Les checkpoints ⏪.</strong> Des points de restauration pour <strong>revenir en arrière</strong> si une modif casse quelque chose. À combiner avec Git&nbsp;: un filet de sécurité de plus.</li>
+      <li><strong>1. Le prompt 🎯</strong> — une intention claire (le quoi, le contexte, la contrainte), jamais «&nbsp;fais un truc&nbsp;». <em>Ex.&nbsp;: «&nbsp;Crée une landing page responsive en HTML/CSS/JS vanilla, sans framework.&nbsp;»</em></li>
+      <li><strong>2. Les mentions <code>@fichier</code> 📎</strong> — taper <code>@</code> ajoute un fichier au contexte&nbsp;: c'est ainsi qu'on dit «&nbsp;regarde <em>ce</em> fichier&nbsp;».</li>
+      <li><strong>3. La mémoire de projet 🧠</strong> — des règles persistantes (stack, conventions). <code>CLAUDE.md</code> avec Claude Code&nbsp;; fichier d'instructions ou règles de workspace ailleurs.</li>
+      <li><strong>4. Le diff 🔍</strong> — votre code review&nbsp;: vert = ajouts, rouge = suppressions. On accepte, rejette ou révise, <em>jamais à l'aveugle.</em></li>
+      <li><strong>5. Les checkpoints ⏪</strong> — des points de restauration pour revenir en arrière si une modif casse&nbsp;; à combiner avec Git.</li>
     </ul>
     <div class="callout teal">
       <span class="label">➡️ À vous de jouer</span>
-      <p>Avec ces cinq notions — prompt clair, <code>@</code>, <code>CLAUDE.md</code>, diff, checkpoint — vous savez déjà piloter l'outil. Le reste, c'est de la pratique&nbsp;: passons-y.</p>
+      <p>Avec ces cinq notions — prompt clair, contexte ciblé, mémoire de projet, diff, checkpoint — vous savez déjà piloter un agent de développement. Le reste, c'est de la pratique&nbsp;: passons-y.</p>
+    </div>
+    <div class="checkpoint">
+      <span class="label">✅ Point de contrôle compréhension</span>
+      <p>Avant la pratique, formulez mentalement une demande en trois morceaux&nbsp;: <strong>objectif</strong>, <strong>contraintes</strong>, <strong>critères de réussite</strong>. C'est ce qui transforme une demande vague en instruction exploitable.</p>
     </div>
 
     <h3>4️⃣ Construire un site web de zéro <span style="color:var(--teal);font-size:.8rem;">(8 min)</span></h3>
-    <p>Ouvrez un dossier vide dans VS Code, puis le panneau Claude Code. Saisissez ce premier prompt&nbsp;:</p>
+    <p>Ouvrez un dossier vide dans VS Code, puis votre assistant de code. Dans le parcours Claude Code, ouvrez le panneau Claude Code. Saisissez ce premier prompt&nbsp;:</p>
     <div class="prompt">
       <div class="phead"><span class="star">✱</span> Prompt 1 — générer la structure</div>
 <pre>Crée un petit site vitrine pour un café fictif "Café Latitude".
@@ -562,7 +864,7 @@ Sections : header avec navigation, hero avec titre + bouton,
 section menu avec 3 produits, et un footer.
 Design responsive et propre. Mets le CSS dans un fichier séparé.</pre>
     </div>
-    <p><strong>Pendant que Claude travaille, observez&nbsp;:</strong> il <strong>annonce un plan</strong> avant d'agir, puis crée les <strong>fichiers</strong> (<code>index.html</code>, <code>style.css</code>, <code>script.js</code>). <strong>Ouvrez le diff</strong> pour lire ce qu'il propose (c'est votre code review), acceptez, puis ouvrez la page dans le navigateur.</p>
+    <p><strong>Pendant que l'agent travaille, observez&nbsp;:</strong> il peut <strong>annoncer un plan</strong> avant d'agir, puis créer les <strong>fichiers</strong> (<code>index.html</code>, <code>style.css</code>, <code>script.js</code>). <strong>Ouvrez le diff</strong> pour lire ce qu'il propose (c'est votre code review), acceptez, puis ouvrez la page dans le navigateur.</p>
     <div class="prompt">
       <div class="phead"><span class="star">✱</span> Prompt 2 — itération ciblée</div>
 <pre>Bien. Maintenant rends le header collant au scroll, ajoute un effet
@@ -577,6 +879,10 @@ chauds (brun/crème).</pre>
       <span class="label">🐞 Si vous tombez sur un bug</span>
       <p>Dites-le simplement&nbsp;: «&nbsp;il y a un bug, le menu déborde sur mobile, corrige-le&nbsp;». L'agent lit, diagnostique et propose un correctif. À retenir&nbsp;: <em>l'agent se trompe parfois</em> — d'où l'importance de relire le diff et de tester.</p>
     </div>
+    <div class="checkpoint">
+      <span class="label">✅ Point de contrôle site web</span>
+      <p>Vous devez avoir au minimum trois fichiers, une page qui s'ouvre dans le navigateur, un affichage correct sur mobile, et au moins une itération acceptée après lecture du diff.</p>
+    </div>
 
     <h3>5️⃣ Transformer le site en PWA installable <span style="color:var(--teal);font-size:.8rem;">(6 min)</span></h3>
     <div class="callout teal">
@@ -588,6 +894,36 @@ chauds (brun/crème).</pre>
         <li>🔒 <strong>HTTPS</strong>&nbsp;: obligatoire (sauf <code>localhost</code>). Pas de service worker sans contexte sécurisé.</li>
       </ul>
     </div>
+
+    <figure class="loopviz" aria-label="Une PWA = un manifeste + un service worker + HTTPS, qui ensemble donnent une app installable et fonctionnant hors-ligne.">
+      <div class="loopviz-steps">
+        <div class="lv-step">
+          <span class="lv-ico">📄</span>
+          <span class="lv-t">Manifeste</span>
+          <span class="lv-d">nom, icônes, couleurs → installable</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">+</span>
+        <div class="lv-step">
+          <span class="lv-ico">⚙️</span>
+          <span class="lv-t">Service worker</span>
+          <span class="lv-d">cache → hors-ligne + démarrage rapide</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">+</span>
+        <div class="lv-step">
+          <span class="lv-ico">🔒</span>
+          <span class="lv-t">HTTPS</span>
+          <span class="lv-d">connexion sécurisée (obligatoire)</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">=</span>
+        <div class="lv-step lv-you">
+          <span class="lv-ico">📱</span>
+          <span class="lv-t">PWA</span>
+          <span class="lv-d">installable &amp; marche hors-ligne</span>
+        </div>
+      </div>
+      <figcaption>Trois briques qui s'additionnent&nbsp;: un simple site devient une app installable.</figcaption>
+    </figure>
+
     <div class="prompt">
       <div class="phead"><span class="star">✱</span> Prompt — laisser l'agent faire le travail</div>
 <pre>Transforme ce site en PWA installable.
@@ -603,6 +939,10 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
       <span class="label">✨ Effet «&nbsp;waouh&nbsp;» garanti</span>
       <p>DevTools → Network → <em>Offline</em>, puis rechargez&nbsp;: la page se charge toujours. Vous venez de voir qu'«&nbsp;app mobile&nbsp;» ≠ forcément Swift/Kotlin/React Native — une PWA bien faite s'installe, marche hors-ligne, et part d'un simple site.</p>
     </div>
+    <div class="checkpoint">
+      <span class="label">✅ Point de contrôle PWA</span>
+      <p>Vous pouvez cocher l'étape si le manifeste est détecté, le service worker est actif, la page reste disponible hors-ligne sur <code>localhost</code>, et le navigateur propose l'installation.</p>
+    </div>
 
     <h3>6️⃣ Bonnes pratiques, limites &amp; pour aller plus loin <span style="color:var(--teal);font-size:.8rem;">(2 min)</span></h3>
     <div class="callout tip">
@@ -611,14 +951,14 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
         <li><strong>Toujours lire le diff.</strong> L'outil accélère, il ne dispense pas de comprendre.</li>
         <li><strong>Travailler sous Git.</strong> Committez avant les grosses tâches&nbsp;; les checkpoints complètent, ne remplacent pas.</li>
         <li><strong>Découper.</strong> Une grosse demande mal cadrée échoue&nbsp;; une série de petites tâches réussit.</li>
-        <li><strong>Un <code>CLAUDE.md</code> par projet</strong> pour fixer stack et conventions une fois pour toutes.</li>
+        <li><strong>Une mémoire projet courte</strong> pour fixer stack et conventions une fois pour toutes&nbsp;: <code>CLAUDE.md</code> avec Claude Code, fichier d'instructions ou règles de workspace avec d'autres assistants.</li>
       </ul>
     </div>
     <div class="callout danger">
       <span class="label">🚧 Limites à garder en tête</span>
       <ul>
         <li>L'agent <strong>peut se tromper</strong>, inventer une API, produire du code qui «&nbsp;a l'air&nbsp;» correct. La responsabilité reste humaine.</li>
-        <li>Outil <strong>payant</strong> qui envoie le code aux serveurs d'Anthropic (à prendre en compte pour les projets sensibles).</li>
+        <li>Outils souvent <strong>payants</strong> qui peuvent envoyer du code à un service externe. Vérifiez les règles de confidentialité, surtout sur les projets sensibles.</li>
         <li>Il ne remplace pas la compréhension des fondamentaux — il l'<strong>amplifie</strong>.</li>
       </ul>
     </div>
@@ -631,20 +971,22 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
       </ul>
     </div>
 
-    <div class="deepdive">
-      <p class="dd-head">🔭 Pour aller plus loin</p>
-      <p class="dd-note">Non abordé dans les 30 min — concepts avancés &amp; docs pour creuser</p>
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">🔭 Concepts avancés Claude Code</p>
+        <p class="dd-note">Optionnel — à ouvrir seulement si vous voulez aller au-delà de l'initiation</p>
+      </summary>
       <ul>
-        <li><b>Toute la «&nbsp;stack d'extension&nbsp;»</b> (skills, sous-agents, hooks, MCP, plugins) expliquée d'un coup&nbsp;: quand utiliser quoi. → <a href="https://code.claude.com/docs/en/features-overview">Vue d'ensemble (docs)</a></li>
-        <li><b>Skills &amp; slash commands</b>&nbsp;: des instructions et raccourcis réutilisables (dans <code>.claude/</code>) que Claude applique automatiquement aux bonnes tâches — pour industrialiser des workflows récurrents. → <a href="https://code.claude.com/docs/en/commands">Commandes (docs)</a></li>
-        <li><b>Sous-agents (subagents)</b>&nbsp;: des instances spécialisées avec leur propre contexte, à qui déléguer une sous-tâche (revue de code, exploration) sans polluer la conversation principale. → <a href="https://anthropic.skilljar.com">Cours «&nbsp;Introduction to Subagents&nbsp;»</a></li>
-        <li><b>Hooks</b>&nbsp;: exécuter automatiquement un script à un moment précis (avant/après une édition, en fin de tâche) pour brancher lint, tests, ou des garde-fous de sécurité. → <a href="https://code.claude.com/docs/en/hooks-guide">Guide des hooks (docs)</a></li>
-        <li><b>MCP (Model Context Protocol)</b>&nbsp;: le standard ouvert qui connecte l'agent à des outils externes — GitHub, bases de données, API internes. → <a href="https://code.claude.com/docs/en/mcp">MCP (docs)</a> · <a href="https://modelcontextprotocol.io">modelcontextprotocol.io</a></li>
-        <li><b>Permissions &amp; modes</b>&nbsp;: une <em>allow-list</em> de commandes (<code>.claude/settings.json</code>), le <em>plan mode</em> (réfléchir avant d'agir) et l'<em>auto mode</em> pour réduire les confirmations. → <a href="https://code.claude.com/docs/en/permissions">Permissions (docs)</a></li>
-        <li><b>Mémoire &amp; contexte</b>&nbsp;: le <code>CLAUDE.md</code> hiérarchique (global + projet + sous-dossier), la compaction (<code>/compact</code>) et les checkpoints pour revenir en arrière. → <a href="https://code.claude.com/docs/en/memory">Mémoire</a> · <a href="https://code.claude.com/docs/en/checkpointing">Checkpoints</a></li>
-        <li><b>Mode headless &amp; Agent SDK</b>&nbsp;: piloter Claude Code par script (<code>claude -p "…"</code>) pour des hooks Git ou des pipelines CI/CD. → <a href="https://code.claude.com/docs/en/headless">Headless (docs)</a></li>
+        <li><b>Vue d'ensemble</b> — skills, sous-agents, hooks, MCP, plugins&nbsp;: quand utiliser quoi. → <a href="https://code.claude.com/docs/en/features-overview">docs</a></li>
+        <li><b>Skills &amp; slash commands</b> — instructions et raccourcis réutilisables (<code>.claude/</code>) pour industrialiser des workflows récurrents. → <a href="https://code.claude.com/docs/en/commands">docs</a></li>
+        <li><b>Sous-agents</b> — instances spécialisées avec leur propre contexte, pour déléguer une sous-tâche sans polluer la conversation. → <a href="https://anthropic.skilljar.com">cours</a></li>
+        <li><b>Hooks</b> — lancer un script à un moment précis (avant/après édition, fin de tâche) pour brancher lint, tests ou garde-fous. → <a href="https://code.claude.com/docs/en/hooks-guide">docs</a></li>
+        <li><b>MCP</b> — le standard ouvert qui connecte l'agent à des outils externes (GitHub, bases, API). → <a href="https://code.claude.com/docs/en/mcp">docs</a> · <a href="https://modelcontextprotocol.io">site</a></li>
+        <li><b>Permissions &amp; modes</b> — <em>allow-list</em> de commandes, <em>plan mode</em>, <em>auto mode</em> pour réduire les confirmations. → <a href="https://code.claude.com/docs/en/permissions">docs</a></li>
+        <li><b>Mémoire &amp; contexte</b> — <code>CLAUDE.md</code> hiérarchique, compaction (<code>/compact</code>) et checkpoints. → <a href="https://code.claude.com/docs/en/memory">Mémoire</a> · <a href="https://code.claude.com/docs/en/checkpointing">Checkpoints</a></li>
+        <li><b>Mode headless &amp; Agent SDK</b> — piloter Claude Code par script (<code>claude -p "…"</code>) pour hooks Git ou CI/CD. → <a href="https://code.claude.com/docs/en/headless">docs</a></li>
       </ul>
-    </div>
+    </details>
   </section>
 
   <!-- ============ 3. CAS PRATIQUE ============ -->
@@ -656,8 +998,21 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
       <p>«&nbsp;J'allume mon PC, je veux faire une app web pour téléphone — de la <strong>location et vente de trottinettes</strong>. Qu'est-ce que j'installe&nbsp;? Comment je maquette les écrans&nbsp;? Comment je commence à coder&nbsp;? Et comment je déploie une version de prod, sachant que côté back j'ai choisi <strong>Firebase</strong>&nbsp;?&nbsp;» — un parcours linéaire en 4 étapes.</p>
     </div>
 
-    <div class="whybox">
-      <h4>💚 Pourquoi Firebase pour un projet modeste&nbsp;?</h4>
+    <div class="short-version">
+      <span class="label">Version courte</span>
+      <p>Firebase est proposé ici parce qu'il évite de gérer un serveur&nbsp;: authentification, base de données, hébergement HTTPS et règles de sécurité sont fournis comme services managés. Pour suivre le cœur du cours, retenez simplement&nbsp;: <strong>front PWA + Firebase = chemin rapide vers une app publiable</strong>.</p>
+    </div>
+
+    <div class="callout info">
+      <span class="label">🔌 Firebase est un exemple, pas une obligation</span>
+      <p>On choisit Firebase ici parce que c'est un <strong>écosystème gratuit</strong>, idéal pour un premier projet. Mais comme pour l'assistant, <strong>seul le back change&nbsp;: le front PWA et les réflexes d'agent restent identiques.</strong> Vous pouvez héberger ailleurs — Supabase, Vercel/Netlify, Azure — et, pour les profils <strong>métier</strong>, sur l'écosystème <strong>Power Platform</strong> (piloté depuis VS Code). Détails en fin de cas pratique&nbsp;: «&nbsp;Et si le back n'est pas Firebase&nbsp;?&nbsp;».</p>
+    </div>
+
+    <details class="whybox">
+      <summary>
+        <h4>💚 Pourquoi Firebase pour un projet modeste&nbsp;?</h4>
+        <p class="dd-note">Optionnel — utile pour la prod, pas indispensable pour comprendre les agents IA</p>
+      </summary>
       <p>Firebase est un <strong>back «&nbsp;clé en main&nbsp;»</strong> (BaaS, <em>Backend as a Service</em>) édité par Google&nbsp;: au lieu d'installer et de maintenir un serveur, vous assemblez des <strong>briques managées</strong>. Pour notre app, les briques utiles sont&nbsp;:</p>
       <ul>
         <li>🔐 <strong>Authentication</strong> — comptes &amp; connexion (e-mail, Google…), sans gérer de mots de passe vous-même.</li>
@@ -667,46 +1022,84 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
         <li>⚙️ <strong>Cloud Functions</strong> — un peu de logique côté serveur, à la demande (paiement, e-mails…), sans serveur permanent.</li>
         <li>🔔 <strong>Cloud Messaging (FCM)</strong> — notifications push. <strong>🛡️ App Check</strong> — anti-abus. <strong>📊 Analytics / Crashlytics</strong> — mesure &amp; crashs.</li>
       </ul>
-      <p><strong>L'intérêt financier (le point clé pour un petit projet)&nbsp;:</strong> tant que le trafic reste modeste, vous restez dans les <strong>quotas gratuits</strong> et l'addition est de <span class="free">~0&nbsp;€/mois</span>. Surtout, le modèle est <strong>serverless</strong>&nbsp;: aucune machine ne tourne 24&nbsp;h/24, donc <strong>pas de coût fixe</strong> — vous ne payez qu'à l'usage réel. Sur le plan Blaze, ces mêmes quotas gratuits sont <strong>déduits en premier</strong>&nbsp;: une petite app paie donc quelques centimes, pas des dizaines d'euros.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Service</th><th>Inclus gratuitement</th></tr></thead>
-          <tbody>
-            <tr><td data-label="Service">Firestore</td><td data-label="Inclus gratuitement" class="free">~50 000 lectures/jour · 20 000 écritures · 20 000 suppressions · 1 Gio stockés</td></tr>
-            <tr><td data-label="Service">Authentication</td><td data-label="Inclus gratuitement" class="free">50 000 utilisateurs actifs/mois (e-mail, Google…)</td></tr>
-            <tr><td data-label="Service">Hosting</td><td data-label="Inclus gratuitement" class="free">10 Go stockés + bande passante incluse · HTTPS + CDN</td></tr>
-            <tr><td data-label="Service">Cloud Functions</td><td data-label="Inclus gratuitement" class="free">2 M d'invocations/mois</td></tr>
-            <tr><td data-label="Service">Cloud Messaging</td><td data-label="Inclus gratuitement" class="free">gratuit, illimité</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p style="margin-bottom:0;">⚠️ <strong>Changements récents à connaître&nbsp;:</strong> <strong>Cloud Storage</strong> n'est plus inclus dans le plan gratuit Spark — il faut le plan Blaze (qui offre tout de même ~5 Go gratuits). Et Blaze n'a <strong>pas de plafond «&nbsp;dur&nbsp;»</strong>&nbsp;: d'où l'importance des alertes de budget (voir Étape&nbsp;0). Pour des quotas chiffrés à jour, voir <a href="https://firebase.google.com/pricing">firebase.google.com/pricing</a>.</p>
-    </div>
+      <p style="margin-bottom:8px;"><strong>L'intérêt financier, en 3 points&nbsp;:</strong></p>
+      <ul>
+        <li><strong>~0&nbsp;€/mois</strong> tant que le trafic reste modeste&nbsp;: on reste dans les <span class="free">quotas gratuits</span>.</li>
+        <li><strong>Pas de coût fixe</strong>&nbsp;: le modèle est <em>serverless</em> — aucune machine ne tourne 24&nbsp;h/24, vous ne payez qu'à l'usage réel.</li>
+        <li><strong>Le gratuit déduit en premier</strong> sur le plan Blaze&nbsp;: une petite app paie quelques centimes, pas des dizaines d'euros.</li>
+      </ul>
+
+      <details class="deepdive" style="margin-top:14px;">
+        <summary>
+          <p class="dd-head">📊 Voir les quotas gratuits chiffrés</p>
+          <p class="dd-note">Référence — chiffres indicatifs, voir la page officielle pour l'à-jour</p>
+        </summary>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Service</th><th>Inclus gratuitement</th></tr></thead>
+            <tbody>
+              <tr><td data-label="Service">Firestore</td><td data-label="Inclus gratuitement" class="free">~50 000 lectures/jour · 20 000 écritures · 20 000 suppressions · 1 Gio stockés</td></tr>
+              <tr><td data-label="Service">Authentication</td><td data-label="Inclus gratuitement" class="free">50 000 utilisateurs actifs/mois (e-mail, Google…)</td></tr>
+              <tr><td data-label="Service">Hosting</td><td data-label="Inclus gratuitement" class="free">10 Go stockés + bande passante incluse · HTTPS + CDN</td></tr>
+              <tr><td data-label="Service">Cloud Functions</td><td data-label="Inclus gratuitement" class="free">2 M d'invocations/mois</td></tr>
+              <tr><td data-label="Service">Cloud Messaging</td><td data-label="Inclus gratuitement" class="free">gratuit, illimité</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-bottom:0;">⚠️ <strong>Changements récents à connaître&nbsp;:</strong> <strong>Cloud Storage</strong> n'est plus inclus dans le plan gratuit Spark — il faut le plan Blaze (qui offre tout de même ~5 Go gratuits). Et Blaze n'a <strong>pas de plafond «&nbsp;dur&nbsp;»</strong>&nbsp;: d'où l'importance des alertes de budget (voir Étape&nbsp;0). Pour des quotas chiffrés à jour, voir <a href="https://firebase.google.com/pricing">firebase.google.com/pricing</a>.</p>
+      </details>
+    </details>
 
     <div class="step">
       <span class="num">ÉTAPE 0</span>
       <h3>🖥️ «&nbsp;J'allume mon PC&nbsp;»&nbsp;: qu'est-ce que j'installe&nbsp;?</h3>
-      <ol>
-        <li><strong>VS Code</strong> (l'éditeur) — <strong>[Recommandé]</strong> <code>winget install Microsoft.VisualStudioCode</code> (ou téléchargement&nbsp;: <a href="https://code.visualstudio.com/download">code.visualstudio.com/download</a>).</li>
-        <li><strong>Node.js 18+</strong> (<code>node --version</code>) — <strong>[Recommandé]</strong> <code>winget install OpenJS.NodeJS.LTS</code> (ou téléchargement&nbsp;: <a href="https://nodejs.org/en/download">nodejs.org/en/download</a>).</li>
-        <li><strong>Git</strong> (<code>git --version</code>) — <strong>[Recommandé]</strong> <code>winget install Git.Git</code> (ou téléchargement&nbsp;: <a href="https://git-scm.com/download/win">git-scm.com/download/win</a>).</li>
-        <li><strong>Claude Code</strong> — <strong>[Recommandé]</strong> installeur natif dans PowerShell (<code>irm https://claude.ai/install.ps1 | iex</code>), ou <a href="https://claude.com/download">claude.com/download</a>&nbsp;; puis l'extension VS Code&nbsp;: <a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">anthropic.claude-code</a>. Détails en partie 2.</li>
-        <li><strong>Firebase CLI</strong> — doc&nbsp;: <a href="https://firebase.google.com/docs/cli">firebase.google.com/docs/cli</a> :</li>
-      </ol>
+      <p>Cinq outils à installer (commandes <strong>winget</strong> recommandées sur Windows&nbsp;; sinon, lien de téléchargement)&nbsp;:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Outil</th><th>Installer</th><th>À quoi ça sert</th></tr></thead>
+          <tbody>
+            <tr>
+              <td data-label="Outil"><strong>VS Code</strong></td>
+              <td data-label="Installer"><code>winget install Microsoft.VisualStudioCode</code><br><a href="https://code.visualstudio.com/download">téléchargement</a></td>
+              <td data-label="À quoi ça sert">L'éditeur de code</td>
+            </tr>
+            <tr>
+              <td data-label="Outil"><strong>Node.js 18+</strong></td>
+              <td data-label="Installer"><code>winget install OpenJS.NodeJS.LTS</code><br><a href="https://nodejs.org/en/download">téléchargement</a> · vérif&nbsp;: <code>node --version</code></td>
+              <td data-label="À quoi ça sert">Fait tourner les outils de dev (npm, Vite…)</td>
+            </tr>
+            <tr>
+              <td data-label="Outil"><strong>Git</strong></td>
+              <td data-label="Installer"><code>winget install Git.Git</code><br><a href="https://git-scm.com/download/win">téléchargement</a> · vérif&nbsp;: <code>git --version</code></td>
+              <td data-label="À quoi ça sert">Historique &amp; versions du code</td>
+            </tr>
+            <tr>
+              <td data-label="Outil"><strong>Assistant agentique</strong><br><span style="font-weight:400;font-size:.85em;">(Claude Code ici)</span></td>
+              <td data-label="Installer"><code>irm https://claude.ai/install.ps1 | iex</code> ou <a href="https://claude.com/download">claude.com/download</a><br>+ extension <a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">anthropic.claude-code</a></td>
+              <td data-label="À quoi ça sert">L'agent de dev. <span style="font-size:.9em;">Codex, Gemini, Cursor, Copilot fonctionnent pareil&nbsp;: vérifiez qu'il voit le dossier projet.</span></td>
+            </tr>
+            <tr>
+              <td data-label="Outil"><strong>Firebase CLI</strong></td>
+              <td data-label="Installer">Voir le bloc ci-dessous · <a href="https://firebase.google.com/docs/cli">doc</a></td>
+              <td data-label="À quoi ça sert">Piloter Firebase depuis le terminal</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <div class="terminal">
-        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">outils Firebase</span></div>
+        <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">installer &amp; connecter Firebase CLI</span></div>
 <pre><span class="p">PS&gt;</span> <span class="k">npm</span> install -g firebase-tools
 <span class="p">PS&gt;</span> <span class="k">firebase</span> login          <span class="c"># connexion au compte Google (navigateur)</span>
 <span class="p">PS&gt;</span> <span class="k">firebase</span> projects:list  <span class="c"># vérifie la connexion</span></pre>
       </div>
-      <p>6. <strong>Un projet Firebase</strong> (<a href="https://console.firebase.google.com">console.firebase.google.com</a>) sur le <strong>plan Blaze (pay-as-you-go)</strong>, avec des <strong>alertes / limites de dépenses déjà configurées</strong>. Vous y activez <strong>Authentication</strong>, <strong>Firestore</strong> et éventuellement <strong>Storage</strong>. Blaze conserve les quotas gratuits de Spark et débloque App Hosting, Cloud Functions et les montées en charge.</p>
+      <p>Enfin, créez un <strong>projet Firebase</strong> (<a href="https://console.firebase.google.com">console.firebase.google.com</a>) sur le <strong>plan Blaze</strong>, avec des <strong>alertes de budget configurées</strong>, et activez-y <strong>Authentication</strong>, <strong>Firestore</strong> (et éventuellement <strong>Storage</strong>). <span style="color:var(--ink-soft);">Pourquoi Blaze et comment le garder sous contrôle&nbsp;: voir juste en dessous.</span></p>
       <div class="callout warn">
         <span class="label">💰 Bon à savoir sur Blaze</span>
         <p>Dans Google Cloud, un <strong>budget = une alerte</strong> (notification e-mail à 50/90/100&nbsp;%) mais <strong>ne coupe pas</strong> la facturation. Un vrai plafond «&nbsp;dur&nbsp;» demande un mécanisme en plus (Cloud Function déclenchée par l'alerte qui désactive la facturation). Pour un projet pédagogique, des alertes basses + des <strong>règles Firestore strictes</strong> suffisent à garder le contrôle.</p>
       </div>
       <div class="callout tip">
         <span class="label">💡 Astuce</span>
-        <p>Déléguez une partie de la mise en route à Claude Code&nbsp;: «&nbsp;Vérifie que Node, Git et Firebase CLI sont installés et dis-moi ce qui manque avec les commandes pour corriger.&nbsp;»</p>
+        <p>Déléguez une partie de la mise en route à votre assistant&nbsp;: «&nbsp;Vérifie que Node, Git et Firebase CLI sont installés et dis-moi ce qui manque avec les commandes pour corriger.&nbsp;»</p>
       </div>
     </div>
 
@@ -716,8 +1109,8 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
       <p>D'abord, <strong>lister les écrans</strong>&nbsp;: accueil/carte des trottinettes dispo, liste/recherche, fiche d'une trottinette, location <em>ou</em> achat, panier/paiement, connexion, profil/mes locations.</p>
       <p>Deux approches&nbsp;:</p>
       <ul>
-        <li>⚡ <strong>[Recommandé] Rapide, dans VS Code&nbsp;:</strong> demandez à Claude Code un <strong>prototype HTML/CSS cliquable</strong> mobile-first. La maquette est déjà du code&nbsp;: la transition vers le vrai développement est naturelle.</li>
-        <li>🖌️ <strong>Plus visuel&nbsp;:</strong> <strong>Claude Design</strong> (canevas) pour des maquettes léchées, puis <em>handoff</em> vers Claude Code pour les transformer en code.</li>
+        <li>⚡ <strong>[Recommandé] Rapide, dans VS Code&nbsp;:</strong> demandez à votre assistant un <strong>prototype HTML/CSS cliquable</strong> mobile-first. La maquette est déjà du code&nbsp;: la transition vers le vrai développement est naturelle.</li>
+        <li>🖌️ <strong>Plus visuel&nbsp;:</strong> utilisez un outil de design ou de maquette IA, puis faites le <em>handoff</em> vers votre assistant de code pour transformer les écrans en composants.</li>
       </ul>
       <div class="prompt">
         <div class="phead"><span class="star">✱</span> Prompt — maquette cliquable</div>
@@ -746,7 +1139,7 @@ Firestore). Crée un firebase.js qui lit les clés depuis des variables
 d'environnement (.env), et NE commite pas le .env (ajoute-le au
 .gitignore). Crée une structure claire : pages, composants, services.</pre>
       </div>
-      <p><strong>Poser les règles dans <code>CLAUDE.md</code>&nbsp;:</strong> stack imposée (React + Vite + Firebase), conventions, «&nbsp;les écrans s'inspirent des maquettes du dossier /maquettes&nbsp;». Claude le relit à chaque session.</p>
+      <p><strong>Poser les règles de projet&nbsp;:</strong> stack imposée (React + Vite + Firebase), conventions, «&nbsp;les écrans s'inspirent des maquettes du dossier /maquettes&nbsp;». Avec Claude Code, placez ces règles dans <code>CLAUDE.md</code>&nbsp;; avec un autre assistant, utilisez son fichier d'instructions ou ses règles de workspace.</p>
       <div class="prompt">
         <div class="phead"><span class="star">✱</span> Prompt — construire un écran depuis la maquette</div>
 <pre>À partir de @maquettes/accueil.html, code la page d'accueil React :
@@ -828,14 +1221,86 @@ et un cas "aucune trottinette".</pre>
       </div>
     </div>
 
+    <figure class="loopviz" aria-label="Le parcours de bout en bout : installer, maquetter, coder, construire, déployer.">
+      <div class="loopviz-steps">
+        <div class="lv-step">
+          <span class="lv-ico">🧰</span>
+          <span class="lv-t">Installer</span>
+          <span class="lv-d">VS Code + agent + Firebase CLI</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step">
+          <span class="lv-ico">🎨</span>
+          <span class="lv-t">Maquetter</span>
+          <span class="lv-d">les écrans, cliquables</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step">
+          <span class="lv-ico">⌨️</span>
+          <span class="lv-t">Coder</span>
+          <span class="lv-d">écran par écran (PWA + Firebase)</span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step">
+          <span class="lv-ico">📦</span>
+          <span class="lv-t">Construire</span>
+          <span class="lv-d"><code>npm run build</code></span>
+        </div>
+        <span class="lv-arrow" aria-hidden="true">→</span>
+        <div class="lv-step lv-end">
+          <span class="lv-ico">🚀</span>
+          <span class="lv-t">Déployer</span>
+          <span class="lv-d"><code>firebase deploy</code> → en ligne</span>
+        </div>
+      </div>
+      <figcaption>Une intention de départ&nbsp;: une app installable en prod à l'arrivée.</figcaption>
+    </figure>
+
     <div class="callout teal">
       <span class="label">🧭 Le résumé du parcours</span>
-      <p><code>Installer (VS Code + Claude Code + Firebase CLI)</code> → <code>Maquetter les écrans</code> → <code>Scaffolder + coder écran par écran (PWA + Firebase)</code> → <code>npm run build</code> → <code>firebase deploy</code>. Une intention de départ, une app installable en prod à l'arrivée.</p>
+      <p><code>Installer (VS Code + assistant agentique + Firebase CLI)</code> → <code>Maquetter les écrans</code> → <code>Scaffolder + coder écran par écran (PWA + Firebase)</code> → <code>npm run build</code> → <code>firebase deploy</code>. Une intention de départ, une app installable en prod à l'arrivée.</p>
     </div>
 
-    <div class="deepdive">
-      <p class="dd-head">🔭 Pour aller plus loin</p>
-      <p class="dd-note">Non abordé dans les 30 min — approfondir la stack PWA + Firebase</p>
+    <div class="callout info">
+      <span class="label">🔌 Et si le back n'est pas Firebase&nbsp;?</span>
+      <p>Firebase n'est qu'un des écosystèmes possibles. <strong>Ce qui ne change pas&nbsp;:</strong> décrire une intention à l'agent, lire le diff, tester, déployer via un CLI. <strong>Ce qui change&nbsp;:</strong> le service de back et sa commande de déploiement. Le même réflexe «&nbsp;l'agent pilote le CLI à ma place&nbsp;» vaut pour Supabase, Vercel/Netlify, Azure… et pour <strong>Power Platform</strong>.</p>
+    </div>
+
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">🏢 Cas particulier : héberger côté Power Platform (profils métier)</p>
+        <p class="dd-note">Optionnel — pertinent si vous travaillez dans l'écosystème Microsoft / Dataverse</p>
+      </summary>
+      <p>Pour les organisations déjà sous <strong>Microsoft 365 / Dataverse</strong>, le back «&nbsp;clé en main&nbsp;» peut être <strong>Power Platform</strong> plutôt que Firebase&nbsp;: données dans <strong>Dataverse</strong>, authentification <strong>Microsoft Entra ID</strong>, et hébergement de l'app dans l'environnement Power Platform. Et tout se pilote <strong>depuis VS Code</strong>, donc avec le même assistant agentique que dans ce cours.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Brique</th><th>Dans ce cours (Firebase)</th><th>Équivalent Power Platform</th></tr></thead>
+          <tbody>
+            <tr><td data-label="Brique">Base de données</td><td data-label="Firebase">Firestore</td><td data-label="Power Platform">Dataverse</td></tr>
+            <tr><td data-label="Brique">Authentification</td><td data-label="Firebase">Firebase Auth</td><td data-label="Power Platform">Microsoft Entra ID</td></tr>
+            <tr><td data-label="Brique">Hébergement du front</td><td data-label="Firebase">Firebase Hosting</td><td data-label="Power Platform">Power Apps (Code Apps) dans l'environnement</td></tr>
+            <tr><td data-label="Brique">CLI de pilotage</td><td data-label="Firebase"><code>firebase</code></td><td data-label="Power Platform"><code>pac</code> (Power Platform CLI)</td></tr>
+            <tr><td data-label="Brique">Outillage VS Code</td><td data-label="Firebase">Firebase CLI + extensions</td><td data-label="Power Platform">Extension <strong>Power Platform Tools</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Le geste reste identique&nbsp;: au lieu de demander à l'agent de lancer <code>firebase deploy</code>, vous lui faites piloter <code>pac</code> (authentification, push d'une solution, déploiement d'une Code App). La maquette, la PWA et la discipline de prompt/diff/test ne bougent pas.</p>
+      <ul>
+        <li><b>Extension Power Platform Tools (VS Code)</b> — connexion aux environnements, exploration Dataverse, commandes <code>pac</code> intégrées. → <a href="https://marketplace.visualstudio.com/items?itemName=microsoft-IsvExpTools.powerplatform-vscode">Marketplace</a></li>
+        <li><b>Power Platform CLI (<code>pac</code>)</b> — l'équivalent du Firebase CLI pour authentifier, créer et déployer. → <a href="https://learn.microsoft.com/power-platform/developer/cli/introduction">Doc Microsoft</a></li>
+        <li><b>Power Apps Code Apps</b> — héberger une app web (front moderne) dans Power Platform. → <a href="https://learn.microsoft.com/power-apps/developer/">Power Apps for developers</a></li>
+      </ul>
+      <div class="callout tip" style="margin-bottom:0;">
+        <span class="label">💡 Pour aller plus loin avec un agent</span>
+        <p>Comme pour Firebase, des <strong>skills dédiées</strong> peuvent outiller l'agent sur ce parcours (setup, scaffolding, données, déploiement Power Platform) — pratique pour transformer ces étapes en commandes répétables.</p>
+      </div>
+    </details>
+
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">🔭 Approfondir PWA + Firebase</p>
+        <p class="dd-note">Optionnel — ressources à explorer après la pratique</p>
+      </summary>
       <ul>
         <li><b>Cours «&nbsp;Learn PWA&nbsp;» (web.dev)</b>&nbsp;: un cours gratuit et complet pour vraiment comprendre manifeste, service workers, cache et installabilité. → <a href="https://web.dev/learn/pwa">web.dev/learn/pwa</a></li>
         <li><b><code>vite-plugin-pwa</code></b>&nbsp;: génère le manifeste et le service worker (via Workbox) automatiquement, au lieu de tout écrire à la main. → <a href="https://vite-pwa-org.netlify.app">vite-pwa-org.netlify.app</a></li>
@@ -849,27 +1314,33 @@ et un cas "aucune trottinette".</pre>
         <li><b>Carte &amp; géoloc</b>&nbsp;: afficher les trottinettes sur une carte avec la position de l'utilisateur. → <a href="https://leafletjs.com">Leaflet</a> <em>[Recommandé&nbsp;: gratuit, sans clé]</em> · <a href="https://developers.google.com/maps/documentation/javascript">Google Maps JS</a></li>
         <li><b>Vers le natif</b>&nbsp;: empaqueter la PWA en app de store (iOS/Android) avec Capacitor. → <a href="https://capacitorjs.com/docs">Capacitor</a></li>
       </ul>
-    </div>
+    </details>
   </section>
 
   <!-- ============ 4. ANTISÈCHE ============ -->
   <section id="antiseche">
     <p class="eyebrow">// Partie 04</p>
-    <h2 class="sect"><span class="emoji">📋</span>Antisèche — commandes &amp; raccourcis<span class="sect-time">📌 référence</span></h2>
+    <h2 class="sect"><span class="emoji">📋</span>Antisèche — commandes, équivalents &amp; réflexes<span class="sect-time">📌 référence</span></h2>
+    <p class="lead">Cette section est une référence rapide, pas une étape à lire ligne par ligne. Ouvrez-la quand vous avez besoin d'une commande.</p>
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">📋 Afficher l'antisèche complète</p>
+        <p class="dd-note">Référence — commandes Claude Code, Firebase et réflexes universels</p>
+      </summary>
     <div class="table-wrap">
       <table>
         <thead><tr><th>Élément</th><th>Commande / action</th></tr></thead>
         <tbody>
-          <tr><td data-label="Élément">Installer le CLI (natif, <strong>PowerShell</strong>)</td><td data-label="Commande / action"><code>irm https://claude.ai/install.ps1 | iex</code></td></tr>
-          <tr><td data-label="Élément">Installer le CLI (npm, Node 18+)</td><td data-label="Commande / action"><code>npm install -g @anthropic-ai/claude-code</code></td></tr>
-          <tr><td data-label="Élément">Vérifier l'installation</td><td data-label="Commande / action"><code>claude --version</code></td></tr>
-          <tr><td data-label="Élément">Diagnostic</td><td data-label="Commande / action"><code>claude doctor</code></td></tr>
-          <tr><td data-label="Élément">Lancer dans le terminal</td><td data-label="Commande / action"><code>claude</code></td></tr>
-          <tr><td data-label="Élément">Extension VS Code</td><td data-label="Commande / action">Marketplace → «&nbsp;Claude Code&nbsp;» (éditeur <em>anthropic</em>), VS Code ≥ 1.98</td></tr>
-          <tr><td data-label="Élément">Ouvrir le panneau</td><td data-label="Commande / action">Icône ✱ (fichier ouvert) ou <code>Ctrl/Cmd+Shift+P</code> → «&nbsp;Claude Code&nbsp;»</td></tr>
-          <tr><td data-label="Élément">Référencer un fichier</td><td data-label="Commande / action"><code>@</code> dans le prompt</td></tr>
-          <tr><td data-label="Élément">Multi-lignes dans le terminal</td><td data-label="Commande / action"><code>/terminal-setup</code> (active <code>Shift+Entrée</code>)</td></tr>
-          <tr><td data-label="Élément">Mémoire de projet</td><td data-label="Commande / action">fichier <code>CLAUDE.md</code> à la racine</td></tr>
+          <tr><td data-label="Élément">Installer Claude Code (natif, <strong>PowerShell</strong>)</td><td data-label="Commande / action"><code>irm https://claude.ai/install.ps1 | iex</code></td></tr>
+          <tr><td data-label="Élément">Installer Claude Code (npm, Node 18+)</td><td data-label="Commande / action"><code>npm install -g @anthropic-ai/claude-code</code></td></tr>
+          <tr><td data-label="Élément">Vérifier Claude Code</td><td data-label="Commande / action"><code>claude --version</code> puis <code>claude doctor</code></td></tr>
+          <tr><td data-label="Élément">Lancer Claude Code dans le terminal</td><td data-label="Commande / action"><code>claude</code></td></tr>
+          <tr><td data-label="Élément">Extension VS Code Claude Code</td><td data-label="Commande / action">Marketplace → «&nbsp;Claude Code&nbsp;» (éditeur <em>anthropic</em>), VS Code ≥ 1.98</td></tr>
+          <tr><td data-label="Élément">Ouvrir le panneau Claude Code</td><td data-label="Commande / action">Icône ✱ (fichier ouvert) ou <code>Ctrl/Cmd+Shift+P</code> → «&nbsp;Claude Code&nbsp;»</td></tr>
+          <tr><td data-label="Élément">Référencer un fichier</td><td data-label="Commande / action"><code>@</code> dans Claude Code&nbsp;; équivalent ailleurs&nbsp;: attacher un fichier, sélectionner un contexte ou pointer un chemin</td></tr>
+          <tr><td data-label="Élément">Multi-lignes dans Claude Code terminal</td><td data-label="Commande / action"><code>/terminal-setup</code> (active <code>Shift+Entrée</code>)</td></tr>
+          <tr><td data-label="Élément">Mémoire de projet</td><td data-label="Commande / action"><code>CLAUDE.md</code> avec Claude Code&nbsp;; équivalent ailleurs&nbsp;: fichier d'instructions, règles projet, workspace rules</td></tr>
+          <tr><td data-label="Élément">Réflexe universel</td><td data-label="Commande / action">Prompt clair → contexte limité → diff lu → test local → commit</td></tr>
           <tr><td data-label="Élément">Installer Firebase CLI</td><td data-label="Commande / action"><code>npm install -g firebase-tools</code></td></tr>
           <tr><td data-label="Élément">Se connecter à Firebase</td><td data-label="Commande / action"><code>firebase login</code></td></tr>
           <tr><td data-label="Élément">Vérifier la connexion</td><td data-label="Commande / action"><code>firebase projects:list</code></td></tr>
@@ -881,55 +1352,94 @@ et un cas "aucune trottinette".</pre>
         </tbody>
       </table>
     </div>
+    </details>
   </section>
 
   <!-- ============ 5. CONSOMMATION ============ -->
   <section id="conso">
     <p class="eyebrow">// Partie 05</p>
-    <h2 class="sect"><span class="emoji">⚡</span>Maîtriser sa consommation (tokens &amp; contexte)<span class="sect-time">⏱️ ~6 min</span></h2>
+    <h2 class="sect"><span class="emoji">⚡</span>Maîtriser sa consommation (tokens &amp; contexte)<span class="sect-time">📌 mémo</span></h2>
 
     <div class="callout info">
       <span class="label">🧠 Pourquoi c'est important</span>
-      <p>Claude Code raisonne à partir d'une <strong>fenêtre de contexte</strong> de taille limitée&nbsp;: vos messages, les fichiers qu'il lit, les sorties de commandes… s'y accumulent. Deux conséquences&nbsp;: chaque token a un <strong>coût</strong> (sur un compte facturé à l'usage ou via l'API), et surtout, quand la fenêtre se remplit, l'agent <strong>«&nbsp;oublie&nbsp;»</strong>, devient moins précis et plus lent. Maîtriser le contexte, c'est obtenir des réponses <strong>plus justes, plus rapides et moins chères</strong>.</p>
+      <p>Les assistants IA raisonnent à partir d'une <strong>fenêtre de contexte</strong> de taille limitée&nbsp;: vos messages, les fichiers lus, les sorties de commandes… s'y accumulent. Deux conséquences&nbsp;: chaque token a souvent un <strong>coût</strong>, et surtout, quand la fenêtre se remplit, l'agent devient moins précis et plus lent. Maîtriser le contexte, c'est obtenir des réponses <strong>plus justes, plus rapides et moins chères</strong>.</p>
     </div>
 
-    <h3>Les bons réflexes</h3>
+    <figure class="ctxgauge" aria-label="La fenêtre de contexte se remplit avec vos messages, les fichiers lus et les sorties de commandes ; il reste d'autant moins de marge.">
+      <p class="cg-head">🪟 La fenêtre de contexte, une place limitée</p>
+      <div class="cg-bar" role="img" aria-label="Barre : messages 26%, fichiers lus 24%, sorties de commandes 22%, marge restante le reste.">
+        <span class="cg-seg s1">Vos messages</span>
+        <span class="cg-seg s2">Fichiers lus</span>
+        <span class="cg-seg s3">Sorties cmd</span>
+        <span class="cg-seg s-free">marge restante</span>
+      </div>
+      <div class="cg-legend">
+        <span><i class="k1"></i> Vos messages</span>
+        <span><i class="k2"></i> Fichiers lus</span>
+        <span><i class="k3"></i> Sorties de commandes</span>
+      </div>
+      <figcaption>Tout ce que vous chargez grignote la marge. <b>Plus la fenêtre se remplit, plus l'agent ralentit et perd en précision</b> — d'où les réflexes ci-dessous.</figcaption>
+    </figure>
+
+    <div class="short-version">
+      <span class="label">Version courte</span>
+      <p>Pour économiser du temps, de l'argent et de la précision&nbsp;: donnez peu de fichiers, faites des tâches courtes, repartez d'un contexte propre entre deux sujets différents.</p>
+    </div>
+
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">⚡ Afficher les réflexes détaillés</p>
+        <p class="dd-note">Référence — à relire quand les sessions deviennent longues ou coûteuses</p>
+      </summary>
+    <h3>Les 3 réflexes qui paient le plus</h3>
     <ul>
-      <li><strong>Ne donnez que les fichiers utiles</strong> avec <code>@fichier</code>, au lieu de laisser l'agent explorer tout le dépôt&nbsp;: c'est le plus gros levier d'économie.</li>
-      <li><strong>Gardez un <code>CLAUDE.md</code> court.</strong> Des règles brèves et toujours vraies évitent de tout réexpliquer… mais un <code>CLAUDE.md</code> trop long se paie à <em>chaque</em> message. Restez concis.</li>
-      <li><strong>Découpez en tâches courtes.</strong> Une nouvelle tâche = un contexte frais. Les longues sessions traînent un historique inutile qui coûte des tokens à chaque tour.</li>
-      <li><strong>Surveillez et nettoyez.</strong> <code>/context</code> montre où part la fenêtre, <code>/compact</code> la résume quand elle se remplit, <code>/clear</code> repart à zéro entre deux tâches sans rapport.</li>
-      <li><strong>Déléguez aux sous-agents.</strong> Confier une sous-tâche (exploration, revue) à un sous-agent garde la conversation principale légère.</li>
-      <li><strong>Choisissez le bon modèle.</strong> Un modèle léger (type Haiku) suffit pour des tâches simples&nbsp;; gardez un modèle puissant (type Opus) pour les tâches complexes. Coupez le raisonnement étendu quand il est inutile.</li>
-      <li><strong>Évitez de coller de gros blocs</strong> (logs entiers, fichiers volumineux)&nbsp;: résumez, ou pointez le fichier avec <code>@</code>.</li>
+      <li><strong>Ne donnez que les fichiers utiles</strong> (<code>@fichier</code>) — au lieu de laisser l'agent explorer tout le dépôt. <em>C'est de loin le plus gros levier d'économie.</em></li>
+      <li><strong>Découpez en tâches courtes</strong> — une nouvelle tâche = un contexte frais&nbsp;; une longue session traîne un historique qui coûte des tokens à chaque tour.</li>
+      <li><strong>Repartez propre entre deux sujets</strong> (<code>/clear</code>) — ne gardez pas le contexte d'une tâche terminée pour la suivante.</li>
     </ul>
 
     <div class="callout tip">
-      <span class="label">⌨️ Les commandes à connaître</span>
-      <p><code>/context</code> — voir ce qui occupe la fenêtre · <code>/compact</code> — résumer/compacter le contexte · <code>/clear</code> — repartir d'un contexte vierge · <code>/model</code> — changer de modèle.</p>
+      <span class="label">⌨️ Les commandes à connaître (Claude Code)</span>
+      <p><code>/context</code> — voir ce qui occupe la fenêtre · <code>/compact</code> — la résumer quand elle se remplit · <code>/clear</code> — repartir d'un contexte vierge · <code>/model</code> — changer de modèle. Avec un autre outil, retenez le réflexe&nbsp;: <strong>mesurer, réduire, repartir proprement.</strong></p>
     </div>
 
-    <div class="deepdive">
-      <p class="dd-head">🔭 Pour aller plus loin</p>
-      <p class="dd-note">Docs officielles pour creuser</p>
+    <h4>Réflexes complémentaires</h4>
+    <ul>
+      <li><strong>Instructions projet courtes</strong> — des règles brèves et toujours vraies évitent de réexpliquer&nbsp;; mais un fichier d'instructions trop long se paie à <em>chaque</em> message.</li>
+      <li><strong>Déléguez aux sous-agents</strong> — confier une exploration ou une revue à un sous-agent garde la conversation principale légère.</li>
+      <li><strong>Choisissez le bon modèle</strong> — un modèle léger (type Haiku) pour les tâches simples, un modèle puissant (type Opus) pour les complexes&nbsp;; coupez le raisonnement étendu s'il est inutile.</li>
+      <li><strong>Évitez de coller de gros blocs</strong> (logs entiers, fichiers volumineux) — résumez, ou pointez le fichier avec <code>@</code>.</li>
+    </ul>
+    </details>
+
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">🔭 Docs coûts &amp; contexte</p>
+        <p class="dd-note">Référence — à garder pour plus tard</p>
+      </summary>
       <ul>
         <li><b>Maîtriser les coûts</b>&nbsp;: suivre l'usage, fixer des limites, réduire la consommation. → <a href="https://code.claude.com/docs/en/costs">code.claude.com/docs — Costs</a></li>
         <li><b>La fenêtre de contexte</b>&nbsp;: ce qui se charge automatiquement, ce que coûte chaque lecture, quand la compaction se déclenche. → <a href="https://code.claude.com/docs/en/context-window">Context window</a></li>
         <li><b>Mémoire &amp; <code>CLAUDE.md</code></b>&nbsp;: bien doser les instructions persistantes. → <a href="https://code.claude.com/docs/en/memory">Memory</a></li>
       </ul>
-    </div>
+    </details>
   </section>
 
   <!-- ============ 6. LIENS UTILES ============ -->
   <section id="liens">
     <p class="eyebrow">// Partie 06</p>
     <h2 class="sect"><span class="emoji">🔗</span>Liens utiles — sites, docs &amp; tutos<span class="sect-time">🧭 à explorer</span></h2>
-    <p class="lead">Toutes les ressources officielles pour creuser après la présentation.</p>
+    <p class="lead">Des ressources pour creuser l'exemple Claude Code, puis les briques techniques communes&nbsp;: PWA, Firebase, Git, VS Code.</p>
 
+    <details class="deepdive">
+      <summary>
+        <p class="dd-head">🔗 Afficher les ressources</p>
+        <p class="dd-note">Référence — à consulter après le cours, pas pendant le parcours principal</p>
+      </summary>
     <div class="links-grid">
 
       <div class="link-card">
-        <h3>🤖 Claude Code &amp; Anthropic</h3>
+        <h3>🤖 Exemple principal : Claude Code</h3>
         <ul>
           <li><a href="https://docs.claude.com/en/docs/claude-code/overview">Documentation Claude Code</a><span class="desc">Le point de départ officiel</span></li>
           <li><a href="https://claude.com/product/claude-code">Page produit Claude Code</a><span class="desc">Présentation &amp; cas d'usage</span></li>
@@ -942,6 +1452,16 @@ et un cas "aucune trottinette".</pre>
           <li><a href="https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview">Guide de prompt engineering</a><span class="desc">Écrire de meilleurs prompts</span></li>
           <li><a href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a><span class="desc">Connecter des outils externes</span></li>
           <li><a href="https://support.claude.com">Centre d'aide</a></li>
+        </ul>
+      </div>
+
+      <div class="link-card">
+        <h3>🧭 Autres assistants</h3>
+        <ul>
+          <li><strong>Codex</strong><span class="desc">Même logique agentique&nbsp;: tâche, contexte projet, diff, validation.</span></li>
+          <li><strong>Gemini CLI / Gemini Code Assist</strong><span class="desc">Approche comparable&nbsp;: donner un contexte, demander une modification, vérifier.</span></li>
+          <li><strong>Cursor, Copilot, Windsurf</strong><span class="desc">Interfaces différentes, réflexes identiques&nbsp;: petites tâches, tests, revue du diff.</span></li>
+          <li><strong>Point de méthode</strong><span class="desc">Ne cherchez pas seulement «&nbsp;le meilleur outil&nbsp;»&nbsp;: apprenez surtout à piloter un agent proprement.</span></li>
         </ul>
       </div>
 
@@ -985,50 +1505,248 @@ et un cas "aucune trottinette".</pre>
         </ul>
       </div>
 
+      <div class="link-card">
+        <h3>🏢 Autre back : Power Platform</h3>
+        <ul>
+          <li><a href="https://marketplace.visualstudio.com/items?itemName=microsoft-IsvExpTools.powerplatform-vscode">Power Platform Tools (VS Code)</a><span class="desc">Piloter Dataverse &amp; <code>pac</code> depuis l'éditeur</span></li>
+          <li><a href="https://learn.microsoft.com/power-platform/developer/cli/introduction">Power Platform CLI (<code>pac</code>)</a><span class="desc">L'équivalent du Firebase CLI</span></li>
+          <li><a href="https://learn.microsoft.com/power-apps/developer/">Power Apps for developers</a><span class="desc">Code Apps, Dataverse, Entra ID</span></li>
+        </ul>
+      </div>
+
     </div>
+    </details>
   </section>
 
-  <!-- ============ 7. FINALE ============ -->
-  <section id="finale">
-    <div class="finale">
-      <p class="eyebrow">// Partie 07</p>
-      <h2>🎯 Le fil rouge à retenir<span class="sect-time" style="color:#fff;background:rgba(255,255,255,.12);">⏱️ ~1 min</span></h2>
+  <!-- ============ 7. AUTO-ÉVALUATION & À RETENIR ============ -->
+  <section id="validation">
+    <p class="eyebrow">// Partie 07</p>
+    <h2 class="sect"><span class="emoji">✅</span>Ce qu'il faut retenir<span class="sect-time">📌 mémo</span></h2>
+
+    <p class="lead">Cette partie sert de sortie de cours. Si vous savez répondre à ces questions sans relire tout le support, vous avez les bons réflexes pour continuer seul.</p>
+
+    <div class="learning-grid">
+      <div class="learning-card">
+        <h3>🧠 Compréhension</h3>
+        <ul>
+          <li>Expliquez la différence entre autocomplétion et agent de développement.</li>
+          <li>Citez les trois éléments qui rendent une PWA installable.</li>
+          <li>Expliquez pourquoi on lit toujours le diff avant d'accepter.</li>
+          <li>Dites à quoi sert une mémoire projet, comme <code>CLAUDE.md</code> dans Claude Code.</li>
+        </ul>
+      </div>
+      <div class="learning-card">
+        <h3>🛠️ Pratique</h3>
+        <ul>
+          <li>Demandez à votre assistant une petite modification ciblée sur votre site.</li>
+          <li>Refusez ou faites corriger une partie du diff si elle ne convient pas.</li>
+          <li>Vérifiez l'app en mode mobile dans le navigateur.</li>
+          <li>Lancez un test simple hors-ligne via les DevTools.</li>
+        </ul>
+      </div>
+      <div class="learning-card">
+        <h3>🚦 Vigilance</h3>
+        <ul>
+          <li>Identifiez une donnée qui ne doit jamais être exposée côté client.</li>
+          <li>Expliquez pourquoi les règles Firestore protègent aussi le budget.</li>
+          <li>Citez deux façons de réduire la consommation de contexte.</li>
+          <li>Décidez ce qui mérite un nouveau prompt plutôt qu'une grosse demande unique.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prompt">
+      <div class="phead"><span class="star">✱</span> Défi final — autonomie guidée</div>
+<pre>Ajoute à mon site une page ou section "Avis clients".
+- 3 avis fictifs, visuellement cohérents avec le design existant.
+- Responsive mobile.
+- Ne modifie pas la structure PWA sauf si nécessaire.
+- Explique-moi les fichiers touchés avant que je valide.</pre>
+    </div>
+
+    <div class="checkpoint">
+      <span class="label">✅ Critère de réussite final</span>
+      <p>Vous avez réussi l'autoformation si vous êtes capable de demander une évolution, comprendre les fichiers modifiés, lire le diff, tester le résultat, puis décider vous-même d'accepter ou de faire corriger.</p>
+    </div>
+
+    <div class="finale" style="margin-top:26px;">
       <p class="flow">Prompt clair → l'agent agit sur tout le projet → vous lisez le diff → vous validez.</p>
-      <p>Claude Code&nbsp;+&nbsp;VS Code permet de passer d'une <strong>intention</strong> à un site web fonctionnel, puis à une PWA installable déployée en prod, en restant celui qui <strong>comprend et valide</strong> le code. L'outil amplifie le développeur&nbsp;; il ne le remplace pas.</p>
+      <p>L'agent IA de développement vous permet de passer d'une <strong>intention</strong> à un site fonctionnel, puis à une app en prod, tout en restant celui qui <strong>comprend et valide</strong> le code. Claude Code tout comme Codex, Gemini... changent l'interface, pas les réflexes essentiels. L'outil amplifie le développeur&nbsp;; il ne le remplace pas.</p>
     </div>
   </section>
 
 </div>
 
 <nav class="navbar" aria-label="Navigation des sections">
-  <a href="#top"><span class="ic">📑</span>Haut</a>
-  <a href="#plan" data-sec="plan"><span class="ic">🗺️</span>Parcours</a>
-  <a href="#detail" data-sec="detail"><span class="ic">🎬</span>Tutoriel</a>
-  <a href="#pratique" data-sec="pratique"><span class="ic">🛴</span>Pratique</a>
-  <a href="#antiseche" data-sec="antiseche"><span class="ic">📋</span>Antisèche</a>
-  <a href="#conso" data-sec="conso"><span class="ic">⚡</span>Conso</a>
-  <a href="#liens" data-sec="liens"><span class="ic">🔗</span>Liens</a>
-  <a href="#finale" data-sec="finale"><span class="ic">🎯</span>Retenir</a>
+  <div class="navbar-inner">
+    <a href="#top"><span class="ic">📑</span>Haut</a>
+    <a href="#plan" data-sec="plan"><span class="ic">🗺️</span>Vue d'ensemble</a>
+    <a href="#detail" data-sec="detail"><span class="ic">🎬</span>Tutoriel</a>
+    <a href="#pratique" data-sec="pratique"><span class="ic">🛴</span>Pratique</a>
+    <a href="#antiseche" data-sec="antiseche"><span class="ic">📋</span>Antisèche</a>
+    <a href="#conso" data-sec="conso"><span class="ic">⚡</span>Conso</a>
+    <a href="#liens" data-sec="liens"><span class="ic">🔗</span>Liens</a>
+    <a href="#validation" data-sec="validation"><span class="ic">✅</span>Bilan</a>
+  </div>
 </nav>
 
 <script>
 (function(){
+  var nav = document.querySelector('.navbar-inner');
   var links = Array.prototype.slice.call(document.querySelectorAll('.navbar a[data-sec]'));
   var map = {};
   links.forEach(function(l){ map[l.getAttribute('data-sec')] = l; });
   if(!('IntersectionObserver' in window)) return;
+  // Centre l'onglet actif DANS la navbar (scroll horizontal uniquement),
+  // sans jamais déplacer la page — sinon le rafraîchissement saute à une section.
+  function centerTab(a){
+    if(!nav) return;
+    var left = a.offsetLeft - (nav.clientWidth - a.offsetWidth) / 2;
+    nav.scrollTo({ left: left, behavior: 'smooth' });
+  }
   var obs = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if(e.isIntersecting){
         links.forEach(function(l){ l.classList.remove('active'); });
         var a = map[e.target.id];
-        if(a){ a.classList.add('active'); a.scrollIntoView({block:'nearest', inline:'nearest'}); }
+        if(a){ a.classList.add('active'); centerTab(a); }
       }
     });
   }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
-  ['plan','detail','pratique','antiseche','conso','liens','finale'].forEach(function(id){
+  ['plan','detail','pratique','antiseche','conso','liens','validation'].forEach(function(id){
     var el = document.getElementById(id);
     if(el) obs.observe(el);
+  });
+})();
+</script>
+
+<script>
+/* Glossaire : à la 1re rencontre d'un terme technique, ajoute une pastille « ? »
+   -> tooltip au survol (PC), notification en bas d'écran (téléphone / tactile). */
+(function(){
+  var GLOSS = [
+    {t:["npm"], d:"Le « magasin de code » de Node.js : une commande qui télécharge et installe des bibliothèques toutes faites (npm = Node Package Manager)."},
+    {t:["Node.js","Node"], d:"Un programme qui permet d'exécuter du JavaScript directement sur votre ordinateur, hors d'un navigateur. Beaucoup d'outils de développement en ont besoin."},
+    {t:["CLI"], d:"« Command-Line Interface » : un outil qu'on pilote en tapant des commandes au clavier dans un terminal, plutôt qu'avec des boutons."},
+    {t:["terminal"], d:"La fenêtre où l'on tape des commandes texte pour piloter l'ordinateur ou ses outils de développement."},
+    {t:["PowerShell"], d:"Le terminal (la fenêtre de commandes) intégré à Windows. C'est là qu'on tape les commandes d'installation."},
+    {t:["PATH"], d:"La liste des dossiers où Windows va chercher les programmes. Si un outil n'y est pas, taper son nom donne « commande non reconnue »."},
+    {t:["VS Code"], d:"Visual Studio Code : l'éditeur de texte pour programmer, gratuit et très répandu, édité par Microsoft."},
+    {t:["HTML"], d:"Le langage qui décrit la structure d'une page web : titres, paragraphes, images, boutons…"},
+    {t:["CSS"], d:"Le langage qui décrit l'apparence d'une page web : couleurs, polices, tailles, mise en page."},
+    {t:["JavaScript"], d:"Le langage qui rend une page web interactive : réagir aux clics, animer, charger des données…"},
+    {t:["vanilla"], d:"« Vanilla » signifie « sans framework » : du HTML/CSS/JavaScript pur, sans bibliothèque ajoutée."},
+    {t:["framework","frameworks"], d:"Une boîte à outils de code prête à l'emploi (ex. React) qui structure et accélère le développement, au prix d'un peu d'apprentissage."},
+    {t:["responsive"], d:"Se dit d'un site qui s'adapte tout seul à la taille de l'écran : lisible aussi bien sur téléphone que sur ordinateur."},
+    {t:["diff"], d:"L'affichage des changements proposés : en vert les ajouts, en rouge les suppressions. C'est ce qu'on relit avant de valider."},
+    {t:["Git"], d:"Un outil qui enregistre l'historique de votre code : chaque version est sauvegardée, on peut revenir en arrière et travailler à plusieurs."},
+    {t:["commit"], d:"Un « point de sauvegarde » dans l'historique Git : une photo de votre code à un instant donné, avec un message décrivant le changement."},
+    {t:["dépôt","dépôts","repository"], d:"Le dossier de votre projet suivi par Git, avec tout son historique de versions (en anglais : repository)."},
+    {t:["PWA"], d:"« Progressive Web App » : un site web qui peut s'installer sur le téléphone et fonctionner comme une vraie application, même hors-ligne."},
+    {t:["manifeste","manifest.json"], d:"Un petit fichier qui décrit l'app (nom, icône, couleurs) et permet de l'installer sur l'écran d'accueil du téléphone."},
+    {t:["service worker","service workers"], d:"Un script qui tourne en arrière-plan du navigateur : il met les fichiers en cache pour que l'app démarre vite et marche hors-ligne."},
+    {t:["HTTPS"], d:"La version sécurisée et chiffrée d'une connexion web (le petit cadenas). Obligatoire pour installer une PWA."},
+    {t:["Firebase"], d:"Une plateforme de Google qui fournit « clé en main » base de données, authentification et hébergement, sans gérer de serveur soi-même."},
+    {t:["Firestore"], d:"La base de données de Firebase : elle stocke vos données et se met à jour en temps réel sur tous les appareils connectés."},
+    {t:["API"], d:"Une « interface » qui permet à deux programmes de se parler : on envoie une demande, on reçoit une réponse, sans connaître les détails internes."},
+    {t:["MCP"], d:"« Model Context Protocol » : un standard qui permet de brancher l'agent IA sur des outils externes (GitHub, bases de données…)."},
+    {t:["CDN"], d:"Un réseau de serveurs répartis dans le monde qui livrent votre site depuis le point le plus proche du visiteur, donc plus vite."},
+    {t:["serverless"], d:"Un modèle où aucune machine ne tourne en permanence : le code s'exécute à la demande et vous ne payez qu'à l'usage réel."},
+    {t:["BaaS"], d:"« Backend as a Service » : un back-end prêt à l'emploi (base, comptes, hébergement) loué comme un service, au lieu de l'installer soi-même."},
+    {t:["SDK"], d:"« Software Development Kit » : un ensemble d'outils et de code fournis pour utiliser un service (ici Firebase) dans son application."},
+    {t:["React"], d:"Un framework JavaScript très répandu pour construire des interfaces web en « composants » réutilisables."},
+    {t:["Vite"], d:"Un outil qui démarre et assemble un projet web moderne très rapidement, pour le développement comme pour la version finale."},
+    {t:["winget"], d:"Le gestionnaire de paquets de Windows : il installe des logiciels en une seule commande."},
+    {t:["tokens","token"], d:"L'unité que l'IA compte pour mesurer et facturer le texte : grossièrement, un mot ≈ 1 à 2 tokens."},
+    {t:["fenêtre de contexte"], d:"La « mémoire de travail » de l'IA : tout ce qu'elle peut lire d'un coup (vos messages, les fichiers…). Sa taille est limitée."},
+    {t:["headless"], d:"Mode « sans interface » : on pilote l'outil par une commande scriptée, sans fenêtre interactive."},
+    {t:["CI/CD"], d:"Chaîne d'automatisation qui teste puis publie le code à chaque modification, sans étape manuelle."},
+    {t:["NoSQL"], d:"Un type de base de données souple, qui range les données en « documents » plutôt qu'en tableaux à colonnes fixes."}
+  ];
+
+  var body = document.body;
+  var SKIP_TAG = {A:1,CODE:1,PRE:1,BUTTON:1,SCRIPT:1,STYLE:1,NOSCRIPT:1};
+  var SKIP_CLASS = {tt:1,phead:1,gloss:1,'sect-time':1,'path-note':1,dur:1,num:1,eyebrow:1,kicker:1,meta:1};
+
+  function inSkipped(node){
+    var p = node.parentNode;
+    while(p && p !== body){
+      if(p.nodeType === 1){
+        if(SKIP_TAG[p.tagName]) return true;
+        if(p.classList){
+          for(var i=0;i<p.classList.length;i++){ if(SKIP_CLASS[p.classList[i]]) return true; }
+        }
+      }
+      p = p.parentNode;
+    }
+    return false;
+  }
+
+  function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+  function makeBadge(g, word){
+    var b = document.createElement('button');
+    b.className = 'gloss';
+    b.type = 'button';
+    b.setAttribute('data-tip', g.d);
+    b.setAttribute('data-term', word);
+    b.setAttribute('aria-label', 'Que veut dire « ' + word + ' » ? Définition.');
+    b.textContent = '?';
+    return b;
+  }
+
+  GLOSS.forEach(function(g){
+    var alts = g.t.slice().sort(function(a,b){ return b.length - a.length; }).map(escapeRe).join('|');
+    var re;
+    try { re = new RegExp('(?<![\\p{L}\\p{N}_-])(' + alts + ')(?![\\p{L}\\p{N}_-])', 'iu'); }
+    catch(e){ re = new RegExp('\\b(' + alts + ')\\b', 'i'); }
+
+    var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, null);
+    var node;
+    while((node = walker.nextNode())){
+      if(!node.nodeValue || inSkipped(node)) continue;
+      var m = re.exec(node.nodeValue);
+      if(!m) continue;
+      var word = m[0];
+      var after = node.splitText(m.index);   // after = mot + suite
+      var rest = after.splitText(word.length); // after = mot, rest = suite
+      rest.parentNode.insertBefore(makeBadge(g, word), rest);
+      break; // une seule pastille par terme : la première rencontre
+    }
+  });
+
+  /* ---- Notification bas d'écran pour le tactile ---- */
+  var coarse = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+  var toast, toastTimer;
+
+  function ensureToast(){
+    if(toast) return;
+    toast = document.createElement('div');
+    toast.className = 'gloss-toast';
+    toast.setAttribute('role','status');
+    toast.innerHTML = '<button class="gt-close" type="button" aria-label="Fermer">×</button>'
+      + '<span class="gt-term"></span><span class="gt-def"></span>';
+    document.body.appendChild(toast);
+    toast.querySelector('.gt-close').addEventListener('click', hideToast);
+  }
+  function showToast(term, def){
+    ensureToast();
+    toast.querySelector('.gt-term').textContent = term;
+    toast.querySelector('.gt-def').textContent = def;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 8000);
+  }
+  function hideToast(){ if(toast) toast.classList.remove('show'); }
+
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.gloss') : null;
+    if(!b){
+      if(toast && (!e.target.closest || !e.target.closest('.gloss-toast'))) hideToast();
+      return;
+    }
+    e.preventDefault();
+    if(coarse) showToast(b.getAttribute('data-term'), b.getAttribute('data-tip'));
   });
 })();
 </script>
