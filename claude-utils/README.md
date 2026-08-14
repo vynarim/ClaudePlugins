@@ -45,6 +45,8 @@ Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills
 
 ## Historique
 
+- **2.1.1** — documentation : l'option `autoUpdate` des marketplaces, qui met à jour les plugins au
+  démarrage sans lancer `/update-plugins`. Aucune skill modifiée dans son fonctionnement.
 - **2.1.0** — deux skills en plus : `ship` (commit + push, disponible sur tous les repos) et
   `context-check` (audit du `CLAUDE.md`). `eco` couvre en plus la délégation aux sous-agents, le mode
   plan, `/rewind` et la mémoire persistante.

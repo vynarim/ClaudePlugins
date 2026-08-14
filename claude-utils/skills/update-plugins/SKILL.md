@@ -53,6 +53,11 @@ recharger la fenêtre.
 
 - Ne pas confondre avec `claude plugin marketplace update` (catalogue) — c'est `claude plugin update`
   (plugin installé) qui applique réellement la nouvelle version.
+- **Pour ne plus avoir à lancer cette skill après chaque publication** : ajouter `"autoUpdate": true`
+  à l'entrée de la marketplace dans `extraKnownMarketplaces` (`~/.claude/settings.json`), ce qui met à
+  jour la marketplace et ses plugins installés au démarrage. L'option n'est exposée par aucune commande
+  du CLI. La skill reste utile pour appliquer un bump *tout de suite* sans attendre un redémarrage.
+  Détails : [INSTALL.md](https://github.com/vynarim/ClaudePlugins/blob/main/INSTALL.md#automatiser--loption-autoupdate).
 - Alternative si `update` se comporte mal : `claude plugin uninstall <plugin>@dev-tools` puis
   `claude plugin install <plugin>@dev-tools`.
 - Cette skill agit au scope **user** par défaut ; préciser `-s project`/`local` si le plugin a été
