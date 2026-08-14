@@ -10,6 +10,7 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 | Skill | Invocation | Rôle |
 |---|---|---|
 | `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, délégation aux sous-agents. |
+| `audit` | `/audit` | Audit de cohérence : reconstitue le modèle depuis le code, le confronte aux écrans et aux règles, rend un diagnostic classé. Read-only. |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
@@ -45,6 +46,13 @@ Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills
 
 ## Historique
 
+- **2.2.0** — skill `audit` : la méthode d'audit de cohérence, jusqu'ici recopiée à la main dans
+  chaque projet. Le squelette (reconstitution du modèle, grille, auto-vérification, format du
+  rapport) est générique ; les spécificités d'un dépôt vivent dans son `.claude/audit-notes.md`
+  (gabarit dans `skills/audit/references/`). `ship` change aussi de règle sur deux points :
+  **plus aucun trailer `Co-Authored-By`** ni mention d'assistant dans les messages de commit, et
+  interdiction explicite de déployer — la mise en production relève d'une skill `deploy` locale au
+  projet.
 - **2.1.1** — documentation : l'option `autoUpdate` des marketplaces, qui met à jour les plugins au
   démarrage sans lancer `/update-plugins`. Aucune skill modifiée dans son fonctionnement.
 - **2.1.0** — deux skills en plus : `ship` (commit + push, disponible sur tous les repos) et

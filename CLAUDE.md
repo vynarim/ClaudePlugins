@@ -12,10 +12,13 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 - `examples/` — gabarit de `.claude/settings.json` à copier dans un projet consommateur
 - `docs/` — source du tutoriel publié via GitHub Pages (`index.html` autonome)
 - `.claude/skills/` — skills **internes** au repo (`skill-new`), non publiées
+- `.claude/audit-notes.md` — ce que `/audit` doit vérifier ici (cohérence du catalogue, pas un modèle
+  de données)
 
 ## Plugins
 
-- **claude-utils** — générique : `eco` (discipline tokens/contexte), `context-check` (audit du
+- **claude-utils** — générique : `eco` (discipline tokens/contexte), `audit` (cohérence modèle ⇄
+  code, extensible par `.claude/audit-notes.md` côté projet), `context-check` (audit du
   `CLAUDE.md`), `ship` (commit + push), `pr-draft`, `session-brief`, `update-plugins`
 
 Repo **généraliste** : outillage Claude Code transverse, sans domaine métier particulier.
@@ -23,8 +26,9 @@ Repo **généraliste** : outillage Claude Code transverse, sans domaine métier 
 ## Conventions
 
 - **Pas de commit/push automatique.** Faire les modifs, puis attendre `/ship` (skill de
-  `claude-utils` : stage + commit Conventional Commits avec trailer Co-Authored-By + push).
-  Voir [[no-auto-commit-ship-skill]].
+  `claude-utils` : stage + commit Conventional Commits + push). Voir [[no-auto-commit-ship-skill]].
+- **Aucun trailer `Co-Authored-By`** ni mention d'assistant dans les messages de commit, quel que
+  soit le dépôt. Voir [[no-coauthored-by-trailer]].
 - Messages de commit : `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`).
 - Travail directement sur `main`.
 - Publier une version = bump `version` du plugin + `/ship`. Côté postes : `claude plugin marketplace

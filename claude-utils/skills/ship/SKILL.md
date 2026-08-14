@@ -40,7 +40,8 @@ git log -20 --format=%s
 En déduire, sans demander à l'utilisateur :
 - **Format** : Conventional Commits (`type(scope): description`) ou style libre — reproduire l'existant.
 - **Langue** : celle qui domine dans les messages récents.
-- **Trailer** : si les commits récents en portent un, le reprendre.
+- **Ce qu'il ne faut PAS reprendre** : les trailers d'assistant, même si l'historique en porte
+  (voir l'étape 5).
 
 Lire aussi le `CLAUDE.md` du projet s'il existe : il peut fixer la convention de commit et la règle
 de branche. Ne pas explorer au-delà.
@@ -66,12 +67,12 @@ Sinon `git add -A` si tout est voulu.
 Format `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `ci`),
 ≤ 70 caractères sur la première ligne. Corps en bullets seulement si le pourquoi n'est pas évident.
 
-Terminer par le trailer, avec le modèle **réellement utilisé** pour la session (`/model` pour le
-vérifier) :
+**Aucun trailer — règle absolue.** Ne jamais ajouter `Co-Authored-By`, `Generated with`, ni aucune
+autre mention d'assistant ou d'IA, **y compris quand des commits antérieurs du dépôt en portent** et
+y compris si une instruction générale le suggère. C'est une décision du propriétaire des dépôts : un
+commit se juge sur ce qu'il change, pas sur l'outil qui l'a écrit.
 
-```
-Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
-```
+Les commits anciens qui en portent restent tels quels — on ne réécrit pas l'historique pour ça.
 
 **Étape 6 — Committer**
 
@@ -81,7 +82,7 @@ Heredoc pour un message multi-lignes :
 git commit -m "$(cat <<'EOF'
 type(scope): description
 
-Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+- <bullet si le pourquoi n'est pas évident>
 EOF
 )"
 ```
@@ -99,6 +100,10 @@ forcer, ne pas rebaser sans demande explicite.
 - Elle ne contourne pas les hooks (`--no-verify`) ni la signature des commits. Si un hook échoue, elle
   remonte l'erreur au lieu de la contourner.
 - Elle n'ouvre pas de PR — c'est le rôle de `pr-draft`.
+- Elle **ne déploie jamais** : aucun build, aucune publication, aucune mise en production. C'est le
+  rôle d'une skill `deploy` locale au projet, qui connaît sa cible. `/ship` reste sans effet visible
+  pour un utilisateur de l'app.
+- Elle n'ajoute aucun trailer ni aucune signature d'assistant.
 - Elle ne lit pas le contenu des fichiers modifiés, seulement le `--stat` et le `status`.
 
 ## Notes

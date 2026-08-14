@@ -8,7 +8,7 @@ Ce dépôt héberge les plugins suivants :
 
 | Plugin | Version | Pour quoi faire |
 |---|---|---|
-| [`claude-utils`](claude-utils/) | 2.1.1 | Boîte à outils générique : efficacité tokens, commit/push, PR GitHub, reprise de session, mise à jour des plugins |
+| [`claude-utils`](claude-utils/) | 2.2.0 | Boîte à outils générique : efficacité tokens, audit de cohérence, commit/push, PR GitHub, reprise de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 
@@ -21,6 +21,7 @@ Pour l'installer sur un poste neuf et prendre en main les skills, suivre le
 | Skill | Invocation | Rôle |
 |---|---|---|
 | `eco` | `/eco` | Discipline tokens/contexte — une session = un objectif, `/clear` aux bascules, délégation aux sous-agents |
+| `audit` | `/audit` | Audit de cohérence modèle ⇄ code : diagnostic classé par gravité, read-only ; spécificités du dépôt dans `.claude/audit-notes.md` |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet et propose la version condensée |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant |
