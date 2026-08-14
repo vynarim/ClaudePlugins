@@ -6,7 +6,6 @@ pour la liste à jour). On enregistre la marketplace une fois, puis on installe 
 ## Prérequis
 
 - **Claude Code** installé (`claude --version`)
-- **Node.js** dans le PATH (`node --version`) — requis par certains plugins (ex. le hook de `claude-utils`)
 
 ---
 
@@ -33,7 +32,6 @@ Dans le terminal (PowerShell) — enregistre la marketplace, puis installe les p
 ```powershell
 claude plugin marketplace add vynarim/ClaudePlugins
 claude plugin install claude-utils@dev-tools
-claude plugin install claude-powerplatform@dev-tools
 ```
 
 > Tu n'es pas obligé de tout installer : n'installe que les plugins dont tu as besoin. La liste
@@ -57,8 +55,7 @@ Recharge ensuite la fenêtre VS Code.
 Dans une session Claude Code :
 
 - `/plugin` → onglet *Installed* : chaque plugin installé (`…@dev-tools`) présent et activé
-- `/hooks` → les hooks éventuels du plugin sont listés (ex. `UserPromptSubmit` pour `claude-utils`)
-- Tape `/` : les skills des plugins installés doivent être proposées (ex. `/eco`, `/pp-diag`)
+- Tape `/` : les skills des plugins installés doivent être proposées (ex. `/eco`, `/session-brief`)
 
 ---
 
@@ -114,7 +111,6 @@ Normal — un plugin Claude Code est distinct d'une extension VS Code. Gère-les
 session ou `claude plugin list` dans le terminal.
 
 **Dépannage propre à un plugin**
-Les particularités (réglages d'un hook, variables d'environnement, prérequis spécifiques) sont
-documentées dans le README de chaque plugin :
+Les particularités (variables d'environnement, prérequis spécifiques) sont documentées dans le README
+de chaque plugin :
 - [claude-utils/README.md](claude-utils/README.md)
-- [claude-powerplatform/README.md](claude-powerplatform/README.md)

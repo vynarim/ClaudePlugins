@@ -1,8 +1,7 @@
 # DEPLOYMENT.md — maintenir la marketplace `dev-tools`
 
 Guide mainteneur : ajouter un plugin, ajouter une skill à un plugin, publier une version, activer des
-plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-utils`,
-`claude-powerplatform`, et ceux à venir).
+plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-utils` et ceux à venir).
 
 ---
 
@@ -17,9 +16,8 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
 3. Ajoute une ligne au tableau des plugins dans le [README.md](README.md) racine.
 4. Valide le JSON, commit, push (voir « Publier »).
 
-> Convention de nommage : préfixe `claude-` pour les plugins (`claude-utils`,
-> `claude-powerplatform`). Les skills d'un même plugin partagent souvent un préfixe court
-> (`pp-diag`, `pp-ship`…).
+> Convention de nommage : préfixe `claude-` pour les plugins (`claude-utils`…). Les skills d'un même
+> plugin partagent souvent un préfixe court, pour les repérer d'un coup d'œil dans la liste des `/`.
 
 ---
 
@@ -68,14 +66,12 @@ marketplace une fois, puis active les plugins voulus :
     }
   },
   "enabledPlugins": {
-    "claude-utils@dev-tools": { "enabled": true, "scope": "project" },
-    "claude-powerplatform@dev-tools": { "enabled": true, "scope": "project" }
+    "claude-utils@dev-tools": { "enabled": true, "scope": "project" }
   }
 }
 ```
 
-N'active que les plugins pertinents pour le projet (ex. `claude-powerplatform` seulement sur un projet
-Power Apps).
+N'active que les plugins pertinents pour le projet.
 
 Quand un développeur ouvre le projet et fait confiance au dossier, Claude Code lui propose d'installer
 la marketplace et les plugins s'il ne les a pas encore. Ce n'est pas une installation silencieuse
@@ -88,6 +84,7 @@ Si le projet a déjà un `.claude/settings.json`, **fusionne** les clés `extraK
 
 ## Sécurité
 
-Un plugin peut exécuter du code avec les privilèges de l'utilisateur (hooks Node, etc.). N'installe
-que depuis ce repo interne. Après toute install ou mise à jour : `/reload-plugins` ou redémarrage de
-VS Code pour activer les changements.
+Un plugin peut exécuter du code avec les privilèges de l'utilisateur (hooks Node, scripts, serveurs
+MCP). Les plugins de ce repo n'en exécutent aucun aujourd'hui — si tu en ajoutes un, documente-le
+dans le README du plugin. N'installe que depuis ce repo. Après toute install ou mise à jour :
+`/reload-plugins` ou redémarrage de VS Code pour activer les changements.

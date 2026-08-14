@@ -4,7 +4,7 @@ description: >-
   Met à jour les plugins Claude Code de la marketplace dev-tools sur ce poste : rafraîchit le
   catalogue puis applique la dernière version de chaque plugin installé (commande native
   claude plugin update), et rappelle qu'un redémarrage est nécessaire. À utiliser quand l'utilisateur
-  veut mettre à jour un plugin (claude-utils, claude-powerplatform…) après une nouvelle version.
+  veut mettre à jour un plugin de la marketplace dev-tools (claude-utils…) après une nouvelle version.
   Déclenche sur : « update-plugins », « mets à jour le plugin », « mettre à jour les plugins »,
   « update plugin », « nouvelle version du plugin », « récupère la dernière version du plugin ».
 ---
@@ -26,7 +26,7 @@ Objectif : appliquer la dernière version publiée d'un (ou de tous les) plugin(
    ```
 
 2. **Déterminer les cibles.**
-   - Si l'utilisateur a nommé un plugin (ex. `claude-powerplatform`), ne mettre à jour que celui-là.
+   - Si l'utilisateur a nommé un plugin (ex. `claude-utils`), ne mettre à jour que celui-là.
    - Sinon, lister les plugins installés et mettre à jour ceux de `@dev-tools` :
      ```powershell
      claude plugin list

@@ -10,15 +10,15 @@ Tout ce qui dépasse part dans `docs/` et n'est référencé qu'au besoin.
 Une à trois phrases : ce que fait l'app, où elle en est, la feature active.
 
 ## Stack
-- Type de projet : <p. ex. React, PCF, Power Apps Code App, site HTML/CSS/JS, script PowerShell…>
-- Données / back : <p. ex. Dataverse, API REST, état local, fichiers statiques…>
-- Outils : <p. ex. VS Code, Power Platform CLI (pac), Vite, npm, TypeScript…>
+- Type de projet : <p. ex. React SPA, API Node, site HTML/CSS/JS, script PowerShell…>
+- Données / back : <p. ex. Postgres, API REST, état local, fichiers statiques…>
+- Outils : <p. ex. VS Code, Vite, npm, TypeScript…>
 
 ## Conventions
 - Style de code & nommage : <p. ex. camelCase, composants PascalCase, kebab-case pour les fichiers>
 - Structure des dossiers : <p. ex. src/components, src/services, assets/, /scripts>
-- Règles spécifiques : <selon la stack — p. ex. RBAC côté table Dataverse, pas de dépendance lourde
-  sur un site statique, conventions de modules PowerShell, contraintes Power Apps Code Apps…>
+- Règles spécifiques : <selon la stack — p. ex. pas de dépendance lourde sur un site statique,
+  conventions de modules PowerShell, contraintes de la cible de déploiement…>
 
 ## État courant
 - En cours : <tâche active>

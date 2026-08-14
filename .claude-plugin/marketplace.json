@@ -6,20 +6,14 @@
   },
   "metadata": {
     "description": "Marketplace interne de plugins Claude Code.",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "plugins": [
     {
       "name": "claude-utils",
       "source": "./claude-utils",
-      "description": "Boîte à outils générique : skills eco (tokens/contexte), pr-draft (PR GitHub), session-brief (reprise de session), update-plugins (mise à jour des plugins dev-tools) et hook d'alerte fenêtre 5 h.",
+      "description": "Boîte à outils générique : skills eco (discipline tokens/contexte), pr-draft (PR GitHub), session-brief (reprise de session) et update-plugins (mise à jour des plugins dev-tools).",
       "keywords": ["utils", "toolkit", "tokens", "efficiency", "github", "pr", "session"]
-    },
-    {
-      "name": "claude-powerplatform",
-      "source": "./claude-powerplatform",
-      "description": "Assistant Power Apps (Code Apps) dans VS Code, du scaffold React au déploiement en solution : skills pp-setup, pp-auth, pp-scaffold, pp-data (Dataverse/connecteurs), pp-diag et pp-ship.",
-      "keywords": ["power-platform", "power-apps", "code-apps", "pac", "dataverse", "connectors"]
     }
   ]
 }

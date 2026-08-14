@@ -13,10 +13,12 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 
 ## Plugins
 
-- **claude-utils** — générique : `eco` (tokens/contexte + hook 5 h), `pr-draft`, `session-brief`
-- **claude-powerplatform** — Power Apps Code Apps : `pp-setup`, `pp-scaffold`, `pp-data`, `pp-diag`,
-  `pp-ship`. Config par projet lue dans le CLAUDE.md du projet cible. Statut preview, voir
-  `claude-powerplatform/QUICKSTART.md`.
+- **claude-utils** — générique : `eco` (discipline tokens/contexte), `pr-draft`, `session-brief`,
+  `update-plugins`
+
+Le plugin `claude-powerplatform` (skills `pp-*`, Code Apps) a été **retiré en v2.0.0** : le périmètre
+est couvert par le plugin officiel Microsoft `code-apps-preview@power-platform-skills`. Récupérable
+dans l'historique git au commit `712017e`.
 
 ## Conventions
 

@@ -1,7 +1,7 @@
 # Plugin `claude-utils`
 
-Boîte à outils générique pour Claude Code : un conteneur de **skills internes réutilisables**, plus des
-hooks transverses. Pensé pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
+Boîte à outils générique pour Claude Code : un conteneur de **skills internes réutilisables**. Pensé
+pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 
 > Installer sur un poste neuf et prendre en main les skills : [QUICKSTART.md](QUICKSTART.md).
 
@@ -9,18 +9,12 @@ hooks transverses. Pensé pour grossir — chaque nouvelle capacité est une ski
 
 | Skill | Invocation | Rôle |
 |---|---|---|
-| `eco` | `/eco` | Discipline tokens/contexte (limites 5 h/hebdo, choix de modèle). Se déclenche aussi automatiquement sur les sessions de code. |
+| `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, ciblage des lectures. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`). |
 
 Le dossier `skills/` est auto-découvert ; chaque skill a son `SKILL.md` et ses `references/`.
-
-## Hook fenêtre 5 h
-
-`hooks/scripts/eco-window-check.js` (`UserPromptSubmit`) : estimation **locale** qui prévient ~30 min
-avant le reset estimé de la fenêtre 5 h (réglable, voir plus bas). La vraie valeur reste `/usage`.
-Échec silencieux : n'interrompt jamais un prompt.
 
 ## Ajouter une nouvelle skill
 
@@ -32,10 +26,8 @@ avant le reset estimé de la fenêtre 5 h (réglable, voir plus bas). La vraie v
 
 Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills/` est auto-découvert.
 
-## Réglages du hook (variables d'environnement, optionnelles)
+## Historique
 
-| Variable | Rôle | Défaut |
-|---|---|---|
-| `ECO_WARN_BEFORE_MIN` | Minutes avant le reset où alerter | `30` |
-| `ECO_WINDOW_MIN` | Durée de la fenêtre, en minutes | `300` (5 h) |
-| `ECO_STATE_FILE` | Chemin du fichier d'état | `~/.claude/eco-window-state.json` |
+- **2.0.0** — suppression du hook `eco-window-check.js` (estimation locale de la fenêtre 5 h),
+  remplacé par l'extension VS Code *Claude Code Usage* et la commande `/usage`, qui lisent l'usage
+  réel au lieu de l'estimer. Le plugin n'exécute plus de code.

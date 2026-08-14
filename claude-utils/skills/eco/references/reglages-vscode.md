@@ -13,7 +13,7 @@ Réglages et commandes utiles. Vérifier les noms exacts dans `code.claude.com/d
 | `/compact` | Élaguer en **restant** sur le même sujet (guider la compaction). |
 | `/rename` | Nommer la session avant un `/clear` pour la retrouver. |
 | `/resume` | Reprendre une session nommée. |
-| `/model` | Changer de modèle en cours de session (Haiku/Sonnet/Opus). |
+| `/model` | Changer de modèle en cours de session (léger pour l'exécution, haut de gamme pour l'archi). |
 | `/config` | Fixer un modèle par défaut et d'autres réglages. |
 
 ## Status line (usage en continu)
