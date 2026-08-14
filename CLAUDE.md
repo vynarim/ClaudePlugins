@@ -16,9 +16,7 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 - **claude-utils** — générique : `eco` (discipline tokens/contexte), `pr-draft`, `session-brief`,
   `update-plugins`
 
-Le plugin `claude-powerplatform` (skills `pp-*`, Code Apps) a été **retiré en v2.0.0** : le périmètre
-est couvert par le plugin officiel Microsoft `code-apps-preview@power-platform-skills`. Récupérable
-dans l'historique git au commit `712017e`.
+Repo **généraliste** : outillage Claude Code transverse, sans domaine métier particulier.
 
 ## Conventions
 

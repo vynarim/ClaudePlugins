@@ -1050,7 +1050,7 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
 
     <div class="callout info">
       <span class="label">🔌 Firebase est un exemple, pas une obligation</span>
-      <p>On choisit Firebase ici parce que c'est un <strong>écosystème gratuit</strong>, idéal pour un premier projet. Mais comme pour l'assistant, <strong>seul le back change&nbsp;: le front PWA et les réflexes d'agent restent identiques.</strong> Vous pouvez héberger ailleurs — Supabase, Vercel/Netlify, Azure — et, pour les profils <strong>métier</strong>, sur l'écosystème <strong>Power Platform</strong> (piloté depuis VS Code). Détails en fin de cas pratique&nbsp;: «&nbsp;Et si le back n'est pas Firebase&nbsp;?&nbsp;».</p>
+      <p>On choisit Firebase ici parce que c'est un <strong>écosystème gratuit</strong>, idéal pour un premier projet. Mais comme pour l'assistant, <strong>seul le back change&nbsp;: le front PWA et les réflexes d'agent restent identiques.</strong> Vous pouvez héberger ailleurs — Supabase, Vercel/Netlify, Azure. Détails en fin de cas pratique&nbsp;: «&nbsp;Et si le back n'est pas Firebase&nbsp;?&nbsp;».</p>
     </div>
 
     <details class="whybox">
@@ -1308,38 +1308,8 @@ et un cas "aucune trottinette".</pre>
 
     <div class="callout info">
       <span class="label">🔌 Et si le back n'est pas Firebase&nbsp;?</span>
-      <p>Firebase n'est qu'un des écosystèmes possibles. <strong>Ce qui ne change pas&nbsp;:</strong> décrire une intention à l'agent, lire le diff, tester, déployer via un CLI. <strong>Ce qui change&nbsp;:</strong> le service de back et sa commande de déploiement. Le même réflexe «&nbsp;l'agent pilote le CLI à ma place&nbsp;» vaut pour Supabase, Vercel/Netlify, Azure… et pour <strong>Power Platform</strong>.</p>
+      <p>Firebase n'est qu'un des écosystèmes possibles. <strong>Ce qui ne change pas&nbsp;:</strong> décrire une intention à l'agent, lire le diff, tester, déployer via un CLI. <strong>Ce qui change&nbsp;:</strong> le service de back et sa commande de déploiement. Le même réflexe «&nbsp;l'agent pilote le CLI à ma place&nbsp;» vaut pour Supabase, Vercel/Netlify ou Azure.</p>
     </div>
-
-    <details class="deepdive">
-      <summary>
-        <p class="dd-head">🏢 Cas particulier : héberger côté Power Platform (profils métier)</p>
-        <p class="dd-note">Optionnel — pertinent si vous travaillez dans l'écosystème Microsoft / Dataverse</p>
-      </summary>
-      <p>Pour les organisations déjà sous <strong>Microsoft 365 / Dataverse</strong>, le back «&nbsp;clé en main&nbsp;» peut être <strong>Power Platform</strong> plutôt que Firebase&nbsp;: données dans <strong>Dataverse</strong>, authentification <strong>Microsoft Entra ID</strong>, et hébergement de l'app dans l'environnement Power Platform. Et tout se pilote <strong>depuis VS Code</strong>, donc avec le même assistant agentique que dans ce cours.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Brique</th><th>Dans ce cours (Firebase)</th><th>Équivalent Power Platform</th></tr></thead>
-          <tbody>
-            <tr><td data-label="Brique">Base de données</td><td data-label="Firebase">Firestore</td><td data-label="Power Platform">Dataverse</td></tr>
-            <tr><td data-label="Brique">Authentification</td><td data-label="Firebase">Firebase Auth</td><td data-label="Power Platform">Microsoft Entra ID</td></tr>
-            <tr><td data-label="Brique">Hébergement du front</td><td data-label="Firebase">Firebase Hosting</td><td data-label="Power Platform">Power Apps (Code Apps) dans l'environnement</td></tr>
-            <tr><td data-label="Brique">CLI de pilotage</td><td data-label="Firebase"><code>firebase</code></td><td data-label="Power Platform"><code>pac</code> (Power Platform CLI)</td></tr>
-            <tr><td data-label="Brique">Outillage VS Code</td><td data-label="Firebase">Firebase CLI + extensions</td><td data-label="Power Platform">Extension <strong>Power Platform Tools</strong></td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>Le geste reste identique&nbsp;: au lieu de demander à l'agent de lancer <code>firebase deploy</code>, vous lui faites piloter <code>pac</code> (authentification, push d'une solution, déploiement d'une Code App). La maquette, la PWA et la discipline de prompt/diff/test ne bougent pas.</p>
-      <ul>
-        <li><b>Extension Power Platform Tools (VS Code)</b> — connexion aux environnements, exploration Dataverse, commandes <code>pac</code> intégrées. → <a href="https://marketplace.visualstudio.com/items?itemName=microsoft-IsvExpTools.powerplatform-vscode">Marketplace</a></li>
-        <li><b>Power Platform CLI (<code>pac</code>)</b> — l'équivalent du Firebase CLI pour authentifier, créer et déployer. → <a href="https://learn.microsoft.com/power-platform/developer/cli/introduction">Doc Microsoft</a></li>
-        <li><b>Power Apps Code Apps</b> — héberger une app web (front moderne) dans Power Platform. → <a href="https://learn.microsoft.com/power-apps/developer/">Power Apps for developers</a></li>
-      </ul>
-      <div class="callout tip" style="margin-bottom:0;">
-        <span class="label">💡 Pour aller plus loin avec un agent</span>
-        <p>Comme pour Firebase, des <strong>skills dédiées</strong> outillent l'agent sur ce parcours (setup, scaffolding, données, déploiement) — pratique pour transformer ces étapes en commandes répétables. Microsoft publie sa propre marketplace de plugins Claude Code&nbsp;: <a href="https://github.com/microsoft/power-platform-skills"><code>microsoft/power-platform-skills</code></a> (Code Apps, Power Pages, apps model-driven, canvas).</p>
-      </div>
-    </details>
 
     <details class="deepdive">
       <summary>
@@ -1547,15 +1517,6 @@ et un cas "aucune trottinette".</pre>
           <li><a href="https://nodejs.org">Node.js</a></li>
           <li><a href="https://git-scm.com">Git</a></li>
           <li><a href="https://learn.microsoft.com/windows/package-manager/winget/">winget (Windows 11)</a><span class="desc">Installer les outils en une commande</span></li>
-        </ul>
-      </div>
-
-      <div class="link-card">
-        <h3>🏢 Autre back : Power Platform</h3>
-        <ul>
-          <li><a href="https://marketplace.visualstudio.com/items?itemName=microsoft-IsvExpTools.powerplatform-vscode">Power Platform Tools (VS Code)</a><span class="desc">Piloter Dataverse &amp; <code>pac</code> depuis l'éditeur</span></li>
-          <li><a href="https://learn.microsoft.com/power-platform/developer/cli/introduction">Power Platform CLI (<code>pac</code>)</a><span class="desc">L'équivalent du Firebase CLI</span></li>
-          <li><a href="https://learn.microsoft.com/power-apps/developer/">Power Apps for developers</a><span class="desc">Code Apps, Dataverse, Entra ID</span></li>
         </ul>
       </div>
 
