@@ -21,18 +21,38 @@ de bruit, dégrade aussi la qualité du raisonnement. Économie et qualité vont
 ## Routine de session
 
 **Au démarrage** — lire le `CLAUDE.md` du projet plutôt que ré-explorer l'arborescence. Une session =
-**un objectif borné**. Si la tâche est complexe : passe « plan » courte, puis exécution.
+**un objectif borné**. Si la tâche est complexe : **mode plan** (Shift+Tab) pour valider l'approche
+avant d'écrire — une mauvaise piste corrigée après coup laisse ses lectures et ses édits ratés dans
+le contexte, et on les repaie à chaque message suivant.
 
 **En cours** — surveiller `/context`, intervenir à **40–50 %**, pas à 90 %. Référencer les fichiers
 avec `@chemin/fichier` au lieu de faire lire des dossiers entiers ; ne pas relire ce qui est déjà en
 contexte. Regrouper les opérations liées en un minimum d'allers-retours.
 
+**Après une dérive** — si un échange a pollué le contexte (exploration inutile, série d'édits à
+jeter), `/rewind` ramène à un point antérieur au lieu de corriger *par-dessus*. Corriger empile ;
+revenir en arrière élague.
+
 **Aux bascules** — `/clear` dès qu'on passe à un sujet **sans rapport**. Le coût de
 re-contextualisation est presque toujours inférieur à celui de traîner du contexte mort. `/rename`
 avant, `/resume` pour y revenir. `/compact` seulement si on **reste** sur le même sujet.
 
-**En fin de session** — enregistrer un court résumé d'état (`docs/progress.md`) pour reprendre sans
-tout réexpliquer.
+**En fin de session** — laisser une trace d'état pour reprendre sans tout réexpliquer : mémoire
+persistante (une entrée `project` — ce que le repo et l'historique git ne disent pas déjà) et/ou un
+court `docs/progress.md`. La skill `session-brief` relit les deux au démarrage suivant.
+
+## Déléguer plutôt que charger
+
+Un sous-agent travaille dans **sa propre fenêtre de contexte** et ne renvoie que sa conclusion. Les
+fichiers qu'il a ouverts pour répondre n'entrent jamais dans le fil principal : c'est le seul moyen
+de faire lire beaucoup sans le repayer à chaque message ensuite.
+
+**À déléguer** — recherche large et incertaine (« où est défini X », « quels fichiers touchent Y »),
+inventaire d'un dossier, revue de diff. Le fil principal ne reçoit que le verdict.
+
+**À garder en direct** — ce que deux lectures ciblées règlent. Un sous-agent repart **à froid** et
+doit re-découvrir ce que la session sait déjà ; en dessous de quelques fichiers il coûte plus qu'il
+ne rapporte. Ne pas paralléliser non plus des étapes qui dépendent l'une de l'autre.
 
 ## Guider la compaction
 

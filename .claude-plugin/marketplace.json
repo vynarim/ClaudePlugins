@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Marketplace interne de plugins Claude Code.",
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "plugins": [
     {
       "name": "claude-utils",
       "source": "./claude-utils",
-      "description": "Boîte à outils générique : skills eco (discipline tokens/contexte), pr-draft (PR GitHub), session-brief (reprise de session) et update-plugins (mise à jour des plugins dev-tools).",
-      "keywords": ["utils", "toolkit", "tokens", "efficiency", "github", "pr", "session"]
+      "description": "Boîte à outils générique : skills eco (discipline tokens/contexte), context-check (audit du CLAUDE.md), ship (commit + push), pr-draft (PR GitHub), session-brief (reprise de session) et update-plugins (mise à jour des plugins dev-tools).",
+      "keywords": ["utils", "toolkit", "tokens", "efficiency", "git", "commit", "github", "pr", "session"]
     }
   ]
 }

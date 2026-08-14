@@ -11,10 +11,17 @@ Réglages et commandes utiles. Vérifier les noms exacts dans `code.claude.com/d
 | `/usage` ou `/status` | Voir la conso 5 h + hebdo et les heures de reset. |
 | `/clear` | Bascule vers un sujet **sans rapport** (autre feature/bug/repo). |
 | `/compact` | Élaguer en **restant** sur le même sujet (guider la compaction). |
+| `/rewind` | Revenir à un point antérieur après une dérive, au lieu de corriger par-dessus. |
 | `/rename` | Nommer la session avant un `/clear` pour la retrouver. |
 | `/resume` | Reprendre une session nommée. |
+| `/agents` | Gérer les sous-agents — déléguer une exploration large hors du fil principal. |
 | `/model` | Changer de modèle en cours de session (léger pour l'exécution, haut de gamme pour l'archi). |
+| `/fast` | Sortie plus rapide sur Opus, sans bascule vers un modèle plus petit. |
 | `/config` | Fixer un modèle par défaut et d'autres réglages. |
+
+**Mode plan** — Shift+Tab fait tourner les modes d'édition ; s'arrêter sur *plan* fait valider
+l'approche avant que quoi que ce soit ne soit écrit. Le gain n'est pas le plan lui-même, c'est la
+mauvaise piste qu'on n'a pas payée en lectures et en édits à jeter.
 
 ## Status line (usage en continu)
 

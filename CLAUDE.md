@@ -11,19 +11,20 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 - `<plugin>/skills/<nom>/references/` — fichiers annexes d'une skill (ex. gabarits)
 - `examples/` — gabarit de `.claude/settings.json` à copier dans un projet consommateur
 - `docs/` — source du tutoriel publié via GitHub Pages (`index.html` autonome)
-- `.claude/skills/ship/` — skill **interne** au repo (non publiée)
+- `.claude/skills/` — skills **internes** au repo (`skill-new`), non publiées
 
 ## Plugins
 
-- **claude-utils** — générique : `eco` (discipline tokens/contexte), `pr-draft`, `session-brief`,
-  `update-plugins`
+- **claude-utils** — générique : `eco` (discipline tokens/contexte), `context-check` (audit du
+  `CLAUDE.md`), `ship` (commit + push), `pr-draft`, `session-brief`, `update-plugins`
 
 Repo **généraliste** : outillage Claude Code transverse, sans domaine métier particulier.
 
 ## Conventions
 
-- **Pas de commit/push automatique.** Faire les modifs, puis attendre `/ship` (skill interne :
-  stage + commit Conventional Commits avec trailer Co-Authored-By + push). Voir [[no-auto-commit-ship-skill]].
+- **Pas de commit/push automatique.** Faire les modifs, puis attendre `/ship` (skill de
+  `claude-utils` : stage + commit Conventional Commits avec trailer Co-Authored-By + push).
+  Voir [[no-auto-commit-ship-skill]].
 - Messages de commit : `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`).
 - Travail directement sur `main`.
 - Publier une version = bump `version` du plugin + `/ship`. Côté postes : `claude plugin marketplace

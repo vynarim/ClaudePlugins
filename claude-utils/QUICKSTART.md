@@ -33,15 +33,18 @@ dans une session Claude Code.
 Dans une session Claude Code :
 
 - `/plugin` → onglet *Installed* : `claude-utils@dev-tools` présent et activé.
-- Tape `/` : les skills `/eco`, `/pr-draft`, `/session-brief`, `/update-plugins` sont proposées.
+- Tape `/` : les skills `/eco`, `/context-check`, `/ship`, `/pr-draft`, `/session-brief`,
+  `/update-plugins` sont proposées.
 
 ## Étape 3 — Prendre en main les skills
 
 | Quand | Commande | Ce qu'elle fait |
 |---|---|---|
 | Tu reprends une session / un projet | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
+| Tes modifs sont prêtes à partir | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique. |
 | Tu veux ouvrir une PR | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
-| Tu surveilles ta conso de tokens | `/eco` | Discipline tokens/contexte (limites 5 h/hebdo, choix de modèle). |
+| Tu surveilles ta conso de tokens | `/eco` | Discipline tokens/contexte (limites 5 h/hebdo, choix de modèle, sous-agents). |
+| Ton `CLAUDE.md` a grossi | `/context-check` | Audite la mémoire projet et propose la version condensée. |
 | Une nouvelle version est publiée | `/update-plugins` | Met à jour les plugins dev-tools sur le poste. |
 
 Pour suivre la consommation réelle (fenêtre 5 h + hebdo) : `/usage` ou `/status` en session, et en

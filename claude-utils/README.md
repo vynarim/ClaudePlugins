@@ -9,7 +9,9 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 
 | Skill | Invocation | Rôle |
 |---|---|---|
-| `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, ciblage des lectures. |
+| `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, délégation aux sous-agents. |
+| `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
+| `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`). |
@@ -41,6 +43,9 @@ Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills
 
 ## Historique
 
+- **2.1.0** — deux skills en plus : `ship` (commit + push, disponible sur tous les repos) et
+  `context-check` (audit du `CLAUDE.md`). `eco` couvre en plus la délégation aux sous-agents, le mode
+  plan, `/rewind` et la mémoire persistante.
 - **2.0.0** — suppression du hook `eco-window-check.js` (estimation locale de la fenêtre 5 h),
   remplacé par l'extension VS Code *Claude Code Usage* et la commande `/usage`, qui lisent l'usage
   réel au lieu de l'estimer. Le plugin n'exécute plus de code.

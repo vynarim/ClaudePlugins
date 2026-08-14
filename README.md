@@ -8,7 +8,7 @@ Ce dépôt héberge les plugins suivants :
 
 | Plugin | Version | Pour quoi faire |
 |---|---|---|
-| [`claude-utils`](claude-utils/) | 2.0.0 | Boîte à outils générique : efficacité tokens, PR GitHub, reprise de session, mise à jour des plugins |
+| [`claude-utils`](claude-utils/) | 2.1.0 | Boîte à outils générique : efficacité tokens, commit/push, PR GitHub, reprise de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 
@@ -20,7 +20,9 @@ Pour l'installer sur un poste neuf et prendre en main les skills, suivre le
 
 | Skill | Invocation | Rôle |
 |---|---|---|
-| `eco` | `/eco` | Discipline tokens/contexte — une session = un objectif, `/clear` aux bascules, ciblage des lectures |
+| `eco` | `/eco` | Discipline tokens/contexte — une session = un objectif, `/clear` aux bascules, délégation aux sous-agents |
+| `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet et propose la version condensée |
+| `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`) |
@@ -50,7 +52,7 @@ que des skills.
 | `<plugin>/skills/<nom>/SKILL.md` | Une skill (dossier `skills/` auto-découvert) |
 | `examples/` | Gabarit de `.claude/settings.json` à copier dans un projet |
 | `docs/` | Source du tutoriel publié sur GitHub Pages |
-| `.claude/skills/ship/` | Skill **interne** au repo (commit + push), non publiée |
+| `.claude/skills/` | Skills **internes** au repo (`skill-new`), non publiées |
 
 ## Documentation
 
