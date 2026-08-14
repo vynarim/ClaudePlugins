@@ -59,4 +59,8 @@ claude plugin update claude-utils@dev-tools       # applique la dernière versio
 ```
 
 Puis recharge la fenêtre. Avec `claude-utils` déjà installé, la skill `/update-plugins` enchaîne ces
-deux étapes pour toi. Détails et dépannage : [INSTALL.md](../INSTALL.md).
+deux étapes pour toi.
+
+Pour ne plus y penser, active `autoUpdate` sur la marketplace dans ton `~/.claude/settings.json` : les
+plugins se mettent à jour au démarrage. Détails, limites et dépannage :
+[INSTALL.md](../INSTALL.md#automatiser--loption-autoupdate).

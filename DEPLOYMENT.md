@@ -45,11 +45,13 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
    claude plugin update <plugin>@dev-tools             # applique la nouvelle version au plugin installé
    ```
    Puis recharger la fenêtre VS Code (*Developer: Reload Window*) ou `/reload-plugins`. Avec
-   `claude-utils` installé, la skill `/update-plugins` enchaîne ces étapes.
+   `claude-utils` installé, la skill `/update-plugins` enchaîne ces étapes. Les postes qui ont activé
+   `autoUpdate` sur la marketplace (voir [INSTALL.md](INSTALL.md#automatiser--loption-autoupdate))
+   récupèrent le bump au démarrage, sans commande.
 
 ⚠️ **`marketplace update` ne suffit pas** : il rafraîchit seulement le catalogue (auto-update désactivé
-par défaut pour les marketplaces tierces). C'est `claude plugin update` qui applique réellement le bump
-à un plugin installé. Cas particuliers : **nouveau** plugin → `claude plugin install <plugin>@dev-tools` ;
+par défaut pour les marketplaces tierces, activable via `autoUpdate`). C'est `claude plugin update` qui
+applique réellement le bump à un plugin installé. Cas particuliers : **nouveau** plugin → `claude plugin install <plugin>@dev-tools` ;
 **downgrade** (ex. repasser en 0.9.0 depuis une version supérieure, non géré par `update`) →
 `uninstall` puis `install`.
 

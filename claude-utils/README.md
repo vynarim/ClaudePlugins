@@ -37,7 +37,9 @@ annexes dans `skills/<nom>/references/`.
 2. Ajoute ses fichiers de référence à côté si besoin.
 3. Incrémente `version` dans `.claude-plugin/plugin.json`.
 4. Commit + push ; les postes mettent à jour via `claude plugin marketplace update dev-tools` puis
-   `claude plugin update claude-utils@dev-tools` (ou la skill `/update-plugins`).
+   `claude plugin update claude-utils@dev-tools` (ou la skill `/update-plugins`). Ceux qui ont activé
+   `autoUpdate` sur la marketplace n'ont rien à lancer — voir
+   [INSTALL.md](../INSTALL.md#automatiser--loption-autoupdate).
 
 Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills/` est auto-découvert.
 

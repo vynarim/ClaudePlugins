@@ -72,13 +72,44 @@ Puis **redémarrer** pour appliquer : recharge la fenêtre VS Code (*Developer: 
 `/reload-plugins`.
 
 > ⚠️ `marketplace update` seul ne suffit pas : il rafraîchit le catalogue mais ne ré-upgrade pas un
-> plugin déjà installé (auto-update désactivé par défaut pour les marketplaces tierces). C'est
-> `claude plugin update` qui applique la nouvelle version. Avec le plugin `claude-utils` installé, la
-> skill `/update-plugins` enchaîne ces étapes pour toi.
+> plugin déjà installé (auto-update désactivé par défaut pour les marketplaces tierces — voir
+> « Automatiser » ci-dessous pour l'activer). C'est `claude plugin update` qui applique la nouvelle
+> version. Avec le plugin `claude-utils` installé, la skill `/update-plugins` enchaîne ces étapes.
 >
 > Cas particuliers : un **nouveau** plugin pas encore installé → `claude plugin install <plugin>@dev-tools`.
 > Un retour à une version **inférieure** (downgrade) n'est pas géré par `update` → `uninstall` puis
 > `install`.
+
+### Automatiser — l'option `autoUpdate`
+
+Pour ne plus lancer ces commandes à la main, ajoute `"autoUpdate": true` à l'entrée de la marketplace
+dans ton `~/.claude/settings.json`. C'est un réglage **poste** : il vaut pour tous tes projets.
+
+```json
+"extraKnownMarketplaces": {
+  "dev-tools": {
+    "source": { "source": "github", "repo": "vynarim/ClaudePlugins" },
+    "autoUpdate": true
+  }
+}
+```
+
+Claude Code met alors à jour la marketplace **et ses plugins installés** au démarrage. Trois points à
+connaître :
+
+- Le CLI n'expose pas cette option — ni `claude plugin`, ni `claude plugin marketplace add`. Elle ne
+  s'active qu'en éditant le `settings.json`.
+- Une mise à jour ne s'applique jamais à une session déjà ouverte. Selon le moment où le
+  téléchargement se termine au démarrage, la nouvelle version peut n'être active qu'au lancement
+  suivant. Pour un bump que tu veux tout de suite, `/update-plugins` puis *Reload Window* reste le
+  chemin sûr.
+- Reprends la **même** forme de `source` que celle déjà enregistrée sur le poste (visible via
+  `claude plugin marketplace list`). Décrire la même marketplace autrement — `github`/`repo` d'un
+  côté, `git`/`url` de l'autre — peut être vu comme un changement de source et déclencher un
+  re-clone.
+
+L'option existe aussi dans le `.claude/settings.json` d'un projet, mais elle s'appliquerait à tous
+ceux qui ouvrent le dépôt : garde-la dans ton settings poste.
 
 ---
 

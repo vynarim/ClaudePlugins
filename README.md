@@ -40,6 +40,11 @@ Les projets configurés (qui déclarent la marketplace dans leur `.claude/settin
 l'installation automatiquement au moment du trust du dossier. Gabarit à copier :
 [`examples/project.claude-settings.json`](examples/project.claude-settings.json).
 
+Pour que les nouvelles versions arrivent seules, ajoute `"autoUpdate": true` à l'entrée `dev-tools`
+de ton `~/.claude/settings.json` — l'option n'est pas exposée par le CLI, voir
+[INSTALL.md](INSTALL.md#automatiser--loption-autoupdate). Sinon, `/update-plugins` fait le travail à
+la demande.
+
 Les plugins de ce repo **n'exécutent aucun code** (pas de hook, pas de serveur MCP) : ils n'apportent
 que des skills.
 
