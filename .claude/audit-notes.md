@@ -1,13 +1,23 @@
 # Notes d'audit — ClaudePlugins
 
-Spécificités projet lues par la skill `/audit` (plugin `claude-utils`). La méthode, l'auto-vérification
-et le format du rapport vivent dans la skill — ne pas les recopier ici.
+Spécificités projet lues par la skill `/audit` (plugin `claude-utils`). La méthode, les checklists
+d'axe et le format du rapport vivent dans la skill ; les constats et leur statut vivent dans
+`.claude/audit-log.md`.
 
-⚠️ **Ici il n'y a ni base, ni écran, ni modèle de données.** La grille générique (champs hors-modèle,
-cascades, validations) ne s'applique pas. Ce qu'on audite, c'est la **cohérence d'un catalogue** :
-manifestes, skills, docs et versions doivent dire la même chose, et une skill doit pouvoir se
-déclencher. Utiliser la grille ci-dessous **à la place** de la grille générique, en gardant tout le
-reste de la méthode.
+⚠️ **Ici il n'y a ni base, ni écran, ni runtime.** Ce qu'on audite, c'est la **cohérence d'un
+catalogue** : manifestes, skills, docs et versions doivent dire la même chose, et une skill doit
+pouvoir se déclencher puis tourner sur n'importe quel dépôt.
+
+## Axes
+
+| Axe | État | Pourquoi |
+|---|---|---|
+| `SEC` sécurité & auth | **N/A** | aucun runtime, aucune donnée, aucun droit |
+| `DATA` données & modèle | **N/A** | pas de base ni de modèle de données |
+| `FONC` métier & fiabilité | actif | « une skill se déclenche et fait ce qu'elle annonce » |
+| `PERF` performance & coût | actif | restreint au coût en tokens de ce qu'une skill charge |
+| `PROP` propreté | actif | renvois morts, contenu dupliqué entre docs |
+| `CONF` config & tests | actif | versions, manifestes, publication, docs |
 
 ## Où vit le « modèle »
 
@@ -19,43 +29,41 @@ reste de la méthode.
 - Docs : `README.md` racine, `claude-utils/README.md`, `claude-utils/QUICKSTART.md`, `INSTALL.md`,
   `DEPLOYMENT.md`, `CLAUDE.md`, `examples/`, `docs/index.html` (page GitHub Pages autonome)
 
-## Domaines (découpage des agents)
+## Domaines
 
 `manifestes` · `skills` · `docs`
 
-## Grille propre à ce dépôt
+## Points de checklist maison
 
-1. **Skill publiée mais non déclarée** — absente d'un des tableaux (`README.md` racine,
-   `claude-utils/README.md`, `QUICKSTART.md`, liste des skills du `CLAUDE.md`), ou de la
-   `description` de `plugin.json` / `marketplace.json`. Et l'inverse : une ligne de tableau pour une
-   skill qui n'existe plus.
-2. **Version non bumpée** alors que des fichiers de `<plugin>/skills/` ont changé depuis le dernier
-   bump : les postes ne recevront rien. Vérifier aussi que `metadata.version` de `marketplace.json`
-   et la colonne version du README racine suivent `plugin.json`.
-3. **Description qui ne déclenche pas** — c'est le seul élément chargé en permanence, et c'est sur
-   lui seul que la skill part. Une `description` sans formulations réelles de l'utilisateur
-   (« Déclenche sur : … ») donne une skill morte : présente dans `/`, jamais invoquée.
-4. **`name` du frontmatter ≠ nom du dossier**, ou `name` en collision avec une skill locale d'un
-   projet consommateur (`ship`, `deploy`, `test`, `doc`…). Une collision rend l'invocation ambiguë
-   chez le consommateur, pas ici — donc invisible depuis ce dépôt.
-5. **Renvoi croisé mort** — une skill qui cite `/xxx` supprimée ou renommée, un `references/…`
-   annoncé mais absent, un lien Markdown vers un fichier déplacé.
-6. **Contradiction entre deux sources** — `CLAUDE.md`, `README`, `INSTALL`/`DEPLOYMENT` et le corps
-   d'une skill qui donnent des consignes différentes sur le même sujet (convention de commit, trailer,
-   procédure de mise à jour, scope d'installation). C'est la classe de défaut la plus fréquente ici :
-   tout est documenté deux fois.
-7. **Fuite de contexte local dans une skill publiée** — chemin en dur, référence à ce dépôt, ou
-   hypothèse de stack. Une skill de `claude-utils` doit tourner sur n'importe quel projet ; le
-   spécifique appartient à un fichier de notes côté consommateur.
-8. **`examples/` et `docs/index.html` périmés** — gabarit de `settings.json` qui déclare la
-   marketplace sous une forme que `INSTALL.md` ne documente plus, page Pages qui ne liste plus les
-   bonnes skills.
-9. **Skill interne exposée par erreur** dans `<plugin>/skills/`, ou skill publiable restée dans
-   `.claude/skills/`.
+- `FONC` — **Description qui ne déclenche pas.** C'est le seul élément chargé en permanence, et c'est
+  sur lui seul que la skill part. Une `description` sans formulations réelles de l'utilisateur
+  (« Déclenche sur : … ») donne une skill morte : présente dans `/`, jamais invoquée.
+- `FONC` — **`name` du frontmatter ≠ nom du dossier**, ou `name` en collision avec une skill locale
+  d'un projet consommateur (`ship`, `deploy`, `test`, `doc`…). La collision se voit chez le
+  consommateur, pas ici — donc invisible depuis ce dépôt.
+- `FONC` — **Fuite de contexte local dans une skill publiée** : chemin en dur, référence à ce dépôt,
+  hypothèse de stack. Une skill de `claude-utils` doit tourner partout ; le spécifique appartient au
+  fichier de notes du consommateur.
+- `PERF` — **Skill monolithique** : contenu qui devrait vivre dans `references/` et n'être chargé
+  qu'à la demande, chargé à chaque invocation.
+- `PROP` — **Renvoi croisé mort** : une skill qui cite `/xxx` supprimée ou renommée, un `references/…`
+  annoncé mais absent, un lien Markdown vers un fichier déplacé.
+- `PROP` — **Même consigne écrite deux fois** dans deux docs, et déjà divergente. Classe de défaut la
+  plus fréquente ici : tout est documenté deux fois.
+- `CONF` — **Skill publiée mais non déclarée** : absente d'un des tableaux (`README.md` racine,
+  `claude-utils/README.md`, `QUICKSTART.md`, liste du `CLAUDE.md`) ou des `description` de
+  `plugin.json` / `marketplace.json`. Et l'inverse : une ligne de tableau pour une skill disparue.
+- `CONF` — **Version non bumpée** alors que des fichiers de `<plugin>/skills/` ont changé depuis le
+  dernier bump : les postes ne recevront rien. Vérifier aussi que `metadata.version` de
+  `marketplace.json` et la colonne version du README racine suivent `plugin.json`.
+- `CONF` — **`examples/` et `docs/index.html` périmés** : gabarit de `settings.json` sous une forme
+  que `INSTALL.md` ne documente plus, page Pages qui ne liste plus les bonnes skills.
+- `CONF` — **Skill interne exposée par erreur** dans `<plugin>/skills/`, ou skill publiable restée
+  dans `.claude/skills/`.
 
-## Déjà couvert
+## Déjà couvert par les tests
 
-Rien d'automatisé — pas de tests dans ce dépôt. Le seul contrôle mécanique est la validation JSON :
+Rien d'automatisé — pas de tests ici. Le seul contrôle mécanique est la validation JSON :
 
 ```powershell
 node -e "['.claude-plugin/marketplace.json','claude-utils/.claude-plugin/plugin.json'].forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})"
@@ -69,9 +77,3 @@ l'audit sans objet.
 - `docs/index.html` dans son détail de mise en forme — seul son contenu factuel compte.
 - Le style rédactionnel des skills. On audite ce qui est faux ou contradictoire, pas ce qui pourrait
   être mieux tourné.
-
-## Faux positifs écartés
-
-| Constat | Pourquoi ce n'en est pas un | Écarté le |
-|---|---|---|
-| *(à remplir au fil des audits)* | | |

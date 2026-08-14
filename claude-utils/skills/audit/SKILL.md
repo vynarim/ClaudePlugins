@@ -1,138 +1,190 @@
 ---
 name: audit
 description: >-
-  Audit de cohérence d'un dépôt : confronte le modèle de données réel — tel qu'il est écrit dans le
-  code, pas dans une spec — au comportement des écrans, formulaires, handlers et règles de sécurité,
-  puis rend un diagnostic classé par gravité (bugs, champs hors-modèle, états incohérents,
-  cascades/orphelins, validations et droits manquants). Read-only : ne modifie aucun code. À utiliser
-  quand l'utilisateur veut une revue de cohérence ou de sécurité. Déclenche sur : « audit », « audite
-  le code », « analyse le code », « cherche les incohérences », « écarts entre le modèle et les
-  formulaires », « revue de cohérence », « revue de sécurité », « qu'est-ce qui cloche dans l'app ».
+  Audit de code structuré par axes — sécurité & authentification, données & modèle, métier &
+  fiabilité, performance & coût, propreté (code mort, duplication), config & tests. Demande l'axe et
+  le périmètre au démarrage, reconstitue le modèle depuis le dépôt courant, rend un diagnostic classé
+  par gravité en déclarant sa couverture, et tient un journal `.claude/audit-log.md` pour que deux
+  audits successifs se complètent au lieu de se contredire. Ne modifie aucun code. À utiliser quand
+  l'utilisateur veut une revue de son dépôt. Déclenche sur : « audit », « audite le code », « analyse
+  le code », « revue de cohérence », « revue de sécurité », « audit de perf », « cherche le code
+  mort », « cherche les duplications », « cherche les incohérences », « écarts entre le modèle et les
+  formulaires », « qu'est-ce qui cloche dans l'app ».
 ---
 
-# audit — cohérence modèle ⇄ code
+# audit — revue de code par axes
 
-Produit un **diagnostic** des écarts entre le modèle de données réel et ce que font réellement les
-écrans, les handlers et les règles. **Read-only** : la skill n'écrit aucun code ; elle termine en
-*proposant* les correctifs.
+Rend un **diagnostic** classé par gravité sur un ou plusieurs **axes** choisis au démarrage. Ne
+modifie aucun code : les correctifs sont proposés, jamais appliqués. Seule écriture autorisée, et
+elle est automatique : le journal `.claude/audit-log.md`.
 
-Principe non négociable : **le modèle métier n'est jamais codé en dur ici**. Il est reconstitué depuis
-le dépôt courant à chaque exécution — c'est ce qui rend la skill portable et ce qui l'empêche
-d'auditer une app imaginaire.
+Trois principes, dans cet ordre :
+
+1. **Rien n'est codé en dur.** Modèle, entités, écrans : tout est reconstitué depuis le dépôt courant
+   à chaque exécution. C'est ce qui rend la skill portable et l'empêche d'auditer une app imaginaire.
+2. **La couverture se déclare.** Un rapport dit toujours ce qui a été examiné **et ce qui ne l'a pas
+   été**. Un audit propre sur un périmètre partiel n'est pas une app saine.
+3. **Deux audits se complètent.** Le journal porte des ids stables et reçoit *tout* ce qui est
+   trouvé ; le rapport ne détaille que le haut de la file. Un run reprend l'état laissé par le
+   précédent au lieu de retirer au sort de nouveaux constats.
+
+## Axes
+
+| id | Axe | Checklist |
+|---|---|---|
+| `SEC` | Sécurité & authentification | [references/axes/securite-auth.md](references/axes/securite-auth.md) |
+| `DATA` | Données & modèle | [references/axes/donnees-modele.md](references/axes/donnees-modele.md) |
+| `FONC` | Métier & fiabilité | [references/axes/metier-fiabilite.md](references/axes/metier-fiabilite.md) |
+| `PERF` | Performance & coût | [references/axes/performance.md](references/axes/performance.md) |
+| `PROP` | Propreté : code mort & duplication | [references/axes/proprete.md](references/axes/proprete.md) |
+| `CONF` | Config, déploiement & tests | [references/axes/config-tests.md](references/axes/config-tests.md) |
+
+**Ne charger que les fichiers des axes retenus.** Un axe sans objet ici (pas d'auth, pas de base,
+site statique) se déclare N/A dans `.claude/audit-notes.md` : il n'est alors ni proposé ni audité. Un
+projet peut aussi ajouter ses propres points de checklist à un axe depuis ses notes.
 
 ## Arguments
 
-- *(défaut)* — analyse **approfondie** de toute l'app : agents parallèles + auto-vérification.
-- `rapide` / `ciblé` — une seule passe, lectures ciblées, économe en tokens.
-- un **domaine nommé** — restreint le périmètre (les domaines du projet sont listés dans ses notes).
+- *(aucun)* — **pose les questions de cadrage** (étape 0). Jamais de passe complète implicite.
+- un **axe** : `SEC` `DATA` `FONC` `PERF` `PROP` `CONF`, ou son nom en clair (« sécurité », « perf »,
+  « code mort », « duplication »…) — part directement, sans question.
+- `tout` — les 6 axes. Coûteux : annoncer l'ordre de grandeur avant de lancer.
+- `rapide` — un seul axe, une passe, pas d'agents, plancher de gravité 🟠.
+- un **domaine** du projet (listés dans ses notes) — restreint le périmètre, axes demandés ensuite.
+- `delta` — n'examine que ce qui a changé depuis le dernier passage inscrit au journal.
 
-## Procédure
+## Étape 0 — Cadrer
 
-**Étape 0 — Charger les spécificités du projet**
+Si un argument fixe déjà l'axe, sauter cette étape. Sinon poser **les trois questions d'un coup**
+(`AskUserQuestion` — 4 options maximum par question, d'où ce découpage) :
 
-Lire `.claude/audit-notes.md` s'il existe : où vit le modèle ici, pièges maison, domaines à découper,
-faux positifs déjà écartés, ce que la batterie de tests couvre déjà. Ces notes **complètent** la
-grille générique, elles ne la remplacent pas. Lire aussi le `CLAUDE.md` du projet. Ne pas explorer
-au-delà à ce stade.
+1. **Axes métier** *(multi)* : `Passe complète (les 6 axes)` · `Sécurité & authentification` ·
+   `Données & modèle` · `Métier & fiabilité`
+2. **Axes qualité** *(multi)* : `Aucun` · `Performance & coût` · `Propreté (code mort, duplication)` ·
+   `Config, déploiement & tests`
+3. **Périmètre** *(simple)* : `Tout le dépôt` · `Un domaine` (options construites depuis les domaines
+   déclarés dans les notes projet) · `Ce qui a changé depuis le dernier audit`
 
-Pas de fichier de notes ? Auditer quand même, et **proposer de le créer en clôture** à partir de
-[references/audit-notes-template.md](references/audit-notes-template.md) — la passe en cours fournit
-justement de quoi le remplir.
+Ne rien lire du dépôt avant la réponse — sauf `.claude/audit-notes.md`, et uniquement pour en tirer
+la liste des domaines et les axes N/A.
 
-**Étape 1 — Reconstituer le modèle**
+## Étape 1 — Charger le contexte projet
 
-Chercher dans cet ordre, en s'arrêtant à ce que le dépôt possède réellement :
+- `.claude/audit-notes.md` — où vit le modèle ici, domaines, pièges maison, axes N/A, points de
+  checklist maison, hors périmètre, ce que les tests couvrent déjà. Ces notes **complètent** les
+  checklists d'axe, elles ne les remplacent pas.
+- `.claude/audit-log.md` — constats ouverts, `écartés` et `acceptés` (à ne plus remonter),
+  `corrigés` (à re-vérifier), couverture des passages précédents, dernier numéro attribué par axe.
+- Le `CLAUDE.md` du projet.
 
-1. **Formes de départ** — seeds et fixtures (exports `INITIAL_*`, `seedData`), schémas déclarés
-   (Prisma, zod, types TS), migrations SQL.
-2. **Écritures serveur** — Cloud Functions, routes API, handlers : quand le serveur écrit, c'est lui
-   qui fixe la forme réelle des documents, pas le client.
-3. **Couche d'accès** — `db.js`, repository, ORM : comment passent les écritures (`create`/`update`/
-   `remove`, patch vs set, opérations sur tableaux).
-4. **État global & abonnements** — `App.jsx`, store, hooks : ce qui est lu, filtré, dérivé.
-5. **Règles & sécurité** — `firestore.rules`, policies, middlewares d'autorisation.
+Ne pas explorer au-delà à ce stade. Fichiers absents : continuer, ils seront créés en fin de run à
+partir de [references/audit-notes-template.md](references/audit-notes-template.md) et
+[references/audit-log-template.md](references/audit-log-template.md).
+
+## Étape 2 — Reconstituer le modèle
+
+Obligatoire pour `DATA`, `FONC` et `SEC` ; réduit à un survol pour `PERF`, `PROP` et `CONF`.
+
+Chercher dans cet ordre, en s'arrêtant à ce que le dépôt possède réellement : **formes de départ**
+(seeds, fixtures, schémas déclarés, migrations) → **écritures serveur** (quand le serveur écrit,
+c'est lui qui fixe la forme réelle, pas le client) → **couche d'accès** (`db.js`, repository, ORM) →
+**état global & abonnements** → **règles & sécurité**.
 
 Noter par entité : **champs**, **types** (nombre vs chaîne, format de date, tableaux d'ids, maps,
-booléens), **id de document** (composite déterministe ?), et **qui écrit** (client ou serveur).
+booléens), **id de document** (composite déterministe ?), **qui écrit** (client ou serveur).
 
-Produire une **note de modèle courte** (entité → champs → qui écrit). Elle sert de référence à toute
-la suite ; sans elle, l'analyse invente.
+Produire une **note de modèle courte** (entité → champs → qui écrit). Elle est transmise à chaque
+agent ; sans elle, l'analyse invente.
 
-**Étape 2 — Confronter le code au modèle**
+## Étape 3 — Inventorier le périmètre
 
-*Mode défaut* : lancer plusieurs agents `general-purpose` **en parallèle**, un par domaine, chacun
-recevant la note de modèle + la grille + les notes projet. Découpage type, à adapter : création/
-édition de contenu · gestion & admin · cœur applicatif (handlers, état global, temps réel) ·
-sécurité (règles confrontées à ce que le client écrit vraiment).
+Avant d'analyser, **lister les unités** que le périmètre contient : écrans, handlers, routes,
+fonctions serveur, fichiers de règles. Par `Glob` et par la table de routes — sans les lire. Cette
+liste est le dénominateur de la couverture ; elle est reprise telle quelle dans le rapport et dans le
+journal. Sans elle, impossible de dire ce qui n'a pas été vu, et l'audit suivant recommence au
+hasard.
 
-*Mode rapide/ciblé* : pas d'agent, lectures ciblées, même grille.
+## Étape 4 — Analyser, un agent par axe
 
-### Grille de recherche
+*Mode normal* : un agent `general-purpose` **par axe retenu**, lancés en parallèle. Chacun reçoit :
+la note de modèle · **son seul** fichier d'axe · l'inventaire du périmètre · les notes projet · la
+liste des constats déjà `écartés`/`acceptés` (à ne pas resignaler) · les `corrigés` de son axe (à
+re-vérifier). Le découpage est **toujours celui des axes**, jamais improvisé : c'est ce qui rend deux
+runs comparables.
 
-1. **Champs hors-modèle** écrits par un formulaire ou un handler ; à l'inverse, champs du modèle
-   jamais lus ni édités (code mort). Classe la plus fréquente après un renommage fait d'un seul côté.
-2. **Types incohérents** — nombre stocké en `""`, `Number("") → 0` au lieu de vide, date mal
-   formatée, tableau traité comme scalaire.
-3. **États exclusifs** (`approved`/`refused`/`archived`, `lobby`/`playing`/`ended`) — l'exclusivité
-   est-elle garantie à l'écriture ? chaque écran re-filtre-t-il correctement (listes, KPI, planning) ?
-4. **Cascades & orphelins** — supprimer un parent laisse-t-il des enfants (sous-collections,
-   références `xxxId`, conversations) ? le libellé de confirmation dit-il la vérité ?
-5. **Validations & limites** — capacité vs effectif, bornes absentes, fin avant début, chevauchement,
-   valeur négative. Attention aux **créneaux qui passent minuit** : comparer `HH:MM` brut sans
-   ajouter un jour quand fin < début fausse durées et chevauchements.
-6. **Id de document déterministe** — respecté partout (création, toggle, suppression) ? `update` sur
-   un document qui peut ne pas exister ?
-7. **Droits** — rôle global vs rôle par entité ; auto-promotion ; chemins détournés (un import de
-   fichier qui injecte un flag privilégié sans le garde-fou de l'UI). Les **états lecture seule**
-   doivent être gardés dans **chaque handler d'écriture**, pas seulement masqués côté affichage.
-8. **Autorité serveur vs client** — quelles écritures passent par le serveur (qui contourne les
-   règles) et lesquelles sont directes ? une écriture sensible faite côté client ? des règles trop
-   permissives qui laissent modifier un champ réservé au serveur ?
-9. **Compteurs & agrégats** — initialisation manquante, double comptage, deux endroits qui
-   recalculent la même chose et divergent.
-10. **Valeurs par défaut divergentes** d'un point d'entrée à l'autre (création vs affichage).
-11. **Sources dupliquées** — copie générée non régénérée ou non déployée, prédicat métier redupliqué
-    à la main d'un côté, liste réécrite en dur alors qu'elle est dérivée ailleurs.
-12. **Logique morte, conditions impossibles, races** — lecture suivie d'une écriture non
-    transactionnelle, id séquentiel `max+1` en temps réel.
+*Mode `rapide`* : pas d'agent, lectures ciblées, même checklist, plancher 🟠.
 
-**Retour exigé de chaque agent**, pour chaque constat — les 7 éléments, pas un télégramme :
-`fichier:ligne` + **citation** du code décisif · **ce qui se passe** (l'écran ou le bouton concret, en
-langage simple) · **pourquoi c'est un problème** (la règle du modèle violée) · **scénario
-reproductible** · **impact observable** · **piste de correction** en une ligne · **classe**
-`[SÉCURITÉ]` / `[BUG]` / `[INCOHÉRENCE]` / `[MINEUR]`.
+**Contrat de retour de chaque agent** — pour chaque constat, les 7 éléments, pas un télégramme :
 
-**Étape 3 — Auto-vérifier avant d'affirmer**
+`fichier:ligne` + **citation** du code décisif · **le point de checklist** qui l'a trouvé (`SEC-4`) ·
+**ce qui se passe**, en langage simple, sur l'écran ou le bouton concret · **pourquoi c'est un
+problème** (la règle violée) · **scénario reproductible** · **impact observable** · **piste de
+correction** en une ligne · **gravité** selon le barème ci-dessous.
 
-Relire **soi-même** au `fichier:ligne` tous les `[SÉCURITÉ]` et les `[BUG]` les plus sévères : un
-agent peut halluciner une ligne, un champ ou une règle. Marquer **✅ vérifié** vs *rapporté*. Un faux
-positif coûte plus cher qu'un oubli.
+Et, en fin de retour : **la couverture** — quelles unités de l'inventaire ont été réellement
+examinées, lesquelles ne l'ont pas été, et pourquoi (budget, hors sujet pour l'axe).
 
-Si le projet a une batterie d'intégrité, la lancer plutôt que re-signaler à la main ce qu'elle couvre.
+## Barème de gravité
 
-**Étape 4 — Restituer**
+La gravité est **impact × probabilité d'atteinte**, pas une impression. Si le scénario d'atteinte ne
+s'écrit pas, ce n'est pas 🔴.
 
-- **Tableau par catégorie** : ⚠️ Sécurité → 🔴 Bugs confirmés → 🟠 Incohérences → 🟡 Mineurs / code
-  mort. Colonnes `# | Constat | Lieu | Impact | Vérifié`, trié du plus grave au moins grave.
-- **Détail par constat** (même numérotation), reprenant les 7 éléments, avec des liens
-  `[fichier.jsx:42](src/...#L42)` cliquables. Dense mais complet : quelqu'un qui n'a pas le code sous
-  les yeux doit comprendre. Pour les 🟡, un résumé + lieu + impact suffisent.
-- **❌ Écartés** : les faux positifs relus, avec la raison — c'est ce qui évite de refaire le tour au
-  prochain audit ; proposer de les recopier dans `.claude/audit-notes.md`.
-- **Synthèse actionnable** : `Prio | Action | Risque du correctif | Décision requise ?`, en séparant
-  le lot « faible risque, corrigeable tout de suite » de ce qui demande un arbitrage produit.
-- **Clôture** : proposer de corriger d'abord sécurité + bugs confirmés à faible risque, puis de
-  relancer les tests du projet, puis `/ship`. **Ne rien écrire sans l'accord de l'utilisateur.**
+- 🔴 **Critique** — données perdues, exposées ou durablement fausses ; droit contournable ; chemin
+  nominal cassé.
+- 🟠 **Majeur** — comportement faux sur un cas limite réellement atteignable, ou fausse assurance
+  (test, CI, défense en profondeur absente).
+- 🟡 **Mineur** — gêne, dette, code mort, duplication sans divergence constatée.
+
+Chaque fichier d'axe précise ce que ces trois niveaux veulent dire pour lui.
+
+## Étape 5 — Vérifier avant d'affirmer
+
+Relire **soi-même**, au `fichier:ligne`, tous les 🔴, ainsi que tout constat annoncé comme
+**régression** d'un item `corrigé` : un agent peut halluciner une ligne, un champ ou une règle.
+Marquer **✅ vérifié** vs *rapporté*. Un faux positif coûte plus cher qu'un oubli.
+
+Si le projet a une batterie d'intégrité ou de tests, la lancer plutôt que resignaler à la main ce
+qu'elle couvre.
+
+## Étape 6 — Restituer
+
+**Budget : 8 constats détaillés au maximum par axe**, les plus graves d'abord. Le reste part au
+journal et sera détaillé au prochain passage — ne pas le perdre, ne pas l'étaler ici.
+
+1. **Delta** en tête, une ligne : `X nouveaux · Y corrigés confirmés · Z régressions · N restants au
+   journal`. C'est ce qui montre que l'audit avance.
+2. **Tableau de synthèse** : `id | Grav | Constat | Lieu | Vérifié`, trié du plus grave au moins
+   grave, tous axes confondus.
+3. **Détail par constat**, même numérotation, les 7 éléments, avec des liens
+   `[fichier.jsx:42](src/...#L42)` cliquables. Dense mais complet : quelqu'un qui n'a pas le code
+   sous les yeux doit comprendre. Pour les 🟡, résumé + lieu + impact suffisent.
+4. **Couverture** : par axe, `X/Y unités examinées` et **la liste de ce qui ne l'a pas été**. Section
+   non négociable — c'est elle qui empêche de lire un rapport court comme un satisfecit.
+5. **❌ Écartés ce run** : les faux positifs relus, avec la raison.
+6. **Plan d'action** : `Prio | Action | Risque du correctif | Décision requise ?`, en séparant le lot
+   « faible risque, corrigeable tout de suite » de ce qui demande un arbitrage produit.
+7. **Clôture** : proposer de corriger d'abord les 🔴 vérifiés à faible risque, puis de relancer les
+   tests, puis `/ship`. **Ne rien écrire dans le code sans l'accord de l'utilisateur.**
+
+## Étape 7 — Mettre à jour le journal
+
+Automatique, sans demander — c'est un fichier d'audit, pas du code. Écrire ou créer
+`.claude/audit-log.md` :
+
+- **Tous** les constats du run, détaillés ou non, avec un id `<AXE>-<nn>` attribué à partir du plus
+  grand numéro déjà présent pour cet axe. **Ne jamais renuméroter l'existant.**
+- Statuts mis à jour : `corrigé` pour ce qui a été re-vérifié comme réparé, `ouvert` de nouveau pour
+  une régression, `écarté` avec la raison pour les faux positifs de ce run.
+- La **couverture** par axe et une ligne d'historique du passage.
+
+Proposer aussi, s'il manque, de créer `.claude/audit-notes.md` depuis le gabarit — la passe en cours
+fournit justement de quoi le remplir. Celui-là attend l'accord.
 
 ## Ce que cette skill ne fait PAS
 
-- Elle n'écrit, ne corrige et ne committe rien — même un correctif d'une ligne attend l'accord.
+- Elle ne modifie, ne corrige et ne committe aucun code — même un correctif d'une ligne attend
+  l'accord. Sa seule écriture est le journal.
 - Elle ne présume aucun nom d'entité, d'écran ou de champ : tout vient du dépôt courant.
-- Elle n'explore pas hors du périmètre demandé ; en mode approfondi elle délègue la largeur aux
-  agents et ne relit elle-même que pour vérifier.
+- Elle ne charge pas les axes qu'on ne lui a pas demandés, et n'explore pas hors du périmètre.
+- Elle ne rend jamais un rapport sans sa section couverture.
 - Elle n'affirme rien qui ne s'appuie sur une ligne réelle relue.
-
-## Sortie attendue
-
-La note de modèle (courte), puis le rapport classé, la section des faux positifs écartés, et la
-synthèse priorisée. Aucun fichier modifié.

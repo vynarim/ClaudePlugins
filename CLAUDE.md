@@ -12,14 +12,15 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 - `examples/` — gabarit de `.claude/settings.json` à copier dans un projet consommateur
 - `docs/` — source du tutoriel publié via GitHub Pages (`index.html` autonome)
 - `.claude/skills/` — skills **internes** au repo (`skill-new`), non publiées
-- `.claude/audit-notes.md` — ce que `/audit` doit vérifier ici (cohérence du catalogue, pas un modèle
-  de données)
+- `.claude/audit-notes.md` — axes actifs et checklist maison de `/audit` ici (cohérence du catalogue,
+  pas un modèle de données) ; `.claude/audit-log.md` — journal des constats, écrit par la skill
 
 ## Plugins
 
-- **claude-utils** — générique : `eco` (discipline tokens/contexte), `audit` (cohérence modèle ⇄
-  code, extensible par `.claude/audit-notes.md` côté projet), `context-check` (audit du
-  `CLAUDE.md`), `ship` (commit + push), `pr-draft`, `session-brief`, `update-plugins`
+- **claude-utils** — générique : `eco` (discipline tokens/contexte), `audit` (revue de code par axes :
+  sécurité, données, métier, perf, propreté, config — extensible par `.claude/audit-notes.md` côté
+  projet), `context-check` (audit du `CLAUDE.md`), `ship` (commit + push), `pr-draft`,
+  `session-brief`, `update-plugins`
 
 Repo **généraliste** : outillage Claude Code transverse, sans domaine métier particulier.
 

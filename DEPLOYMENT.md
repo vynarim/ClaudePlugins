@@ -23,9 +23,21 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
 
 ## Ajouter une skill à un plugin existant
 
-1. Crée `<plugin>/skills/<nom>/SKILL.md` avec le frontmatter `name` et `description`.
-2. Le dossier `skills/` est auto-découvert par le harness — pas de modification de `plugin.json` requise.
-3. Incrémente la version du plugin et publie (section suivante).
+1. Crée `<plugin>/skills/<nom>/SKILL.md` avec le frontmatter `name` et `description`. La
+   `description` est le routeur : sans les formulations réelles de l'utilisateur (« Déclenche
+   sur : … »), la skill existe mais ne part jamais.
+2. Ce qui déborde du `SKILL.md` (gabarits, checklists, tableaux de référence) va dans
+   `<plugin>/skills/<nom>/references/` et n'est lu que quand la skill y renvoie — c'est ce qui évite
+   de charger tout le contenu à chaque invocation.
+3. Le dossier `skills/` est auto-découvert par le harness — pas de modification de `plugin.json` requise.
+4. **Déclare la skill partout où la liste existe**, sinon elle est publiée mais invisible :
+   `description` de `<plugin>/.claude-plugin/plugin.json` et de `.claude-plugin/marketplace.json`,
+   tableau des skills du [README.md](README.md) racine, tableau de `<plugin>/README.md`, tableau
+   « quelle skill pour quoi » de `claude-utils/QUICKSTART.md`, liste des skills du
+   [CLAUDE.md](CLAUDE.md).
+5. Incrémente la version du plugin et publie (section suivante).
+
+> Depuis ce dépôt, la skill interne `/skill-new` fait le squelette et rappelle cette liste.
 
 ---
 
@@ -34,9 +46,9 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
 1. Incrémente `version` dans `<plugin>/.claude-plugin/plugin.json` (le plugin modifié), et reporte-la
    dans le tableau des plugins du [README.md](README.md) racine. Si le changement est notable,
    ajoute une ligne à la section « Historique » du README du plugin.
-2. Valide les manifestes JSON touchés, par exemple :
+2. Valide les manifestes JSON touchés — un JSON cassé empêche le chargement du plugin :
    ```powershell
-   node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8')); console.log('OK')"
+   node -e "['.claude-plugin/marketplace.json','claude-utils/.claude-plugin/plugin.json'].forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})"
    ```
 3. `git commit` + `git push` (via `/ship`).
 4. Sur chaque poste, après le push :

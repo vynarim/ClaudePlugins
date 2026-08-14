@@ -25,7 +25,7 @@ classique : la skill est écrite, mais jamais déclarée ni publiée.
    part jamais.
 3. **La destination** :
    - `claude-utils/skills/<nom>/` — **publiée**, disponible sur tous les postes et tous les projets.
-   - `.claude/skills/<nom>/` — **interne**, ne sert qu'à ce repo (comme `ship` et cette skill-ci).
+   - `.claude/skills/<nom>/` — **interne**, ne sert qu'à ce repo (comme cette skill-ci).
    Trancher sur un critère unique : est-ce que ça a du sens dans un autre dépôt ?
 4. **Les limites** — ce que la skill ne doit pas faire (modifier des fichiers, pousser, explorer
    l'arborescence…).
@@ -80,14 +80,16 @@ Une skill interne s'arrête à l'étape 3. Une skill dans `claude-utils/` demand
 1. `claude-utils/.claude-plugin/plugin.json` — ajouter la skill à `description`, **bumper `version`**.
 2. `.claude-plugin/marketplace.json` — mettre à jour la `description` du plugin et ses `keywords`.
 3. `claude-utils/README.md` — ligne dans le tableau des skills.
-4. `claude-utils/QUICKSTART.md` — ligne dans le tableau « quelle skill pour quoi ».
-5. `README.md` racine — colonne version du tableau des plugins.
+4. `claude-utils/QUICKSTART.md` — ligne dans le tableau « quelle skill pour quoi », et liste des
+   skills proposées par `/` à l'étape « Vérifier ».
+5. `README.md` racine — ligne dans le tableau des skills **et** colonne version du tableau des
+   plugins.
 6. `CLAUDE.md` — liste des skills du plugin.
 
 Valider les JSON touchés :
 
 ```powershell
-node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8')); console.log('OK')"
+node -e "['.claude-plugin/marketplace.json','claude-utils/.claude-plugin/plugin.json'].forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})"
 ```
 
 **Étape 5 — Rappeler la suite**

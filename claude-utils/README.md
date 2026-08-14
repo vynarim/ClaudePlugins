@@ -10,7 +10,7 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 | Skill | Invocation | Rôle |
 |---|---|---|
 | `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, délégation aux sous-agents. |
-| `audit` | `/audit` | Audit de cohérence : reconstitue le modèle depuis le code, le confronte aux écrans et aux règles, rend un diagnostic classé. Read-only. |
+| `audit` | `/audit` | Revue de code par axes (sécurité, données, métier, perf, propreté, config) : demande l'axe au démarrage, rend un diagnostic classé par gravité avec sa couverture, tient un journal pour que deux audits se complètent. Ne modifie aucun code. |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
@@ -19,6 +19,40 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 
 Le dossier `skills/` est auto-découvert ; chaque skill a son `SKILL.md` et, si besoin, ses fichiers
 annexes dans `skills/<nom>/references/`.
+
+## Utiliser `/audit`
+
+La seule skill du plugin qui se configure et qui garde une trace d'un passage à l'autre.
+
+| Commande | Effet |
+|---|---|
+| `/audit` | Demande l'axe puis le périmètre, et part. |
+| `/audit sécurité` (ou `SEC`, `perf`, `code mort`…) | Un axe précis, sans question. |
+| `/audit tout` | Les six axes. Coûteux — la skill annonce l'ordre de grandeur avant de lancer. |
+| `/audit rapide` | Une passe, pas de sous-agents, ne remonte que 🔴 et 🟠. |
+| `/audit delta` | Seulement ce qui a changé depuis le dernier passage. |
+
+Les six axes : `SEC` sécurité & authentification · `DATA` données & modèle · `FONC` métier &
+fiabilité · `PERF` performance & coût · `PROP` code mort & duplication · `CONF` config, déploiement &
+tests. Chacun a sa checklist dans `skills/audit/references/axes/`, chargée seulement s'il est retenu.
+
+**Deux fichiers, dans le `.claude/` du projet audité :**
+
+- `.claude/audit-notes.md` — **optionnel, à toi.** Axes sans objet ici, chemins où vit le modèle,
+  découpage en domaines, pièges maison, hors périmètre. Gabarit dans
+  `skills/audit/references/audit-notes-template.md`. Sans lui l'audit tourne quand même, il connaît
+  juste moins le terrain.
+- `.claude/audit-log.md` — **écrit par la skill**, sans demander. Tous les constats, avec un id
+  stable (`SEC-03`) et un statut (`ouvert` · `corrigé` · `écarté` · `accepté`). C'est le seul fichier
+  qu'elle modifie : elle ne touche jamais au code.
+
+**Enchaîner les passages.** Le rapport ne détaille que les huit constats les plus graves par axe,
+mais le journal reçoit tout. Tu corriges, tu relances : la skill re-vérifie les `corrigés`, saute ce
+qui est marqué `écarté` ou `accepté`, et détaille la suite de la file au lieu d'en retirer une
+nouvelle. Chaque rapport s'ouvre sur `nouveaux · corrigés · régressions · restants` et se termine par
+ce qui **n'a pas** été examiné.
+
+Méthode complète : [skills/audit/SKILL.md](skills/audit/SKILL.md).
 
 ## Prérequis et dépannage
 
@@ -46,6 +80,16 @@ Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills
 
 ## Historique
 
+- **2.3.0** — `audit` refondu en **revue par axes**. Six axes (`SEC` sécurité & auth, `DATA` données &
+  modèle, `FONC` métier & fiabilité, `PERF` performance & coût, `PROP` code mort & duplication,
+  `CONF` config & tests), chacun avec sa checklist fermée dans `skills/audit/references/axes/`,
+  chargée seulement si l'axe est retenu. `/audit` sans argument commence par demander l'axe et le
+  périmètre. Trois mécanismes règlent la non-convergence d'un audit à l'autre : un **inventaire du
+  périmètre** dont le rapport doit déclarer la couverture, un **barème de gravité** écrit, et un
+  **journal `.claude/audit-log.md`** à ids stables — il reçoit tout ce qui est trouvé pendant que le
+  rapport ne détaille que les huit constats les plus graves par axe, si bien que le passage suivant
+  reprend la file et affiche un delta (nouveaux / corrigés / régressions) au lieu de retirer au sort.
+  Le journal est écrit automatiquement ; le code, lui, n'est toujours pas touché.
 - **2.2.0** — skill `audit` : la méthode d'audit de cohérence, jusqu'ici recopiée à la main dans
   chaque projet. Le squelette (reconstitution du modèle, grille, auto-vérification, format du
   rapport) est générique ; les spécificités d'un dépôt vivent dans son `.claude/audit-notes.md`
