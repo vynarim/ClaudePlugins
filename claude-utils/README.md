@@ -14,7 +14,20 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`). |
 
-Le dossier `skills/` est auto-découvert ; chaque skill a son `SKILL.md` et ses `references/`.
+Le dossier `skills/` est auto-découvert ; chaque skill a son `SKILL.md` et, si besoin, ses fichiers
+annexes dans `skills/<nom>/references/`.
+
+## Prérequis et dépannage
+
+- **Prérequis** : Claude Code installé. Rien d'autre — le plugin n'exécute aucun code (pas de hook,
+  pas de serveur MCP, pas de variable d'environnement à régler), il n'apporte que des skills.
+- **Une skill n'apparaît pas** après installation ou mise à jour : recharge la fenêtre VS Code
+  (*Developer: Reload Window*) ou `/reload-plugins` — les plugins sont chargés à l'ouverture.
+- **Une skill manque alors que le plugin est listé** : elle a probablement été ajoutée dans une
+  version plus récente → `/update-plugins`, ou voir [INSTALL.md](../INSTALL.md#mettre-à-jour).
+- `/pr-draft` et `/session-brief` interrogent GitHub via `gh pr list`. Sans
+  [GitHub CLI](https://cli.github.com/) authentifié (`gh auth status`), seules ces étapes échouent :
+  la partie git locale (diff, statut, commits) fonctionne quand même.
 
 ## Ajouter une nouvelle skill
 

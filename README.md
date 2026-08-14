@@ -6,9 +6,9 @@ Marketplace interne `dev-tools` — catalogue de plugins Claude Code.
 
 Ce dépôt héberge les plugins suivants :
 
-| Plugin | Pour quoi faire |
-|---|---|
-| [`claude-utils`](claude-utils/) | Boîte à outils générique : efficacité tokens, PR GitHub, reprise de session |
+| Plugin | Version | Pour quoi faire |
+|---|---|---|
+| [`claude-utils`](claude-utils/) | 2.0.0 | Boîte à outils générique : efficacité tokens, PR GitHub, reprise de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 
@@ -35,7 +35,22 @@ claude plugin install claude-utils@dev-tools
 ```
 
 Les projets configurés (qui déclarent la marketplace dans leur `.claude/settings.json`) proposent
-l'installation automatiquement au moment du trust du dossier.
+l'installation automatiquement au moment du trust du dossier. Gabarit à copier :
+[`examples/project.claude-settings.json`](examples/project.claude-settings.json).
+
+Les plugins de ce repo **n'exécutent aucun code** (pas de hook, pas de serveur MCP) : ils n'apportent
+que des skills.
+
+## Structure du repo
+
+| Chemin | Rôle |
+|---|---|
+| `.claude-plugin/marketplace.json` | Catalogue `dev-tools` — déclare les plugins publiés |
+| `<plugin>/.claude-plugin/plugin.json` | Manifeste d'un plugin (`version` à bumper pour publier) |
+| `<plugin>/skills/<nom>/SKILL.md` | Une skill (dossier `skills/` auto-découvert) |
+| `examples/` | Gabarit de `.claude/settings.json` à copier dans un projet |
+| `docs/` | Source du tutoriel publié sur GitHub Pages |
+| `.claude/skills/ship/` | Skill **interne** au repo (commit + push), non publiée |
 
 ## Documentation
 

@@ -13,7 +13,7 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
    - `<nom-du-plugin>/README.md` (rôle, skills, prérequis)
 2. Déclare le plugin dans la marketplace `.claude-plugin/marketplace.json` (ajoute une entrée au
    tableau `plugins` : `name`, `source: "./<nom-du-plugin>"`, `description`, `keywords`).
-3. Ajoute une ligne au tableau des plugins dans le [README.md](README.md) racine.
+3. Ajoute une ligne au tableau des plugins dans le [README.md](README.md) racine (nom, version, rôle).
 4. Valide le JSON, commit, push (voir « Publier »).
 
 > Convention de nommage : préfixe `claude-` pour les plugins (`claude-utils`…). Les skills d'un même
@@ -31,7 +31,9 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
 
 ## Publier une version
 
-1. Incrémente `version` dans `<plugin>/.claude-plugin/plugin.json` (le plugin modifié).
+1. Incrémente `version` dans `<plugin>/.claude-plugin/plugin.json` (le plugin modifié), et reporte-la
+   dans le tableau des plugins du [README.md](README.md) racine. Si le changement est notable,
+   ajoute une ligne à la section « Historique » du README du plugin.
 2. Valide les manifestes JSON touchés, par exemple :
    ```powershell
    node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8')); console.log('OK')"
@@ -79,6 +81,12 @@ forcée — c'est une proposition.
 
 Si le projet a déjà un `.claude/settings.json`, **fusionne** les clés `extraKnownMarketplaces` et
 `enabledPlugins` dans l'existant au lieu de remplacer le fichier.
+
+> Scope `user` **ou** scope `project`, pas les deux. Un plugin déjà installé au niveau poste
+> (`claude plugin install`) est disponible partout : le déclarer en plus dans `enabledPlugins` d'un
+> projet crée une seconde installation scope `project` et le fait apparaître **en double** dans
+> `/plugin`. Réserve le `enabledPlugins` projet aux dépôts partagés, où il sert justement à proposer
+> l'install à ceux qui ne l'ont pas. Nettoyage : voir [INSTALL.md](INSTALL.md#dépannage).
 
 ---
 

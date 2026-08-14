@@ -9,7 +9,9 @@ réinstaller par projet).
 ## Étape 0 — Prérequis (hors plugin)
 
 - **Claude Code** installé — vérifie : `claude --version`
-- **Node.js** dans le PATH — vérifie : `node --version` (requis par le hook fenêtre 5 h)
+
+Rien d'autre : le plugin n'exécute aucun code (pas de hook, pas de serveur MCP), il n'apporte que
+des skills.
 
 ## Étape 1 — Installer le plugin
 
@@ -31,7 +33,6 @@ dans une session Claude Code.
 Dans une session Claude Code :
 
 - `/plugin` → onglet *Installed* : `claude-utils@dev-tools` présent et activé.
-- `/hooks` → le hook `UserPromptSubmit` (alerte fenêtre 5 h) est listé.
 - Tape `/` : les skills `/eco`, `/pr-draft`, `/session-brief`, `/update-plugins` sont proposées.
 
 ## Étape 3 — Prendre en main les skills
@@ -43,8 +44,9 @@ Dans une session Claude Code :
 | Tu surveilles ta conso de tokens | `/eco` | Discipline tokens/contexte (limites 5 h/hebdo, choix de modèle). |
 | Une nouvelle version est publiée | `/update-plugins` | Met à jour les plugins dev-tools sur le poste. |
 
-Le hook fenêtre 5 h tourne tout seul : il prévient ~30 min avant le reset estimé. Réglages
-(facultatifs) dans le [README du plugin](README.md#réglages-du-hook-variables-denvironnement-optionnelles).
+Pour suivre la consommation réelle (fenêtre 5 h + hebdo) : `/usage` ou `/status` en session, et en
+continu l'extension VS Code **Claude Code Usage** (`growthjack.claude-code-usage`) ou une status
+line. `/eco` détaille ces réglages.
 
 ## Mettre à jour plus tard
 

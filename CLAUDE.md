@@ -8,7 +8,9 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 - `.claude-plugin/marketplace.json` — déclare les plugins de la marketplace
 - `<plugin>/.claude-plugin/plugin.json` — manifeste d'un plugin (`version` à bumper pour publier)
 - `<plugin>/skills/<nom>/SKILL.md` — skills (dossier `skills/` auto-découvert)
-- `<plugin>/references/` — fichiers annexes partagés (ex. gabarits)
+- `<plugin>/skills/<nom>/references/` — fichiers annexes d'une skill (ex. gabarits)
+- `examples/` — gabarit de `.claude/settings.json` à copier dans un projet consommateur
+- `docs/` — source du tutoriel publié via GitHub Pages (`index.html` autonome)
 - `.claude/skills/ship/` — skill **interne** au repo (non publiée)
 
 ## Plugins
