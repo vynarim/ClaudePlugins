@@ -78,17 +78,32 @@ Méthode complète : [skills/audit/SKILL.md](skills/audit/SKILL.md).
 ## Ajouter une nouvelle skill
 
 1. Crée `skills/<nouveau-nom>/SKILL.md` (frontmatter `name` + `description`).
-2. Ajoute ses fichiers de référence à côté si besoin.
-3. Incrémente `version` dans `.claude-plugin/plugin.json`.
-4. Commit + push ; les postes mettent à jour via `claude plugin marketplace update dev-tools` puis
-   `claude plugin update claude-utils@dev-tools` (ou la skill `/update-plugins`). Ceux qui ont activé
-   `autoUpdate` sur la marketplace n'ont rien à lancer — voir
-   [INSTALL.md](../INSTALL.md#automatiser--loption-autoupdate).
+2. Ajoute ses fichiers de référence dans `skills/<nouveau-nom>/references/` si le contenu déborde.
+3. **Déclare-la partout où la liste des skills existe**, bumpe la version, publie : la procédure
+   complète vit dans [DEPLOYMENT.md](../DEPLOYMENT.md), § « Ajouter une skill à un plugin existant ».
+   C'est **la** liste de référence — la suivre point par point plutôt que d'en tenir une seconde ici,
+   car ce sont justement ses derniers points qu'on oublie.
 
-Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills/` est auto-découvert.
+Le dossier `skills/` est auto-découvert : rien à ajouter dans `plugin.json` pour que la skill soit
+**chargée**. Elle doit en revanche y être **décrite** — la `description` du manifeste est ce qui la
+rend trouvable, et `DEPLOYMENT.md` en fait le premier point de la resynchronisation.
 
 ## Historique
 
+- **2.4.1** — correctifs issus de la passe `/audit` sur les axes métier, perf et propreté.
+  `session-brief` et `pr-draft` **détectent la branche par défaut** (`git symbolic-ref`) au lieu de
+  supposer `main` : le brief de reprise et la génération de PR partaient en erreur sur tout dépôt en
+  `master` ou `develop`, `session-brief` n'ayant aucune garde et `pr-draft` la sienne écrite *après*
+  les commandes qui l'utilisent. `session-brief` cherche aussi la mémoire persistante au bon endroit
+  (`~/.claude/projects/…`, et non un chemin relatif au projet). Côté docs, la procédure d'ajout d'une
+  skill n'existe plus qu'en un seul exemplaire — `DEPLOYMENT.md` — et le README racine rappelle la
+  règle « scope user **ou** project, pas les deux » là où il distribue le gabarit. Enfin, la règle
+  « aucune mention d'assistant » que `ship` applique aux messages de commit **s'étend aux corps de
+  PR** : `pr-draft` n'ajoute plus de pied de page `🤖 Généré avec…`, ni dans son gabarit ni dans la
+  commande `gh pr create` qu'elle affiche. Enfin `audit` s'allège : les formats de sortie (plan du
+  rapport, colonnes du journal) et la reconstitution du modèle quittent le `SKILL.md` pour
+  `references/formats-de-sortie.md` et `references/reconstituer-modele.md`, chargés seulement au
+  moment de s'en servir — le second ne l'est jamais sur un dépôt sans modèle de données.
 - **2.4.0** — `audit` gagne la **non-régression**. Chaque constat du journal porte désormais son
   **test de re-vérification** (une commande qui tranche, ou `fichier:ligne` + ce qu'on doit y lire) et
   la version où le correctif a atterri, ce qui rend un point re-testable des semaines plus tard sans

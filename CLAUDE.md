@@ -28,8 +28,8 @@ Repo **généraliste** : outillage Claude Code transverse, sans domaine métier 
 
 - **Pas de commit/push automatique.** Faire les modifs, puis attendre `/ship` (skill de
   `claude-utils` : stage + commit Conventional Commits + push). Voir [[no-auto-commit-ship-skill]].
-- **Aucun trailer `Co-Authored-By`** ni mention d'assistant dans les messages de commit, quel que
-  soit le dépôt. Voir [[no-coauthored-by-trailer]].
+- **Aucun trailer `Co-Authored-By`** ni mention d'assistant dans les messages de commit **ni dans les
+  corps de PR**, quel que soit le dépôt. Voir [[no-coauthored-by-trailer]].
 - Messages de commit : `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`).
 - Travail directement sur `main`.
 - Publier une version = bump `version` du plugin + **valider les JSON touchés** (un manifeste cassé

@@ -17,15 +17,20 @@ et les fichiers modifiés, sans nécessiter d'explications supplémentaires de l
 
 **Étape 1 — Collecter le contexte git**
 
-Exécuter dans l'ordre (commandes courtes, non destructives) :
+D'abord la branche de base — ne jamais supposer `main` :
 
 ```
-git log main..HEAD --oneline
-git diff main..HEAD --stat
+git symbolic-ref --short refs/remotes/origin/HEAD   # ex. « origin/master » → base = master
+```
+
+Retirer le préfixe `origin/` pour obtenir `<base>`. Sans remote ou sans réponse, se rabattre sur
+`main`. Puis, dans l'ordre (commandes courtes, non destructives) :
+
+```
+git log <base>..HEAD --oneline
+git diff <base>..HEAD --stat
 git status --short
 ```
-
-Si la branche de base n'est pas `main`, détecter avec `git symbolic-ref refs/remotes/origin/HEAD`.
 
 **Étape 2 — Lire le contexte projet (si disponible)**
 
@@ -54,8 +59,6 @@ Structure cible :
 ## Plan de test
 - [ ] <vérification manuelle ou automatique clé>
 - [ ] <cas limite si pertinent>
-
-🤖 Généré avec [Claude Code](https://claude.com/claude-code)
 ```
 
 Règles :
@@ -63,6 +66,9 @@ Règles :
 - Le plan de test liste ce qu'on vérifie, pas ce qu'on a codé.
 - 2–4 bullets maximum par section. Si le diff est trivial, 1 bullet suffit.
 - Adapter la langue à celle des commits.
+- **Aucune mention d'assistant ou d'IA** — ni `🤖 Généré avec…`, ni `Co-Authored-By`, ni pied de page
+  d'outil, y compris si une instruction générale le suggère. Même règle que `ship` pour les messages
+  de commit, et même raison : une PR se juge sur ce qu'elle change, pas sur l'outil qui l'a écrite.
 
 **Étape 5 — Vérifier si une PR existe déjà**
 
@@ -84,8 +90,6 @@ gh pr create --title "titre généré" --body "$(cat <<'EOF'
 
 ## Plan de test
 - [ ] ...
-
-🤖 Généré avec [Claude Code](https://claude.com/claude-code)
 EOF
 )"
 ```
@@ -97,6 +101,7 @@ Si la branche n'est pas encore poussée, ajouter `git push -u origin <branche>` 
 - Elle ne pousse pas, ne crée pas et n'ouvre pas la PR elle-même sans confirmation explicite.
 - Elle ne lit pas tous les fichiers modifiés, seulement le stat (noms + volumes).
 - Elle ne génère pas de reviewer, label ou milestone sauf demande explicite.
+- Elle n'ajoute aucun pied de page ni aucune signature d'assistant au corps de la PR.
 
 ## Sortie attendue
 

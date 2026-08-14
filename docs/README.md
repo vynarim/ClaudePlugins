@@ -1,9 +1,3 @@
-<!--
-  À placer dans le repo sous : docs/README.md
-  (ce fichier est une note de maintenance, il n'est PAS servi comme page —
-   c'est index.html qui l'est.)
--->
-
 # docs/ — Tutoriel publié (GitHub Pages)
 
 Ce dossier héberge le **tutoriel HTML** « Claude Code + VS Code », publié via **GitHub Pages**.

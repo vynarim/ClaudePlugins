@@ -17,14 +17,23 @@ projet pour qu'il puisse reprendre sans réexpliquer le contexte.
 
 **Étape 1 — État git local**
 
+D'abord la branche de base — ne jamais supposer `main` :
+
+```
+git symbolic-ref --short refs/remotes/origin/HEAD   # ex. « origin/master » → base = master
+```
+
+Retirer le préfixe `origin/` pour obtenir `<base>`. Sans remote ou sans réponse, se rabattre sur
+`main`. Puis :
+
 ```
 git status --short
-git log main..HEAD --oneline
+git log <base>..HEAD --oneline
 git stash list
 ```
 
 Résumer en 2–3 lignes :
-- Branche courante et nb de commits d'avance sur `main`
+- Branche courante et nb de commits d'avance sur `<base>`
 - Fichiers modifiés non commités (unstaged/staged/untracked)
 - Stash en attente le cas échéant
 
@@ -47,7 +56,7 @@ Ne pas explorer l'arborescence au-delà de ces fichiers connus.
 
 **Étape 4 — Mémoire persistante Claude Code**
 
-Si de la mémoire personnelle est disponible (ex. fichiers dans `.claude/projects/…/memory/`),
+Si de la mémoire personnelle est disponible (ex. fichiers dans `~/.claude/projects/…/memory/`),
 lire `MEMORY.md` pour identifier les entrées de type `project` récentes concernant ce dépôt.
 
 **Étape 5 — Composer le brief**

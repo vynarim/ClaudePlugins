@@ -8,7 +8,7 @@ Ce dépôt héberge les plugins suivants :
 
 | Plugin | Version | Pour quoi faire |
 |---|---|---|
-| [`claude-utils`](claude-utils/) | 2.4.0 | Boîte à outils générique : efficacité tokens, revue de code par axes, commit/push, PR GitHub, reprise de session, mise à jour des plugins |
+| [`claude-utils`](claude-utils/) | 2.4.1 | Boîte à outils générique : efficacité tokens, revue de code par axes, commit/push, PR GitHub, reprise de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 
@@ -40,6 +40,12 @@ claude plugin install claude-utils@dev-tools
 Les projets configurés (qui déclarent la marketplace dans leur `.claude/settings.json`) proposent
 l'installation automatiquement au moment du trust du dossier. Gabarit à copier :
 [`examples/project.claude-settings.json`](examples/project.claude-settings.json).
+
+⚠️ Scope `user` **ou** scope `project`, pas les deux. Si tu as déjà lancé les deux commandes ci-dessus
+(scope poste), déclarer en plus le plugin dans le `.claude/settings.json` d'un projet crée une seconde
+installation et le fait apparaître **en double** dans `/plugin`. Le gabarit sert aux dépôts partagés,
+où il propose l'install à ceux qui ne l'ont pas — voir
+[DEPLOYMENT.md](DEPLOYMENT.md#activer-des-plugins-dans-un-projet).
 
 Pour que les nouvelles versions arrivent seules, ajoute `"autoUpdate": true` à l'entrée `dev-tools`
 de ton `~/.claude/settings.json` — l'option n'est pas exposée par le CLI, voir

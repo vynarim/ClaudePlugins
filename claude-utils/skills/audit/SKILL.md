@@ -21,7 +21,7 @@ Rend un **diagnostic** classé par gravité sur un ou plusieurs **axes** choisis
 modifie aucun code : les correctifs sont proposés, jamais appliqués. Seule écriture autorisée, et
 elle est automatique : le journal `.claude/audit-log.md`.
 
-Trois principes, dans cet ordre :
+Quatre principes, dans cet ordre :
 
 1. **Rien n'est codé en dur.** Modèle, entités, écrans : tout est reconstitué depuis le dépôt courant
    à chaque exécution. C'est ce qui rend la skill portable et l'empêche d'auditer une app imaginaire.
@@ -93,18 +93,12 @@ partir de [references/audit-notes-template.md](references/audit-notes-template.m
 
 ## Étape 2 — Reconstituer le modèle
 
-Obligatoire pour `DATA`, `FONC` et `SEC` ; réduit à un survol pour `PERF`, `PROP` et `CONF`.
+Obligatoire pour `DATA`, `FONC` et `SEC` : produire une **note de modèle courte** (entité → champs →
+qui écrit), transmise ensuite à chaque agent — sans elle, l'analyse invente. Ordre de recherche et
+cas du dépôt sans modèle :
+[references/reconstituer-modele.md](references/reconstituer-modele.md).
 
-Chercher dans cet ordre, en s'arrêtant à ce que le dépôt possède réellement : **formes de départ**
-(seeds, fixtures, schémas déclarés, migrations) → **écritures serveur** (quand le serveur écrit,
-c'est lui qui fixe la forme réelle, pas le client) → **couche d'accès** (`db.js`, repository, ORM) →
-**état global & abonnements** → **règles & sécurité**.
-
-Noter par entité : **champs**, **types** (nombre vs chaîne, format de date, tableaux d'ids, maps,
-booléens), **id de document** (composite déterministe ?), **qui écrit** (client ou serveur).
-
-Produire une **note de modèle courte** (entité → champs → qui écrit). Elle est transmise à chaque
-agent ; sans elle, l'analyse invente.
+Pour `PERF`, `PROP` et `CONF` : un survol suffit, ne pas charger ce fichier.
 
 ## Étape 3 — Inventorier le périmètre
 
@@ -135,8 +129,11 @@ correction** en une ligne · **gravité** selon le barème ci-dessous · le **te
 **Test de re-vérification** — obligatoire, un par constat. C'est ce qui rend le constat rejouable
 sans le re-déduire : une commande qui répond seule (`grep -n "…" src/x.js`, `test -f LICENSE`, un
 test de la batterie), ou à défaut `fichier:ligne` + **ce qu'on doit y lire** pour conclure que c'est
-réparé. Formulé pour que « ça passe » soit sans ambiguïté. Un constat sans test de re-vérification
-est un constat qu'on retrouvera au hasard.
+réparé. Formulé pour que « ça passe » soit sans ambiguïté, et pour **ne pas se déclencher sur sa
+propre interdiction** : un test qui cherche la chaîne fautive échouera dès que le correctif consiste à
+écrire une règle qui cite cette chaîne pour l'interdire — viser la forme réelle du défaut (ancrage en
+début de ligne, chemin précis), pas sa simple mention. Un constat sans test de re-vérification est un
+constat qu'on retrouvera au hasard.
 
 Et, en fin de retour : **la couverture** — quelles unités de l'inventaire ont été réellement
 examinées, lesquelles ne l'ont pas été, et pourquoi (budget, hors sujet pour l'axe).
@@ -190,41 +187,21 @@ agent. Sortie réduite au delta, au tableau des items re-testés et aux régress
 
 ## Étape 6 — Restituer
 
-**Budget : 8 constats détaillés au maximum par axe**, les plus graves d'abord. Le reste part au
-journal et sera détaillé au prochain passage — ne pas le perdre, ne pas l'étaler ici.
+Charger [references/formats-de-sortie.md](references/formats-de-sortie.md) et s'y tenir : le plan du
+rapport y est écrit en sept points (delta, synthèse, détail, couverture, écartés, plan d'action,
+clôture), avec la forme réduite du mode `regression`.
 
-1. **Delta** en tête, une ligne : `X nouveaux · Y corrigés confirmés · Z régressions · R re-testés au
-   vert · N restants au journal`. C'est ce qui montre que l'audit avance.
-2. **Tableau de synthèse** : `id | Grav | Constat | Lieu | Vérifié`, trié du plus grave au moins
-   grave, tous axes confondus.
-3. **Détail par constat**, même numérotation, les 8 éléments, avec des liens
-   `[fichier.jsx:42](src/...#L42)` cliquables. Dense mais complet : quelqu'un qui n'a pas le code
-   sous les yeux doit comprendre. Pour les 🟡, résumé + lieu + impact suffisent.
-4. **Couverture** : par axe, `X/Y unités examinées` et **la liste de ce qui ne l'a pas été**. Section
-   non négociable — c'est elle qui empêche de lire un rapport court comme un satisfecit.
-5. **❌ Écartés ce run** : les faux positifs relus, avec la raison.
-6. **Plan d'action** : `Prio | Action | Risque du correctif | Décision requise ?`, en séparant le lot
-   « faible risque, corrigeable tout de suite » de ce qui demande un arbitrage produit.
-7. **Clôture** : proposer de corriger d'abord les 🔴 vérifiés à faible risque, puis de relancer les
-   tests, puis `/ship`. **Ne rien écrire dans le code sans l'accord de l'utilisateur.**
+Trois invariants, quel que soit le format : **8 constats détaillés au maximum par axe** — le reste
+part au journal et sera détaillé au prochain passage — **jamais de rapport sans sa section
+couverture**, et **rien écrit dans le code sans l'accord de l'utilisateur**.
 
 ## Étape 7 — Mettre à jour le journal
 
-Automatique, sans demander — c'est un fichier d'audit, pas du code. Écrire ou créer
-`.claude/audit-log.md` :
-
-- **Tous** les constats du run, détaillés ou non, avec un id `<AXE>-<nn>` attribué à partir du plus
-  grand numéro déjà présent pour cet axe. **Ne jamais renuméroter ni réattribuer l'existant** — un id
-  vaut à vie, y compris pour un constat qui revient après avoir été corrigé.
-- Pour chaque constat, son **test de re-vérification** (colonne `Vérif`) — c'est lui qui sera rejoué
-  à l'étape 5 bis des runs suivants. Une ligne sans `Vérif` est une ligne qu'on ne saura pas re-tester.
-- Statuts mis à jour : `corrigé` + `Corrigé en` (sha court ou version) pour ce qui a été re-vérifié
-  comme réparé, `ouvert` de nouveau pour une régression (même id), `écarté` avec la raison pour les
-  faux positifs de ce run. `Re-testé le` à la date du dernier passage au vert.
-- La **couverture** par axe et une ligne d'historique du passage.
-
-Proposer aussi, s'il manque, de créer `.claude/audit-notes.md` depuis le gabarit — la passe en cours
-fournit justement de quoi le remplir. Celui-là attend l'accord.
+Automatique, sans demander — c'est un fichier d'audit, pas du code. `.claude/audit-log.md` reçoit
+**tous** les constats du run, détaillés ou non, chacun sous un id `<AXE>-<nn>` **stable à vie** et
+accompagné de son **test de re-vérification**. Format des colonnes, règles de statut et pièges de
+rédaction du test : [references/formats-de-sortie.md](references/formats-de-sortie.md), § « Le
+journal ».
 
 ## Ce que cette skill ne fait PAS
 
