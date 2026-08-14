@@ -5,3 +5,6 @@ Thumbs.db
 # Logs / divers
 *.log
 node_modules/
+
+# Claude Code — réglages locaux au poste (permissions « toujours autoriser »)
+.claude/settings.local.json

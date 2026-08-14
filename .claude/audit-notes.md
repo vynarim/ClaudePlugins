@@ -63,7 +63,8 @@ pouvoir se déclencher puis tourner sur n'importe quel dépôt.
 
 ## Déjà couvert par les tests
 
-Rien d'automatisé — pas de tests ici. Le seul contrôle mécanique est la validation JSON :
+Pas de tests ni de CI ici — c'est assumé (voir `CONF-A1` au journal). Le seul contrôle mécanique est
+la validation JSON, désormais jouée par `/ship` sur les `.json` stagés (depuis `claude-utils` 2.4.0) :
 
 ```powershell
 node -e "['.claude-plugin/marketplace.json','claude-utils/.claude-plugin/plugin.json'].forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})"

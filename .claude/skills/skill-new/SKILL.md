@@ -75,16 +75,13 @@ Viser ~100 lignes. Ce qui déborde (gabarits, tableaux de référence, procédur
 
 **Étape 4 — Resynchroniser (uniquement si la skill est publiée)**
 
-Une skill interne s'arrête à l'étape 3. Une skill dans `claude-utils/` demande, en plus :
+Une skill interne s'arrête à l'étape 3. Une skill dans `claude-utils/` doit en plus être **déclarée
+partout où la liste des skills existe**, sinon elle est publiée mais invisible.
 
-1. `claude-utils/.claude-plugin/plugin.json` — ajouter la skill à `description`, **bumper `version`**.
-2. `.claude-plugin/marketplace.json` — mettre à jour la `description` du plugin et ses `keywords`.
-3. `claude-utils/README.md` — ligne dans le tableau des skills.
-4. `claude-utils/QUICKSTART.md` — ligne dans le tableau « quelle skill pour quoi », et liste des
-   skills proposées par `/` à l'étape « Vérifier ».
-5. `README.md` racine — ligne dans le tableau des skills **et** colonne version du tableau des
-   plugins.
-6. `CLAUDE.md` — liste des skills du plugin.
+La liste de référence vit dans [DEPLOYMENT.md](../../../DEPLOYMENT.md), § « Ajouter une skill à un
+plugin existant », point 4 : **la lire et la suivre point par point**, plutôt que de la recopier ici
+— une seconde copie diverge, et ce sont justement ses derniers points qu'on oublie. Elle couvre les
+deux manifestes (dont le bump de `version` et les `keywords`), les trois docs et le `CLAUDE.md`.
 
 Valider les JSON touchés :
 

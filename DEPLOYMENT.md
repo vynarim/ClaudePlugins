@@ -30,14 +30,21 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
    `<plugin>/skills/<nom>/references/` et n'est lu que quand la skill y renvoie — c'est ce qui évite
    de charger tout le contenu à chaque invocation.
 3. Le dossier `skills/` est auto-découvert par le harness — pas de modification de `plugin.json` requise.
-4. **Déclare la skill partout où la liste existe**, sinon elle est publiée mais invisible :
-   `description` de `<plugin>/.claude-plugin/plugin.json` et de `.claude-plugin/marketplace.json`,
-   tableau des skills du [README.md](README.md) racine, tableau de `<plugin>/README.md`, tableau
-   « quelle skill pour quoi » de `claude-utils/QUICKSTART.md`, liste des skills du
-   [CLAUDE.md](CLAUDE.md).
-5. Incrémente la version du plugin et publie (section suivante).
+4. **Déclare la skill partout où la liste existe**, sinon elle est publiée mais invisible. C'est
+   **la** liste de référence — celle que suit `/skill-new` ; ne pas en tenir une seconde ailleurs :
+   1. `<plugin>/.claude-plugin/plugin.json` — ajouter la skill à `description`, **bumper `version`**.
+   2. `.claude-plugin/marketplace.json` — `description` du plugin et ses `keywords`, **identiques à
+      ceux du `plugin.json`** : deux manifestes qui divergent donnent une recherche incohérente selon
+      le fichier interrogé.
+   3. `<plugin>/README.md` — ligne du tableau des skills, plus une ligne d'« Historique » si le
+      changement est notable.
+   4. `claude-utils/QUICKSTART.md` — tableau « quelle skill pour quoi », **et** la liste des skills
+      proposées par `/` à l'étape « Vérifier ».
+   5. [README.md](README.md) racine — tableau des skills **et** colonne version du tableau des plugins.
+   6. [CLAUDE.md](CLAUDE.md) — liste des skills du plugin.
+5. Publie (section suivante).
 
-> Depuis ce dépôt, la skill interne `/skill-new` fait le squelette et rappelle cette liste.
+> Depuis ce dépôt, la skill interne `/skill-new` fait le squelette et renvoie à cette liste.
 
 ---
 

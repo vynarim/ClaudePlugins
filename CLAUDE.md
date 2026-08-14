@@ -32,7 +32,8 @@ Repo **généraliste** : outillage Claude Code transverse, sans domaine métier 
   soit le dépôt. Voir [[no-coauthored-by-trailer]].
 - Messages de commit : `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`).
 - Travail directement sur `main`.
-- Publier une version = bump `version` du plugin + `/ship`. Côté postes : `claude plugin marketplace
+- Publier une version = bump `version` du plugin + **valider les JSON touchés** (un manifeste cassé
+  empêche le chargement du plugin sur tous les postes) + `/ship`. Côté postes : `claude plugin marketplace
   update dev-tools` (catalogue) puis `claude plugin update <plugin>@dev-tools` (applique le bump), ou
   la skill `/update-plugins`. `marketplace update` seul ne ré-upgrade pas. Détails dans
   [DEPLOYMENT.md](DEPLOYMENT.md).

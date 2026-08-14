@@ -9,9 +9,17 @@ réinstaller par projet).
 ## Étape 0 — Prérequis (hors plugin)
 
 - **Claude Code** installé — vérifie : `claude --version`
+- **GitHub CLI** installé **et authentifié** — `gh --version`, puis `gh auth status` qui doit répondre
+  *Logged in*. `/pr-draft` ne fonctionne pas du tout sans lui et `/session-brief` perd sa section
+  « PRs ouvertes ». L'échec ressemble à un bug de la skill (`gh: command not found`) :
 
-Rien d'autre : le plugin n'exécute aucun code (pas de hook, pas de serveur MCP), il n'apporte que
-des skills.
+  ```powershell
+  winget install GitHub.cli
+  gh auth login
+  ```
+
+Ce sont des outils **machine**, à installer sur chaque poste. Le plugin, lui, n'exécute aucun code
+(pas de hook, pas de serveur MCP) : il n'apporte que des skills.
 
 ## Étape 1 — Installer le plugin
 
@@ -42,7 +50,7 @@ Dans une session Claude Code :
 |---|---|---|
 | Tu reprends une session / un projet | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
 | Tes modifs sont prêtes à partir | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique. |
-| Tu veux ouvrir une PR | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
+| Tu veux ouvrir une PR | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. Nécessite `gh` authentifié (étape 0). |
 | Tu surveilles ta conso de tokens | `/eco` | Discipline tokens/contexte (limites 5 h/hebdo, choix de modèle, sous-agents). |
 | Tu veux faire relire ton code | `/audit` | Demande l'axe (sécurité, données, métier, perf, propreté, config) et le périmètre, puis rend un diagnostic classé par gravité. |
 | Ton `CLAUDE.md` a grossi | `/context-check` | Audite la mémoire projet et propose la version condensée. |

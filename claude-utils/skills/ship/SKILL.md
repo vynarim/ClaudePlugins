@@ -31,6 +31,16 @@ Vérifier qu'aucun fichier sensible ou hors sujet n'est sur le point d'être sta
 tokens, dumps, artefacts de build, fichiers volumineux. En cas de doute, le signaler avant de stager
 plutôt que de committer puis corriger — un secret poussé reste dans l'historique même après suppression.
 
+**Valider les `.json` qui partent.** Un JSON cassé passe le commit sans rien dire et casse ce qui le
+lit — manifeste, configuration, verrou de dépendances. Sur les fichiers `.json` modifiés :
+
+```bash
+node -e "process.argv.slice(1).forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})" <fichiers.json>
+```
+
+Un JSON invalide **arrête** `/ship` : le signaler, ne pas committer. Sans `node` sur le poste, le dire
+et continuer plutôt que d'inventer un autre validateur.
+
 **Étape 2 — S'aligner sur les conventions du projet**
 
 ```

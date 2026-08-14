@@ -31,6 +31,7 @@ La seule skill du plugin qui se configure et qui garde une trace d'un passage à
 | `/audit tout` | Les six axes. Coûteux — la skill annonce l'ordre de grandeur avant de lancer. |
 | `/audit rapide` | Une passe, pas de sous-agents, ne remonte que 🔴 et 🟠. |
 | `/audit delta` | Seulement ce qui a changé depuis le dernier passage. |
+| `/audit regression` | Ne cherche rien de neuf : rejoue les tests des constats déjà `corrigé` ou `accepté` pour vérifier qu'ils tiennent toujours. Restreignable à un axe (`regression SEC`) ou à des ids (`regression CONF-03`). |
 
 Les six axes : `SEC` sécurité & authentification · `DATA` données & modèle · `FONC` métier &
 fiabilité · `PERF` performance & coût · `PROP` code mort & duplication · `CONF` config, déploiement &
@@ -43,21 +44,29 @@ tests. Chacun a sa checklist dans `skills/audit/references/axes/`, chargée seul
   `skills/audit/references/audit-notes-template.md`. Sans lui l'audit tourne quand même, il connaît
   juste moins le terrain.
 - `.claude/audit-log.md` — **écrit par la skill**, sans demander. Tous les constats, avec un id
-  stable (`SEC-03`) et un statut (`ouvert` · `corrigé` · `écarté` · `accepté`). C'est le seul fichier
-  qu'elle modifie : elle ne touche jamais au code.
+  stable (`SEC-03`), un statut (`ouvert` · `corrigé` · `écarté` · `accepté`), le **test qui permet de
+  le rejouer** et la version où le correctif a atterri. C'est le seul fichier qu'elle modifie : elle
+  ne touche jamais au code.
 
 **Enchaîner les passages.** Le rapport ne détaille que les huit constats les plus graves par axe,
 mais le journal reçoit tout. Tu corriges, tu relances : la skill re-vérifie les `corrigés`, saute ce
-qui est marqué `écarté` ou `accepté`, et détaille la suite de la file au lieu d'en retirer une
-nouvelle. Chaque rapport s'ouvre sur `nouveaux · corrigés · régressions · restants` et se termine par
-ce qui **n'a pas** été examiné.
+qui est marqué `écarté`, et détaille la suite de la file au lieu d'en retirer une nouvelle. Chaque
+rapport s'ouvre sur `nouveaux · corrigés · régressions · re-testés · restants` et se termine par ce
+qui **n'a pas** été examiné.
+
+**Non-régression.** Un `corrigé` n'est pas figé : son test reste dans le journal et est rejoué aux
+passages suivants, pas seulement au premier. Un correctif qui casse trois versions plus tard rouvre
+**le même id** — pas un constat neuf — et remonte dans le rapport même si d'autres sont plus graves.
+`/audit regression` fait ce seul travail, pour une fraction du coût d'une passe.
 
 Méthode complète : [skills/audit/SKILL.md](skills/audit/SKILL.md).
 
 ## Prérequis et dépannage
 
-- **Prérequis** : Claude Code installé. Rien d'autre — le plugin n'exécute aucun code (pas de hook,
-  pas de serveur MCP, pas de variable d'environnement à régler), il n'apporte que des skills.
+- **Prérequis** : Claude Code, plus **GitHub CLI authentifié** (`gh auth status`) pour `/pr-draft` et
+  `/session-brief` — détail au dernier point de cette section. Le plugin lui-même n'exécute aucun
+  code (pas de hook, pas de serveur MCP, pas de variable d'environnement à régler), il n'apporte que
+  des skills.
 - **Une skill n'apparaît pas** après installation ou mise à jour : recharge la fenêtre VS Code
   (*Developer: Reload Window*) ou `/reload-plugins` — les plugins sont chargés à l'ouverture.
 - **Une skill manque alors que le plugin est listé** : elle a probablement été ajoutée dans une
@@ -80,6 +89,14 @@ Pas besoin de toucher `plugin.json` pour déclarer la skill : le dossier `skills
 
 ## Historique
 
+- **2.4.0** — `audit` gagne la **non-régression**. Chaque constat du journal porte désormais son
+  **test de re-vérification** (une commande qui tranche, ou `fichier:ligne` + ce qu'on doit y lire) et
+  la version où le correctif a atterri, ce qui rend un point re-testable des semaines plus tard sans
+  le re-déduire. Un `corrigé` n'est plus figé après une re-vérification : il est rejoué à chaque
+  passage, et une régression rouvre **son id d'origine** au lieu de créer un constat neuf.
+  `/audit regression` ne fait que ça — pas d'exploration, pas d'agents, restreignable à un axe ou à
+  des ids. `ship` valide au passage les `.json` qui partent : un manifeste cassé passait le commit
+  sans rien dire.
 - **2.3.0** — `audit` refondu en **revue par axes**. Six axes (`SEC` sécurité & auth, `DATA` données &
   modèle, `FONC` métier & fiabilité, `PERF` performance & coût, `PROP` code mort & duplication,
   `CONF` config & tests), chacun avec sa checklist fermée dans `skills/audit/references/axes/`,

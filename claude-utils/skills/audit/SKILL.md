@@ -5,11 +5,14 @@ description: >-
   fiabilité, performance & coût, propreté (code mort, duplication), config & tests. Demande l'axe et
   le périmètre au démarrage, reconstitue le modèle depuis le dépôt courant, rend un diagnostic classé
   par gravité en déclarant sa couverture, et tient un journal `.claude/audit-log.md` pour que deux
-  audits successifs se complètent au lieu de se contredire. Ne modifie aucun code. À utiliser quand
-  l'utilisateur veut une revue de son dépôt. Déclenche sur : « audit », « audite le code », « analyse
-  le code », « revue de cohérence », « revue de sécurité », « audit de perf », « cherche le code
-  mort », « cherche les duplications », « cherche les incohérences », « écarts entre le modèle et les
-  formulaires », « qu'est-ce qui cloche dans l'app ».
+  audits successifs se complètent au lieu de se contredire. Chaque constat y garde le test qui l'a
+  trouvé, rejouable des semaines plus tard pour vérifier qu'un correctif tient toujours
+  (`/audit regression`). Ne modifie aucun code. À utiliser quand l'utilisateur veut une revue de son
+  dépôt. Déclenche sur : « audit », « audite le code », « analyse le code », « revue de cohérence »,
+  « revue de sécurité », « audit de perf », « cherche le code mort », « cherche les duplications »,
+  « cherche les incohérences », « écarts entre le modèle et les formulaires », « qu'est-ce qui cloche
+  dans l'app », « vérifie qu'il n'y a pas de régression », « reteste ce qui a été corrigé », « est-ce
+  que le correctif tient toujours ».
 ---
 
 # audit — revue de code par axes
@@ -27,6 +30,9 @@ Trois principes, dans cet ordre :
 3. **Deux audits se complètent.** Le journal porte des ids stables et reçoit *tout* ce qui est
    trouvé ; le rapport ne détaille que le haut de la file. Un run reprend l'état laissé par le
    précédent au lieu de retirer au sort de nouveaux constats.
+4. **Un constat corrigé reste re-testable.** Chaque ligne du journal porte son **test de
+   re-vérification** et la version où le correctif a atterri. Un `corrigé` n'est jamais figé : il
+   sort du rapport tant qu'il passe, et rien n'empêche de le rejouer six mois plus tard.
 
 ## Axes
 
@@ -52,6 +58,9 @@ projet peut aussi ajouter ses propres points de checklist à un axe depuis ses n
 - `rapide` — un seul axe, une passe, pas d'agents, plancher de gravité 🟠.
 - un **domaine** du projet (listés dans ses notes) — restreint le périmètre, axes demandés ensuite.
 - `delta` — n'examine que ce qui a changé depuis le dernier passage inscrit au journal.
+- `regression` — **ne cherche rien de neuf** : rejoue les tests de re-vérification des constats
+  `corrigé` et `accepté` du journal (étape 5 bis). Peut être restreint à un axe (`regression SEC`) ou
+  à des ids (`regression CONF-03 CONF-05`). Coût d'un ordre de grandeur inférieur à une passe.
 
 ## Étape 0 — Cadrer
 
@@ -73,8 +82,9 @@ la liste des domaines et les axes N/A.
 - `.claude/audit-notes.md` — où vit le modèle ici, domaines, pièges maison, axes N/A, points de
   checklist maison, hors périmètre, ce que les tests couvrent déjà. Ces notes **complètent** les
   checklists d'axe, elles ne les remplacent pas.
-- `.claude/audit-log.md` — constats ouverts, `écartés` et `acceptés` (à ne plus remonter),
-  `corrigés` (à re-vérifier), couverture des passages précédents, dernier numéro attribué par axe.
+- `.claude/audit-log.md` — constats ouverts, `écartés` (à ne plus remonter), `acceptés` et `corrigés`
+  (à re-tester, chacun avec son **test de re-vérification** et la version où le correctif a atterri),
+  couverture des passages précédents, dernier numéro attribué par axe.
 - Le `CLAUDE.md` du projet.
 
 Ne pas explorer au-delà à ce stade. Fichiers absents : continuer, ils seront créés en fin de run à
@@ -108,18 +118,25 @@ hasard.
 
 *Mode normal* : un agent `general-purpose` **par axe retenu**, lancés en parallèle. Chacun reçoit :
 la note de modèle · **son seul** fichier d'axe · l'inventaire du périmètre · les notes projet · la
-liste des constats déjà `écartés`/`acceptés` (à ne pas resignaler) · les `corrigés` de son axe (à
-re-vérifier). Le découpage est **toujours celui des axes**, jamais improvisé : c'est ce qui rend deux
-runs comparables.
+liste des constats déjà `écartés` (à ne pas resignaler) · les `corrigés` et `acceptés` de son axe
+**avec leur test de re-vérification**, à rejouer avant toute recherche neuve. Le découpage est
+**toujours celui des axes**, jamais improvisé : c'est ce qui rend deux runs comparables.
 
 *Mode `rapide`* : pas d'agent, lectures ciblées, même checklist, plancher 🟠.
 
-**Contrat de retour de chaque agent** — pour chaque constat, les 7 éléments, pas un télégramme :
+**Contrat de retour de chaque agent** — pour chaque constat, les 8 éléments, pas un télégramme :
 
 `fichier:ligne` + **citation** du code décisif · **le point de checklist** qui l'a trouvé (`SEC-4`) ·
 **ce qui se passe**, en langage simple, sur l'écran ou le bouton concret · **pourquoi c'est un
 problème** (la règle violée) · **scénario reproductible** · **impact observable** · **piste de
-correction** en une ligne · **gravité** selon le barème ci-dessous.
+correction** en une ligne · **gravité** selon le barème ci-dessous · le **test de re-vérification**
+(voir ci-dessous).
+
+**Test de re-vérification** — obligatoire, un par constat. C'est ce qui rend le constat rejouable
+sans le re-déduire : une commande qui répond seule (`grep -n "…" src/x.js`, `test -f LICENSE`, un
+test de la batterie), ou à défaut `fichier:ligne` + **ce qu'on doit y lire** pour conclure que c'est
+réparé. Formulé pour que « ça passe » soit sans ambiguïté. Un constat sans test de re-vérification
+est un constat qu'on retrouvera au hasard.
 
 Et, en fin de retour : **la couverture** — quelles unités de l'inventaire ont été réellement
 examinées, lesquelles ne l'ont pas été, et pourquoi (budget, hors sujet pour l'axe).
@@ -146,16 +163,41 @@ Marquer **✅ vérifié** vs *rapporté*. Un faux positif coûte plus cher qu'un
 Si le projet a une batterie d'intégrité ou de tests, la lancer plutôt que resignaler à la main ce
 qu'elle couvre.
 
+## Étape 5 bis — Re-tester les corrigés (non-régression)
+
+Rejouer les **tests de re-vérification** des constats `corrigé` et `accepté` des axes retenus. À
+faire à **chaque** run, pas seulement au suivant : un correctif validé une fois peut casser trois
+versions plus tard.
+
+Prioriser par ce qui a bougé — un lieu inchangé depuis le correctif ne peut pas avoir régressé :
+
+```bash
+git log -1 --format=%h -- <fichier du constat>   # comparer à la colonne « Corrigé en »
+```
+
+Trois issues, et une seule règle : **l'id ne change jamais**.
+
+- Le test passe → reste `corrigé` (ou `accepté`), colonne `Re-testé le` mise à jour. Rien dans le
+  rapport, sauf le compteur du delta.
+- Le test échoue → **régression** : l'item repasse `ouvert` sous **son id d'origine**, est relu
+  soi-même au `fichier:ligne` (étape 5), et est détaillé dans le rapport même si d'autres constats
+  sont plus graves. Ne jamais lui donner un id neuf : c'est ce qui ferait perdre l'historique.
+- Le test ne peut pas être rejoué (outil absent, dépendance non authentifiée, environnement absent) →
+  `non re-testé`, avec la raison, et il compte comme non couvert.
+
+**Mode `regression`** : le run s'arrête là. Pas d'étape 2, 3 ni 4 — aucune recherche neuve, aucun
+agent. Sortie réduite au delta, au tableau des items re-testés et aux régressions détaillées.
+
 ## Étape 6 — Restituer
 
 **Budget : 8 constats détaillés au maximum par axe**, les plus graves d'abord. Le reste part au
 journal et sera détaillé au prochain passage — ne pas le perdre, ne pas l'étaler ici.
 
-1. **Delta** en tête, une ligne : `X nouveaux · Y corrigés confirmés · Z régressions · N restants au
-   journal`. C'est ce qui montre que l'audit avance.
+1. **Delta** en tête, une ligne : `X nouveaux · Y corrigés confirmés · Z régressions · R re-testés au
+   vert · N restants au journal`. C'est ce qui montre que l'audit avance.
 2. **Tableau de synthèse** : `id | Grav | Constat | Lieu | Vérifié`, trié du plus grave au moins
    grave, tous axes confondus.
-3. **Détail par constat**, même numérotation, les 7 éléments, avec des liens
+3. **Détail par constat**, même numérotation, les 8 éléments, avec des liens
    `[fichier.jsx:42](src/...#L42)` cliquables. Dense mais complet : quelqu'un qui n'a pas le code
    sous les yeux doit comprendre. Pour les 🟡, résumé + lieu + impact suffisent.
 4. **Couverture** : par axe, `X/Y unités examinées` et **la liste de ce qui ne l'a pas été**. Section
@@ -172,9 +214,13 @@ Automatique, sans demander — c'est un fichier d'audit, pas du code. Écrire ou
 `.claude/audit-log.md` :
 
 - **Tous** les constats du run, détaillés ou non, avec un id `<AXE>-<nn>` attribué à partir du plus
-  grand numéro déjà présent pour cet axe. **Ne jamais renuméroter l'existant.**
-- Statuts mis à jour : `corrigé` pour ce qui a été re-vérifié comme réparé, `ouvert` de nouveau pour
-  une régression, `écarté` avec la raison pour les faux positifs de ce run.
+  grand numéro déjà présent pour cet axe. **Ne jamais renuméroter ni réattribuer l'existant** — un id
+  vaut à vie, y compris pour un constat qui revient après avoir été corrigé.
+- Pour chaque constat, son **test de re-vérification** (colonne `Vérif`) — c'est lui qui sera rejoué
+  à l'étape 5 bis des runs suivants. Une ligne sans `Vérif` est une ligne qu'on ne saura pas re-tester.
+- Statuts mis à jour : `corrigé` + `Corrigé en` (sha court ou version) pour ce qui a été re-vérifié
+  comme réparé, `ouvert` de nouveau pour une régression (même id), `écarté` avec la raison pour les
+  faux positifs de ce run. `Re-testé le` à la date du dernier passage au vert.
 - La **couverture** par axe et une ligne d'historique du passage.
 
 Proposer aussi, s'il manque, de créer `.claude/audit-notes.md` depuis le gabarit — la passe en cours
