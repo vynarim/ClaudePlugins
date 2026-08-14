@@ -6,6 +6,18 @@ pour la liste à jour). On enregistre la marketplace une fois, puis on installe 
 ## Prérequis
 
 - **Claude Code** installé (`claude --version`)
+- **GitHub CLI** installé **et authentifié** — `gh --version`, puis `gh auth status` qui doit
+  répondre *Logged in*. Deux skills de `claude-utils` en dépendent : `pr-draft` ne fonctionne pas du
+  tout sans lui, et `session-brief` perd sa section « PRs ouvertes » (le reste du brief marche).
+  L'échec est silencieux — la skill part et s'arrête sur `gh: command not found`, ce qui ressemble à
+  un bug de la skill. Installation :
+
+  ```powershell
+  winget install GitHub.cli
+  gh auth login
+  ```
+
+  À refaire sur **chaque poste** : c'est un outil machine, rien dans le dépôt ne l'apporte.
 
 ---
 
