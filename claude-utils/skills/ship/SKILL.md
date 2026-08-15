@@ -111,8 +111,9 @@ forcer, ne pas rebaser sans demande explicite.
   remonte l'erreur au lieu de la contourner.
 - Elle n'ouvre pas de PR — c'est le rôle de `pr-draft`.
 - Elle **ne déploie jamais** : aucun build, aucune publication, aucune mise en production. C'est le
-  rôle d'une skill `deploy` locale au projet, qui connaît sa cible. `/ship` reste sans effet visible
-  pour un utilisateur de l'app.
+  rôle de `claude-utils:deploy`, qui lit les cibles dans `.claude/deploy-notes.md`. `/ship` reste
+  sans effet visible pour un utilisateur de l'app — **sauf** sur un dépôt qui publie par CI, où une
+  poussée sur la branche par défaut met de fait en ligne. Dans ce cas, le dire avant de pousser.
 - Elle n'ajoute aucun trailer ni aucune signature d'assistant.
 - Elle ne lit pas le contenu des fichiers modifiés, seulement le `--stat` et le `status`.
 

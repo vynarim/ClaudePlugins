@@ -11,8 +11,11 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 |---|---|---|
 | `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, délégation aux sous-agents. |
 | `audit` | `/audit` | Revue de code par axes (sécurité, données, métier, perf, propreté, config) : demande l'axe au démarrage, rend un diagnostic classé par gravité avec sa couverture, tient un journal pour que deux audits se complètent. Ne modifie aucun code. |
+| `test` | `/test` | Joue la batterie de non-régression (lint, unitaires, build, puis les étapes lentes), rend un tableau ✅/❌ et déclare ce qui n'a pas été éprouvé. Ne committe rien, ne touche jamais la prod. |
+| `doc` | `/doc` | Réaligne le README sur ce que fait réellement le code : reconstitue la vérité depuis les sources, classe les écarts `périmé` / `absent` / `inventé`, préserve la structure existante. |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. |
+| `deploy` | `/deploy` | Mise en production : bump, vérifications, contrôle anti-secrets, envoi via `ship`, déploiement cible par cible dans un ordre qui dépend du sens du changement, puis vérification en ligne. Lit `.claude/deploy-notes.md` — sans lui, elle s'arrête. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`). |
@@ -61,6 +64,27 @@ passages suivants, pas seulement au premier. Un correctif qui casse trois versio
 
 Méthode complète : [skills/audit/SKILL.md](skills/audit/SKILL.md).
 
+## Les notes projet — `deploy`, `test`, `doc`
+
+Ces trois skills portent la **méthode** ; ce qui varie d'un dépôt à l'autre vit dans un fichier de
+notes du projet, sur le modèle d'`audit-notes.md`. C'est ce qui leur permet de servir n'importe quel
+dépôt sans en connaître aucun.
+
+| Skill | Fichier | Sans lui |
+|---|---|---|
+| `deploy` | `.claude/deploy-notes.md` | **la skill s'arrête** — une commande de déploiement inventée ne se rattrape pas |
+| `test` | `.claude/test-notes.md` | tourne quand même, en déduisant les étapes de `package.json` |
+| `doc` | `.claude/doc-notes.md` | tourne quand même, en reconstituant la carte à chaque passage |
+
+Gabarits dans `skills/<nom>/references/<nom>-notes-template.md`. Chaque skill propose de créer le
+sien en fin de run quand il manque.
+
+**`/ship` et `/deploy` sont séparés, et l'ordre compte.** `ship` commit et pousse, sans jamais rien
+mettre en ligne ; `deploy` déploie, et appelle la procédure de `ship` au passage — parce que ce qui
+part en ligne doit correspondre à un commit identifiable, sinon le retour arrière est impossible.
+Un dépôt qui publie par CI est le seul cas où pousser met de fait en ligne : `deploy` le signale
+avant de pousser au lieu de déployer à la main.
+
 ## Prérequis et dépannage
 
 - **Prérequis** : Claude Code, plus **GitHub CLI authentifié** (`gh auth status`) pour `/pr-draft` et
@@ -90,6 +114,23 @@ rend trouvable, et `DEPLOYMENT.md` en fait le premier point de la resynchronisat
 
 ## Historique
 
+- **2.5.0** — trois skills en plus : **`deploy`**, **`test`** et **`doc`**, extraites des copies
+  locales que les projets avaient dû écrire chacun de leur côté — `deploy` existait en cinq
+  exemplaires, `doc` et `test` en quatre. Ce qui différait entre les copies tenait dans une poignée
+  de lignes de configuration ; il part dans un fichier de notes du projet, sur le modèle
+  d'`audit-notes.md`. L'intérêt n'est pas de supprimer treize fichiers, c'est qu'une leçon apprise
+  dans un dépôt profite désormais aux autres : `deploy` fait dépendre l'ordre règles/hébergement du
+  **sens** du changement de droits (ajouter des droits → règles d'abord ; en retirer → hébergement
+  d'abord, le client ancien ne survivant pas aux règles neuves), impose de **lire** le numéro de
+  version plutôt que de l'écrire en dur dans le contrôle de bundle — un contrôle qui échoue toujours
+  ne contrôle rien — et refuse de conclure depuis la sortie de l'outil de déploiement, qui annonce
+  aussi bien `Deploy complete!` sur une cible vide que `Skipped` sur un composant fraîchement
+  publié. `test` applique la symétrique : une étape non lancée est `⏭️`, jamais `✅`, un compte de
+  tests inférieur à l'attendu est un échec, et le rapport se termine par ce que la batterie n'a pas
+  éprouvé. `doc` ne traite que le **fond** — la vérité vient des sources, jamais du README relu — et
+  classe les écarts en `périmé` / `absent` / `inventé` ; l'axe **forme** (hiérarchie, illustrations,
+  lisibilité) viendra dans une version suivante. `ship` corrige au passage un renvoi devenu faux :
+  la mise en production ne relève plus d'une skill locale au projet.
 - **2.4.1** — correctifs issus de la passe `/audit` sur les axes métier, perf et propreté.
   `session-brief` et `pr-draft` **détectent la branche par défaut** (`git symbolic-ref`) au lieu de
   supposer `main` : le brief de reprise et la génération de PR partaient en erreur sur tout dépôt en

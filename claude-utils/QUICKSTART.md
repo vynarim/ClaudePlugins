@@ -41,15 +41,18 @@ dans une session Claude Code.
 Dans une session Claude Code :
 
 - `/plugin` → onglet *Installed* : `claude-utils@dev-tools` présent et activé.
-- Tape `/` : les skills `/eco`, `/audit`, `/context-check`, `/ship`, `/pr-draft`, `/session-brief`,
-  `/update-plugins` sont proposées.
+- Tape `/` : les skills `/eco`, `/audit`, `/test`, `/doc`, `/context-check`, `/ship`, `/deploy`,
+  `/pr-draft`, `/session-brief`, `/update-plugins` sont proposées.
 
 ## Étape 3 — Prendre en main les skills
 
 | Quand | Commande | Ce qu'elle fait |
 |---|---|---|
 | Tu reprends une session / un projet | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
+| Tu veux valider avant d'envoyer | `/test` | Joue la batterie de non-régression et rend un tableau ✅/❌, avec ce qu'elle n'a pas éprouvé. Ne committe rien. |
 | Tes modifs sont prêtes à partir | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique. |
+| Tu veux mettre en ligne | `/deploy` | Bump, vérifications, envoi via `/ship`, déploiement cible par cible, vérification en ligne. Demande un `.claude/deploy-notes.md` dans le projet. |
+| Le README ne dit plus la vérité | `/doc` | Réaligne le README sur le code : classe les écarts `périmé` / `absent` / `inventé`, sans redessiner la page. |
 | Tu veux ouvrir une PR | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. Nécessite `gh` authentifié (étape 0). |
 | Tu surveilles ta conso de tokens | `/eco` | Discipline tokens/contexte (limites 5 h/hebdo, choix de modèle, sous-agents). |
 | Tu veux faire relire ton code | `/audit` | Demande l'axe (sécurité, données, métier, perf, propreté, config) et le périmètre, puis rend un diagnostic classé par gravité. |

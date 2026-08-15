@@ -1,7 +1,7 @@
 {
   "name": "claude-utils",
-  "version": "2.4.1",
-  "description": "Boîte à outils générique pour Claude Code : conteneur de skills internes réutilisables. Skills disponibles : eco (discipline tokens/contexte), audit (revue de code par axes : sécurité, données, métier, perf, propreté, config), context-check (audit du CLAUDE.md), ship (commit + push), pr-draft (génération PR GitHub), session-brief (brief de reprise de session), update-plugins (mise à jour des plugins dev-tools).",
+  "version": "2.5.0",
+  "description": "Boîte à outils générique pour Claude Code : conteneur de skills internes réutilisables. Skills disponibles : eco (discipline tokens/contexte), audit (revue de code par axes : sécurité, données, métier, perf, propreté, config), test (batterie de non-régression), doc (réalignement du README sur le code), context-check (audit du CLAUDE.md), ship (commit + push), deploy (mise en production, cible par cible, avec vérification en ligne), pr-draft (génération PR GitHub), session-brief (brief de reprise de session), update-plugins (mise à jour des plugins dev-tools).",
   "author": {
     "name": "Jean-Rémy"
   },
@@ -20,7 +20,13 @@
     "commit",
     "github",
     "pr",
-    "session"
+    "session",
+    "deploy",
+    "release",
+    "test",
+    "regression",
+    "documentation",
+    "readme"
   ],
   "license": "MIT"
 }

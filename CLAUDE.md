@@ -19,8 +19,14 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 
 - **claude-utils** — générique : `eco` (discipline tokens/contexte), `audit` (revue de code par axes :
   sécurité, données, métier, perf, propreté, config — extensible par `.claude/audit-notes.md` côté
-  projet), `context-check` (audit du `CLAUDE.md`), `ship` (commit + push), `pr-draft`,
-  `session-brief`, `update-plugins`
+  projet), `test` (non-régression), `doc` (README ⇄ code), `context-check` (audit du `CLAUDE.md`),
+  `ship` (commit + push), `deploy` (mise en production), `pr-draft`, `session-brief`,
+  `update-plugins`
+
+  `deploy`, `test` et `doc` portent la méthode et lisent leurs spécificités dans
+  `.claude/<nom>-notes.md` côté projet, comme `audit`. Gabarits dans
+  `claude-utils/skills/<nom>/references/`. Sans ses notes, `deploy` **s'arrête** ; les deux autres
+  tournent en mode dégradé.
 
 Repo **généraliste** : outillage Claude Code transverse, sans domaine métier particulier.
 
