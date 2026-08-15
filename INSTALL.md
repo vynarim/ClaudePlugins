@@ -153,16 +153,33 @@ fenêtre. Si la skill a été ajoutée dans une nouvelle version, voir « Mettre
 Il est installé **deux fois, à deux scopes** : une fois au niveau `user` (`claude plugin install …`),
 une fois au niveau `project` — déclenché par un projet dont le `.claude/settings.json` déclare le
 plugin dans `enabledPlugins`. Même version, même cache : c'est cosmétique, pas de double chargement.
+
+`claude plugin list` donne le diagnostic : le plugin y apparaît deux fois, une entrée
+`Scope: user` et une `Scope: project`.
+
 Pour nettoyer, l'install `user` suffisant pour tous les projets :
 
-1. Retire la ligne du plugin dans `enabledPlugins` du `.claude/settings.json` du projet concerné —
-   sinon l'install projet revient au prochain trust du dossier.
-2. Dans `~/.claude/plugins/installed_plugins.json`, supprime l'objet portant `"scope": "project"`
-   dans le tableau du plugin (garde celui en `"scope": "user"`). Fais une copie du fichier avant.
-3. Redémarre VS Code.
+1. Retire la ligne du plugin dans `enabledPlugins` du `.claude/settings.json` du projet concerné.
+   **C'est l'étape qui compte, et le CLI ne la fait pas** : il sait retirer une installation, pas
+   l'empêcher de revenir. Tant que `enabledPlugins` déclare le plugin, le prochain trust du dossier
+   le réinstalle en scope projet, et le doublon reparaît.
+2. Retire ensuite l'installation projet :
+
+   ```powershell
+   claude plugin uninstall <plugin>@dev-tools --scope project
+   ```
+
+   **Le `--scope` n'est pas optionnel ici.** `install` comme `uninstall` valent `--scope user` par
+   défaut : sans lui, la commande retire l'installation `user` — celle qui te sert dans *tous* tes
+   projets — et laisse en place exactement le doublon que tu voulais supprimer.
+3. Si l'entrée survit malgré tout, l'édition à la main reste le recours : dans
+   `~/.claude/plugins/installed_plugins.json`, supprime l'objet portant `"scope": "project"` dans le
+   tableau du plugin (garde celui en `"scope": "user"`). Fais une copie du fichier avant.
+4. Redémarre VS Code.
 
 L'inverse marche aussi : si tu préfères le pilotage par projet, désinstalle la version `user`
-(`claude plugin uninstall <plugin>@dev-tools`) et laisse le `settings.json` du projet faire le travail.
+(`claude plugin uninstall <plugin>@dev-tools`, le scope par défaut) et laisse le `settings.json` du
+projet faire le travail.
 
 **Un plugin n'apparaît pas dans les extensions VS Code**
 Normal — un plugin Claude Code est distinct d'une extension VS Code. Gère-les via `/plugin` en
