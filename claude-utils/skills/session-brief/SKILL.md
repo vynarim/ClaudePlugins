@@ -49,8 +49,9 @@ Lister les PRs ouvertes (numéro, titre, état). Si aucune : le mentionner briè
 **Étape 3 — Mémoire projet**
 
 Lire `CLAUDE.md` à la racine du projet s'il existe (ou le résumer s'il est déjà en contexte).
-Lire aussi `docs/progress.md` ou `session_summary.md` s'ils existent — ce sont les notes de fin de
-session recommandées par la skill `eco`.
+Lire aussi le **fichier d'état de fin de session** s'il existe — `docs/progress.md`, `ROADMAP.md`,
+`CHANTIERS.md`, `session_summary.md`, ou la section « État courant » du `CLAUDE.md`. C'est ce
+qu'écrit la skill `handoff` ; son bloc « à ne pas refaire » vaut souvent plus que le git log.
 
 Ne pas explorer l'arborescence au-delà de ces fichiers connus.
 

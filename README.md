@@ -8,7 +8,7 @@ Ce dépôt héberge les plugins suivants :
 
 | Plugin | Version | Pour quoi faire |
 |---|---|---|
-| [`claude-utils`](claude-utils/) | 2.6.0 | Boîte à outils générique : efficacité tokens, revue de code par axes, non-régression, documentation, audit du `CLAUDE.md`, commit/push, mise en production, PR GitHub, reprise de session, mise à jour des plugins |
+| [`claude-utils`](claude-utils/) | 2.7.0 | Boîte à outils générique : efficacité tokens, revue de code par axes, non-régression, documentation (fond et forme), audit du `CLAUDE.md`, alignement d'un socle partagé, commit/push, mise en production, PR GitHub, reprise et clôture de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 
@@ -23,12 +23,14 @@ Pour l'installer sur un poste neuf et prendre en main les skills, suivre le
 | `eco` | `/eco` | Discipline tokens/contexte — une session = un objectif, `/clear` aux bascules, délégation aux sous-agents |
 | `audit` | `/audit` | Revue de code par axes (sécurité, données, métier, perf, propreté, config) : demande l'axe, classe par gravité, déclare sa couverture et tient un journal ; `/audit regression` rejoue les correctifs passés ; spécificités du dépôt dans `.claude/audit-notes.md` |
 | `test` | `/test` | Batterie de non-régression : tableau ✅/❌ par étape, et ce que la batterie n'a **pas** éprouvé ; étapes déclarées dans `.claude/test-notes.md`. Ne committe rien, ne touche jamais la prod |
-| `doc` | `/doc` | Réaligne le README sur le code : écarts classés `périmé` / `absent` / `inventé`, structure existante préservée ; carte des sources dans `.claude/doc-notes.md` |
+| `doc` | `/doc` | Réaligne le README sur le dépôt, en deux axes : **fond** (écarts classés `périmé` / `absent` / `inventé`, structure préservée) et **forme** (`/doc forme` : ordre de lecture, aération, mermaid, encarts) ; carte des sources dans `.claude/doc-notes.md` |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet et propose la version condensée |
+| `kit-sync` | `/kit-sync` | Compare un socle partagé entre projets frères : divergence mesurée fichier par fichier, classée progrès / adaptation légitime / dérive, propagation proposée jamais appliquée en silence ; `.claude/kit-notes.md` + journal `kit-log.md` |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique ; bumpe la version si `.claude/deploy-notes.md` le lui demande |
 | `deploy` | `/deploy` | Mise en production : bump, vérifications, envoi via `ship`, déploiement cible par cible, vérification en ligne. Cibles déclarées dans `.claude/deploy-notes.md` |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet |
+| `handoff` | `/handoff` | Trace d'état de fin de session — état courant, trois points de reprise, dettes et fausses pistes, état git — écrite dans le fichier que le projet utilise déjà, et relue par `session-brief` |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`) |
 
 ## Installation rapide

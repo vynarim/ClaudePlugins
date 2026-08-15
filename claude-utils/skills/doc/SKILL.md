@@ -1,21 +1,34 @@
 ---
 name: doc
 description: >-
-  Réaligne le README du dépôt courant sur ce que fait réellement le code : reconstitue la vérité
-  depuis les sources avant d'écrire, corrige le contenu section par section sans toucher à la
-  structure existante, et ne documente que ce qui existe. À utiliser après un lot qui change le
-  comportement ou l'architecture. Déclenche sur : « doc », « mets à jour la doc », « mets à jour le
-  README », « régénère la doc », « documente », « le README est périmé », « réaligne la
-  documentation ».
+  Réaligne le README du dépôt courant, en deux axes choisis à l'entrée. Axe fond (défaut) :
+  reconstitue la vérité depuis les sources avant d'écrire, corrige le contenu section par section
+  sans toucher à la structure, et ne documente que ce qui existe. Axe forme (`/doc forme`) : ordre de
+  lecture, aération, illustrations — diagrammes mermaid, encarts GitHub, sections repliables,
+  captures inutilisées du dépôt — sans jamais réécrire une affirmation factuelle. À utiliser après un
+  lot qui change le comportement, ou quand la page est devenue illisible. Déclenche sur : « doc »,
+  « mets à jour la doc », « mets à jour le README », « régénère la doc », « documente », « le README
+  est périmé », « réaligne la documentation », « le README est illisible », « rends le README plus
+  lisible », « ajoute un schéma au README », « aère le README », « refonds la mise en page du
+  README ».
 ---
 
-# doc — réaligner le README sur le code
+# doc — réaligner le README sur le dépôt
 
-Objectif : que le `README.md` reflète **fidèlement** le dépôt tel qu'il est — rien d'inventé, rien
-de périmé. C'est l'axe **fond**. La forme (hiérarchie, illustrations, lisibilité) est un axe
-distinct, à venir : cette skill ne réorganise pas la page.
+Objectif : que le `README.md` dise **vrai** et se **lise**. Deux axes sur le même fichier, choisis à
+l'entrée, sur le modèle d'`audit` — parce qu'ils portent des consignes contradictoires (« préserver
+l'ordre des sections » contre « déplace, replie, convertis ») qui ne cohabitent pas dans une passe
+unique, mais très bien comme axes séparés.
 
-Trois principes :
+| Axe | Question | Coût | Quand |
+|---|---|---|---|
+| `fond` *(défaut)* | Le README dit-il vrai ? | lit le code | à chaque lot qui change le comportement |
+| `forme` | Le README se lit-il ? | ne lit pas le code | une fois, puis à la demande |
+
+**Arguments** : `/doc` → axe fond · `/doc forme` → axe forme seul · `/doc tout` → le fond, puis la
+forme. Ne charger [references/axe-forme.md](references/axe-forme.md) que si l'axe forme est retenu.
+
+Les étapes 0 à 5 ci-dessous **sont l'axe fond**. Trois principes :
 
 1. **La vérité vient du code, pas du README.** On ne corrige jamais un README en le relisant : on
    le confronte aux sources. Le README est le document le plus périmé du dépôt, c'est précisément
@@ -94,10 +107,20 @@ important ; sinon le signaler explicitement plutôt que de le corriger en silenc
 - **Doc seule = pas de déploiement.** Le proposer seulement si le lot embarque aussi du code.
 - Proposer `/ship`. Ne pas committer.
 
+## Axe forme
+
+Retenu seulement sur `/doc forme` ou `/doc tout`, et **après** le fond quand les deux sont demandés :
+déplacer des sections dont le contenu est faux ne fait que mieux présenter l'erreur.
+
+Charger alors [references/axe-forme.md](references/axe-forme.md) et s'y tenir : mesures avant/après,
+ordre de lecture, règle anti-mur, illustrations qui survivent sur GitHub. Cet axe **n'ouvre pas le
+code** — s'il croise une affirmation douteuse, il la signale et renvoie au fond.
+
 ## Ce que cette skill ne fait PAS
 
-- Elle ne réorganise pas le README : ni l'ordre des sections, ni la mise en page, ni les
-  illustrations. C'est l'axe forme, à venir.
+- Sur l'axe **fond**, elle ne réorganise rien : ni l'ordre des sections, ni la mise en page, ni les
+  illustrations. Sur l'axe **forme**, elle ne réécrit aucune affirmation factuelle. Aucun run ne fait
+  les deux dans la même passe.
 - Elle n'écrit rien qu'elle n'ait vérifié dans une source relue.
 - Elle n'écrit aucun secret ni aucune donnée réelle.
 - Elle ne corrige pas le code quand elle trouve un écart : elle documente ce qui est, et signale
@@ -106,5 +129,8 @@ important ; sinon le signaler explicitement plutôt que de le corriger en silenc
 
 ## Sortie attendue
 
-La liste des écarts relevés, classés `périmé` / `absent` / `inventé`, puis le README mis à jour. Les
-fichiers annexes non traités sont nommés, avec l'écart constaté.
+**Axe fond** : la liste des écarts relevés, classés `périmé` / `absent` / `inventé`, puis le README
+mis à jour. Les fichiers annexes non traités sont nommés, avec l'écart constaté.
+
+**Axe forme** : les mesures avant/après, les sections déplacées, les illustrations ajoutées, et les
+images du dépôt restées inutilisées.

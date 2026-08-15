@@ -38,6 +38,15 @@ téléphones, montants : les exemples viennent des données de démonstration an
 
 <Valeurs publiques par nature que le projet assume de laisser en clair : …>
 
+## Axe forme — ce qui est propre à ce dépôt
+
+- **Images disponibles** : `<docs/screenshots/>` — <lesquelles sont à jour, lesquelles sont périmées
+  et ne doivent pas être affichées>
+- **Conventions déjà en place** : <emoji sur les titres de premier niveau, badges autorisés, ordre
+  des sections voulu>
+- **À ne pas replier ni déplacer** : <la section que le lecteur vient chercher en premier ici>
+- **Longueur assumée** : <le README fait N lignes et c'est voulu / il doit tenir en un écran>
+
 ## Pièges maison
 
 <Distinctions que le README doit tenir et qui se perdent à chaque passage : dev/prod, base nommée,

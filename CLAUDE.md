@@ -19,14 +19,15 @@ Vocabulaire : repo `ClaudePlugins` · marketplace `dev-tools` · plugins ci-dess
 
 - **claude-utils** — générique : `eco` (discipline tokens/contexte), `audit` (revue de code par axes :
   sécurité, données, métier, perf, propreté, config — extensible par `.claude/audit-notes.md` côté
-  projet), `test` (non-régression), `doc` (README ⇄ code), `context-check` (audit du `CLAUDE.md`),
-  `ship` (commit + push, bump si les notes le déclarent), `deploy` (mise en production), `pr-draft`,
-  `session-brief`, `update-plugins`
+  projet), `test` (non-régression), `doc` (README ⇄ dépôt, axes `fond` et `forme`), `context-check`
+  (audit du `CLAUDE.md`), `kit-sync` (socle partagé entre projets frères), `ship` (commit + push,
+  bump si les notes le déclarent), `deploy` (mise en production), `pr-draft`, `session-brief`,
+  `handoff` (trace de fin de session, relue par `session-brief`), `update-plugins`
 
-  `deploy`, `test` et `doc` portent la méthode et lisent leurs spécificités dans
+  `deploy`, `test`, `doc` et `kit-sync` portent la méthode et lisent leurs spécificités dans
   `.claude/<nom>-notes.md` côté projet, comme `audit`. Gabarits dans
-  `claude-utils/skills/<nom>/references/`. Sans ses notes, `deploy` **s'arrête** ; les deux autres
-  tournent en mode dégradé.
+  `claude-utils/skills/<nom>/references/`. Sans ses notes, `deploy` **s'arrête** ; les autres
+  tournent en mode dégradé. Deux journaux écrits sans demander : `audit-log.md`, `kit-log.md`.
 
 Repo **généraliste** : outillage Claude Code transverse, sans domaine métier particulier.
 

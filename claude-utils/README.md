@@ -12,12 +12,14 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 | `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, délégation aux sous-agents. |
 | `audit` | `/audit` | Revue de code par axes (sécurité, données, métier, perf, propreté, config) : demande l'axe au démarrage, rend un diagnostic classé par gravité avec sa couverture, tient un journal pour que deux audits se complètent. Ne modifie aucun code. |
 | `test` | `/test` | Joue la batterie de non-régression (lint, unitaires, build, puis les étapes lentes), rend un tableau ✅/❌ et déclare ce qui n'a pas été éprouvé. Ne committe rien, ne touche jamais la prod. |
-| `doc` | `/doc` | Réaligne le README sur ce que fait réellement le code : reconstitue la vérité depuis les sources, classe les écarts `périmé` / `absent` / `inventé`, préserve la structure existante. |
+| `doc` | `/doc` | Réaligne le README sur le dépôt, en deux axes : **fond** (la vérité vient des sources, écarts classés `périmé` / `absent` / `inventé`) et **forme** (`/doc forme` : ordre de lecture, aération, mermaid, encarts, captures inutilisées). |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
+| `kit-sync` | `/kit-sync` | Compare un socle partagé entre projets frères, classe chaque divergence (progrès à propager / adaptation légitime / dérive) et propose la propagation fichier par fichier. Ne fusionne rien en silence. |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. Bumpe la version si `deploy-notes.md` le lui demande. |
 | `deploy` | `/deploy` | Mise en production : bump, vérifications, contrôle anti-secrets, envoi via `ship`, déploiement cible par cible dans un ordre qui dépend du sens du changement, puis vérification en ligne. Lit `.claude/deploy-notes.md` — sans lui, elle s'arrête. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
+| `handoff` | `/handoff` | Écrit la trace d'état de fin de session — état courant, trois points de reprise, dettes et fausses pistes, état git — dans le fichier que le projet utilise déjà. C'est ce que `session-brief` relit au démarrage suivant. |
 | `update-plugins` | `/update-plugins` | Met à jour les plugins dev-tools sur le poste (`claude plugin update`). |
 
 Le dossier `skills/` est auto-découvert ; chaque skill a son `SKILL.md` et, si besoin, ses fichiers
@@ -64,17 +66,22 @@ passages suivants, pas seulement au premier. Un correctif qui casse trois versio
 
 Méthode complète : [skills/audit/SKILL.md](skills/audit/SKILL.md).
 
-## Les notes projet — `deploy`, `test`, `doc`
+## Les notes projet — `deploy`, `test`, `doc`, `kit-sync`
 
-Ces trois skills portent la **méthode** ; ce qui varie d'un dépôt à l'autre vit dans un fichier de
-notes du projet, sur le modèle d'`audit-notes.md`. C'est ce qui leur permet de servir n'importe quel
-dépôt sans en connaître aucun.
+Ces skills portent la **méthode** ; ce qui varie d'un dépôt à l'autre vit dans un fichier de notes du
+projet, sur le modèle d'`audit-notes.md`. C'est ce qui leur permet de servir n'importe quel dépôt
+sans en connaître aucun.
 
 | Skill | Fichier | Sans lui |
 |---|---|---|
 | `deploy` | `.claude/deploy-notes.md` | **la skill s'arrête** — une commande de déploiement inventée ne se rattrape pas |
 | `test` | `.claude/test-notes.md` | tourne quand même, en déduisant les étapes de `package.json` |
 | `doc` | `.claude/doc-notes.md` | tourne quand même, en reconstituant la carte à chaque passage |
+| `kit-sync` | `.claude/kit-notes.md` | demande une fois le projet frère et le chemin du socle, puis tourne — la comparaison est en lecture seule |
+
+Deux skills tiennent en plus un **journal**, écrit sans demander parce que c'est un fichier
+d'arbitrage et non du code : `.claude/audit-log.md` (les constats et leur test de re-vérification) et
+`.claude/kit-log.md` (les divergences de socle déjà arbitrées, pour ne pas les resignaler).
 
 Gabarits dans `skills/<nom>/references/<nom>-notes-template.md`. Chaque skill propose de créer le
 sien en fin de run quand il manque.
@@ -156,6 +163,28 @@ rend trouvable, et `DEPLOYMENT.md` en fait le premier point de la resynchronisat
 
 ## Historique
 
+- **2.7.0** — deux skills en plus et un axe : **`handoff`**, **`kit-sync`**, et l'axe **forme** de
+  `doc`. `handoff` referme une boucle ouverte dans le plugin lui-même — `eco` recommandait de laisser
+  une trace de fin de session, `session-brief` déclarait la relire, et rien ne l'écrivait. Elle écrit
+  dans le fichier que le projet utilise **déjà** (`ROADMAP.md`, `CHANTIERS.md`, `docs/progress.md`,
+  section « État courant » du `CLAUDE.md`) plutôt que d'imposer une convention de plus, prend l'état
+  depuis git et non depuis l'impression de la session — ce qui n'est pas commité n'est pas fait — et
+  garde un bloc **« à ne pas refaire »** : une fausse piste non écrite est reprise à l'identique trois
+  jours plus tard. Trois points de reprise au maximum, et le bloc précédent est **remplacé**, pas
+  empilé : un fichier d'état qui grossit redevient du contexte à charger. `kit-sync` traite le cas
+  inverse du fork : il existait une skill pour forker un modèle, aucune pour faire **remonter** un
+  correctif, et deux projets frères nés du même socle en étaient à 449 lignes de divergence sur un
+  seul fichier. Elle mesure la dette fichier par fichier, classe chaque écart en **progrès à
+  propager** / **adaptation légitime** / **dérive accidentelle** — le tri se lit dans les commits des
+  deux côtés, pas dans le diff — et propose la propagation du plus petit écart au plus grand, un
+  gros merge d'un bloc étant la garantie qu'il ne sera jamais fait. Les arbitrages partent dans
+  `.claude/kit-log.md` pour ne pas être re-soumis. Enfin `doc` gagne son axe **forme**, annoncé en
+  2.5.0 : ordre de lecture, règle anti-mur (jamais plus de 7 puces sans une respiration), diagrammes
+  mermaid plutôt que PNG exportés, encarts natifs GitHub, captures que le dépôt possède sans les
+  afficher. Deux axes et non deux skills, parce que les phrases de déclenchement sont indiscernables
+  et que leurs consignes se contredisent — « préserver l'ordre des sections » contre « déplace,
+  replie, convertis ». `/doc` reste le fond ; `/doc forme` ne lit pas le code et ne réécrit aucune
+  affirmation factuelle.
 - **2.5.1** — enseignements du premier projet migré vers les skills génériques. La procédure de
   migration gagne deux étapes que le pilote a fait apparaître : **vérifier que les notes seront
   versionnées** — beaucoup de projets ignorent `.claude/*` avec une liste blanche, où un fichier de

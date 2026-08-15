@@ -39,7 +39,9 @@ avant, `/resume` pour y revenir. `/compact` seulement si on **reste** sur le mê
 
 **En fin de session** — laisser une trace d'état pour reprendre sans tout réexpliquer : mémoire
 persistante (une entrée `project` — ce que le repo et l'historique git ne disent pas déjà) et/ou un
-court `docs/progress.md`. La skill `session-brief` relit les deux au démarrage suivant.
+court fichier d'état. C'est le travail de la skill `handoff` : elle écrit dans le fichier que le
+projet utilise déjà, et `session-brief` le relit au démarrage suivant. Un `/clear` après `/handoff`
+ne coûte rien.
 
 ## Déléguer plutôt que charger
 
