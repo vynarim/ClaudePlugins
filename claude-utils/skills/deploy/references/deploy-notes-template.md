@@ -4,6 +4,13 @@ Spécificités projet lues par la skill `/deploy` (plugin `claude-utils`). La m�
 étapes et les garde-fous vivent dans la skill — ne pas les recopier ici. Ce fichier ne contient que
 ce que la skill ne peut pas deviner.
 
+## Enjeu
+
+<Ce qu'un déploiement raté coûte **ici**, concrètement. C'est ce qui justifie l'ordre des étapes et
+les vérifications qui les précèdent — sans quoi la procédure se contourne le jour où elle gêne.
+Ex. : application en production avec des données de clients réels ; une règle trop stricte coupe
+l'accès à tout le monde ; telle fonction cassée enferme le dernier administrateur dehors.>
+
 ## Cible et régime
 
 - **URL de production** : <https://…>

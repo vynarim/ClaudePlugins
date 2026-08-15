@@ -79,6 +79,37 @@ dépôt sans en connaître aucun.
 Gabarits dans `skills/<nom>/references/<nom>-notes-template.md`. Chaque skill propose de créer le
 sien en fin de run quand il manque.
 
+### Migrer une skill locale de même nom
+
+`deploy`, `test` et `doc` sont des noms courants : un projet qui avait déjà écrit la sienne se
+retrouve avec **deux skills pour le même geste**. Le namespace les distingue quand on les tape
+(`/deploy` locale, `/claude-utils:deploy`), mais le déclenchement par description, lui, a deux
+candidates aux formulations identiques — et rien ne garantit laquelle part.
+
+Migrer plutôt que cohabiter, dans cet ordre :
+
+1. **Écrire les notes d'abord**, en vidant la skill locale de son spécifique : cibles, commandes,
+   URL, secrets, pièges maison → `.claude/<nom>-notes.md` (gabarit dans
+   `skills/<nom>/references/`). Ce qui reste dans la skill locale est de la méthode, donc déjà
+   couvert par la version générique.
+2. **Vérifier que les notes seront versionnées.** Beaucoup de projets ignorent `.claude/*` avec une
+   liste blanche : un fichier de notes non déclaré y est ignoré en silence, et la skill s'arrête sur
+   un clone neuf ou sur un autre poste — exactement ce que la migration voulait éviter.
+
+   ```bash
+   git check-ignore -v .claude/deploy-notes.md   # ne doit rien renvoyer
+   ```
+
+3. **Mettre le poste à jour avant de supprimer quoi que ce soit** : `/update-plugins` puis
+   rechargement de fenêtre. Tant que le cache est sur une version antérieure, supprimer la skill
+   locale laisse le projet **sans aucune** skill pour ce geste.
+4. **Comparer** : lancer la skill du plugin et vérifier qu'elle fait bien ce que faisait la locale.
+   Un garde-fou maison oublié dans la migration ne se manifestera qu'en ligne.
+5. **Supprimer la skill locale** une fois la comparaison faite.
+
+Ce qui n'a **pas** vocation à migrer : une skill locale qui manipule un format de données maison ou
+un écran précis. Elle ne doublonne rien et reste à sa place.
+
 **`/ship` et `/deploy` sont séparés, et l'ordre compte.** `ship` commit et pousse, sans jamais rien
 mettre en ligne ; `deploy` déploie, et appelle la procédure de `ship` au passage — parce que ce qui
 part en ligne doit correspondre à un commit identifiable, sinon le retour arrière est impossible.
@@ -114,6 +145,14 @@ rend trouvable, et `DEPLOYMENT.md` en fait le premier point de la resynchronisat
 
 ## Historique
 
+- **2.5.1** — enseignements du premier projet migré vers les skills génériques. La procédure de
+  migration gagne deux étapes que le pilote a fait apparaître : **vérifier que les notes seront
+  versionnées** — beaucoup de projets ignorent `.claude/*` avec une liste blanche, où un fichier de
+  notes non déclaré est ignoré en silence et la skill s'arrête sur un clone neuf — et **mettre le
+  poste à jour avant de supprimer la skill locale**, faute de quoi le projet se retrouve sans aucune
+  skill pour ce geste le temps que le cache suive. Le gabarit de `deploy-notes.md` gagne une section
+  **Enjeu** : ce qu'un déploiement raté coûte dans ce projet précis. Elle manquait, alors que c'est
+  elle qui fait qu'on ne contourne pas la procédure le jour où elle gêne.
 - **2.5.0** — trois skills en plus : **`deploy`**, **`test`** et **`doc`**, extraites des copies
   locales que les projets avaient dû écrire chacun de leur côté — `deploy` existait en cinq
   exemplaires, `doc` et `test` en quatre. Ce qui différait entre les copies tenait dans une poignée
