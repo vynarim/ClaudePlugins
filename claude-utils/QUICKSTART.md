@@ -50,7 +50,7 @@ Dans une session Claude Code :
 |---|---|---|
 | Tu reprends une session / un projet | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
 | Tu veux valider avant d'envoyer | `/test` | Joue la batterie de non-régression et rend un tableau ✅/❌, avec ce qu'elle n'a pas éprouvé. Ne committe rien. |
-| Tes modifs sont prêtes à partir | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique. |
+| Tes modifs sont prêtes à partir | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique. Bumpe la version si le projet l'a déclaré dans `.claude/deploy-notes.md`. |
 | Tu veux mettre en ligne | `/deploy` | Bump, vérifications, envoi via `/ship`, déploiement cible par cible, vérification en ligne. Demande un `.claude/deploy-notes.md` dans le projet. |
 | Le README ne dit plus la vérité | `/doc` | Réaligne le README sur le code : classe les écarts `périmé` / `absent` / `inventé`, sans redessiner la page. |
 | Tu veux ouvrir une PR | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. Nécessite `gh` authentifié (étape 0). |

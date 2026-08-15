@@ -51,7 +51,7 @@ En déduire, sans demander à l'utilisateur :
 - **Format** : Conventional Commits (`type(scope): description`) ou style libre — reproduire l'existant.
 - **Langue** : celle qui domine dans les messages récents.
 - **Ce qu'il ne faut PAS reprendre** : les trailers d'assistant, même si l'historique en porte
-  (voir l'étape 5).
+  (voir l'étape 6).
 
 Lire aussi le `CLAUDE.md` du projet s'il existe : il peut fixer la convention de commit et la règle
 de branche. Ne pas explorer au-delà.
@@ -64,7 +64,25 @@ Si la branche courante est la branche par défaut (`main`/`master`) :
 
 Ne jamais créer la branche sans le dire.
 
-**Étape 4 — Découper**
+**Étape 4 — Bump de version, seulement si les notes le demandent**
+
+Lire `.claude/deploy-notes.md` s'il existe — champ **« Bumpé par »** de la section Version.
+
+- Fichier absent, ou champ qui ne nomme pas `/ship` → **ne rien bumper.** C'est le cas courant : le
+  numéro avance au déploiement, pas à l'envoi.
+- Champ qui nomme `/ship` → incrémenter le fichier de version déclaré, en suivant la **règle
+  d'incrément** qui y figure, et inclure ce fichier dans le commit.
+
+La **condition** compte autant que la règle. Un dépôt qui se sert du numéro comme repère de
+déploiement veut qu'il avance dès que **ce qui tourne en prod** change — build, règles, fonctions,
+configuration d'hébergement — et qu'il reste immobile pour un lot qui ne part jamais en ligne :
+documentation, journal d'audit, skills, tests. Un numéro qui bouge sans que rien ne soit publié fait
+mentir tout ce qui s'y réfère. Si les notes ne tranchent pas, demander plutôt que décider seul.
+
+**Ne jamais inventer un fichier de version ni une règle d'incrément.** Sans notes, `/ship` ne bumpe
+rien.
+
+**Étape 5 — Découper**
 
 Si plusieurs changements **sans rapport** sont en attente, proposer des commits séparés plutôt qu'un
 commit fourre-tout — stager par chemins (`git add <fichiers>`) et committer en plusieurs fois. Un
@@ -72,7 +90,7 @@ commit doit pouvoir être annulé seul sans emporter autre chose.
 
 Sinon `git add -A` si tout est voulu.
 
-**Étape 5 — Rédiger le message**
+**Étape 6 — Rédiger le message**
 
 Format `type(scope): description` (`feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `perf`, `ci`),
 ≤ 70 caractères sur la première ligne. Corps en bullets seulement si le pourquoi n'est pas évident.
@@ -84,7 +102,7 @@ commit se juge sur ce qu'il change, pas sur l'outil qui l'a écrit.
 
 Les commits anciens qui en portent restent tels quels — on ne réécrit pas l'historique pour ça.
 
-**Étape 6 — Committer**
+**Étape 7 — Committer**
 
 Heredoc pour un message multi-lignes :
 
@@ -97,7 +115,7 @@ EOF
 )"
 ```
 
-**Étape 7 — Pousser**
+**Étape 8 — Pousser**
 
 `git push` — ou `git push -u origin <branche>` si la branche n'a pas d'upstream. Confirmer branche et
 hash court. Si le push est rejeté (`non-fast-forward`), **s'arrêter et le signaler** : ne pas

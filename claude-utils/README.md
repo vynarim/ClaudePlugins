@@ -14,7 +14,7 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 | `test` | `/test` | Joue la batterie de non-régression (lint, unitaires, build, puis les étapes lentes), rend un tableau ✅/❌ et déclare ce qui n'a pas été éprouvé. Ne committe rien, ne touche jamais la prod. |
 | `doc` | `/doc` | Réaligne le README sur ce que fait réellement le code : reconstitue la vérité depuis les sources, classe les écarts `périmé` / `absent` / `inventé`, préserve la structure existante. |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
-| `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. |
+| `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. Bumpe la version si `deploy-notes.md` le lui demande. |
 | `deploy` | `/deploy` | Mise en production : bump, vérifications, contrôle anti-secrets, envoi via `ship`, déploiement cible par cible dans un ordre qui dépend du sens du changement, puis vérification en ligne. Lit `.claude/deploy-notes.md` — sans lui, elle s'arrête. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet. |
@@ -79,6 +79,11 @@ dépôt sans en connaître aucun.
 Gabarits dans `skills/<nom>/references/<nom>-notes-template.md`. Chaque skill propose de créer le
 sien en fin de run quand il manque.
 
+**`ship` lit une seule ligne de `deploy-notes.md`** — le champ « Bumpé par » — pour savoir s'il doit
+incrémenter la version au moment de committer. C'est le seul endroit où une skill lit les notes d'une
+autre, et c'est voulu : la règle de version d'un projet n'existe qu'à un seul exemplaire, qu'elle
+soit appliquée à l'envoi ou au déploiement. Un dépôt qui ne déclare rien ne se voit rien bumper.
+
 ### Migrer une skill locale de même nom
 
 `deploy`, `test` et `doc` sont des noms courants : un projet qui avait déjà écrit la sienne se
@@ -97,8 +102,14 @@ Migrer plutôt que cohabiter, dans cet ordre :
    un clone neuf ou sur un autre poste — exactement ce que la migration voulait éviter.
 
    ```bash
-   git check-ignore -v .claude/deploy-notes.md   # ne doit rien renvoyer
+   git status --short .claude/   # le fichier doit apparaître, en ??
    ```
+
+   **C'est `git status` qui tranche, pas `git check-ignore`.** Dans un dépôt en liste blanche —
+   le cas courant, et celui où ce contrôle sert vraiment — `check-ignore -v` affiche la ligne
+   `!.claude/…-notes.md` qui **dé-ignore** le fichier : une sortie non vide qu'on lit comme un échec
+   alors que tout va bien. Il rend son verdict par son code de sortie (0 = ignoré), pas par ce qu'il
+   affiche. Un fichier absent de `git status` est un fichier qui ne partira pas.
 
 3. **Mettre le poste à jour avant de supprimer quoi que ce soit** : `/update-plugins` puis
    rechargement de fenêtre. Tant que le cache est sur une version antérieure, supprimer la skill

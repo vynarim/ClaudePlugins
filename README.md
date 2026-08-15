@@ -8,7 +8,7 @@ Ce dépôt héberge les plugins suivants :
 
 | Plugin | Version | Pour quoi faire |
 |---|---|---|
-| [`claude-utils`](claude-utils/) | 2.5.1 | Boîte à outils générique : efficacité tokens, revue de code par axes, non-régression, documentation, commit/push, mise en production, PR GitHub, reprise de session, mise à jour des plugins |
+| [`claude-utils`](claude-utils/) | 2.6.0 | Boîte à outils générique : efficacité tokens, revue de code par axes, non-régression, documentation, audit du `CLAUDE.md`, commit/push, mise en production, PR GitHub, reprise de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 
@@ -22,10 +22,10 @@ Pour l'installer sur un poste neuf et prendre en main les skills, suivre le
 |---|---|---|
 | `eco` | `/eco` | Discipline tokens/contexte — une session = un objectif, `/clear` aux bascules, délégation aux sous-agents |
 | `audit` | `/audit` | Revue de code par axes (sécurité, données, métier, perf, propreté, config) : demande l'axe, classe par gravité, déclare sa couverture et tient un journal ; `/audit regression` rejoue les correctifs passés ; spécificités du dépôt dans `.claude/audit-notes.md` |
-| `test` | `/test` | Batterie de non-régression : tableau ✅/❌ par étape, et ce que la batterie n'a **pas** éprouvé. Ne committe rien, ne touche jamais la prod |
-| `doc` | `/doc` | Réaligne le README sur le code : écarts classés `périmé` / `absent` / `inventé`, structure existante préservée |
+| `test` | `/test` | Batterie de non-régression : tableau ✅/❌ par étape, et ce que la batterie n'a **pas** éprouvé ; étapes déclarées dans `.claude/test-notes.md`. Ne committe rien, ne touche jamais la prod |
+| `doc` | `/doc` | Réaligne le README sur le code : écarts classés `périmé` / `absent` / `inventé`, structure existante préservée ; carte des sources dans `.claude/doc-notes.md` |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet et propose la version condensée |
-| `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique |
+| `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique ; bumpe la version si `.claude/deploy-notes.md` le lui demande |
 | `deploy` | `/deploy` | Mise en production : bump, vérifications, envoi via `ship`, déploiement cible par cible, vérification en ligne. Cibles déclarées dans `.claude/deploy-notes.md` |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant |
 | `session-brief` | `/session-brief` | Brief de reprise : git status, PRs ouvertes, mémoire projet |
@@ -65,6 +65,7 @@ que des skills.
 | `.claude-plugin/marketplace.json` | Catalogue `dev-tools` — déclare les plugins publiés |
 | `<plugin>/.claude-plugin/plugin.json` | Manifeste d'un plugin (`version` à bumper pour publier) |
 | `<plugin>/skills/<nom>/SKILL.md` | Une skill (dossier `skills/` auto-découvert) |
+| `<plugin>/skills/<nom>/references/` | Annexes d'une skill : gabarits de notes projet, checklists d'axes |
 | `examples/` | Gabarit de `.claude/settings.json` à copier dans un projet |
 | `docs/` | Source du tutoriel publié sur GitHub Pages |
 | `.claude/skills/` | Skills **internes** au repo (`skill-new`), non publiées |

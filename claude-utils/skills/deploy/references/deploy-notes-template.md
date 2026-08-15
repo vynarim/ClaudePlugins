@@ -24,10 +24,28 @@ l'accès à tout le monde ; telle fonction cassée enferme le dernier administra
 
 - **Fichier** : `<src/version.js>` — `<export const APP_VERSION = "X.Y.Z">`
 - **Reporté aussi dans** : `<package.json>` | —
-- **Bumpé par** : cette skill | `/ship` | `<npm run bump>`
+- **Bumpé par** : cette skill | `/ship` | `<npm run bump>` | personne — <s'il n'existe aucun fichier
+  de version, l'écrire ici : les étapes « bump » et « la version est dans le bundle » sont alors sans
+  objet, et il faut dire ce qui identifie ce qui est en ligne à la place — un run de CI, un hash>
+- **Bumpé quand** *(à remplir seulement si `/ship` bumpe)* : <tous les lots, ou seulement ceux qui
+  atteignent la prod — et à quoi on le reconnaît. `/ship` lit cette ligne ; sans elle, il demande
+  plutôt que de décider.>
 - **Règle d'incrément** : <sémantique classique, ou règle maison — décrire les paliers>
 - **Contrôle « la version est dans le bundle »** : <commande qui **lit** le numéro depuis le fichier
   de version puis le cherche dans le build — jamais un numéro écrit en dur>
+
+  Ce contrôle échoue de deux façons, et **les deux sont silencieuses** :
+
+  - **Toujours rouge** — le numéro est écrit en dur et la série a changé depuis. Sur une procédure
+    qui interdit de déployer par-dessus du rouge, cela apprend à passer outre, et plus rien n'est vu
+    le jour où le bump manque vraiment.
+  - **Toujours vert** — le motif d'extraction ne correspond à rien (guillemets simples là où le
+    fichier en met de doubles), ou il a été élargi pour « le rattraper » et ramasse alors un
+    fragment : un point isolé, que tout build contient. Le contrôle affiche vert sans rien vérifier.
+
+  D'où deux exigences dans la commande : **ancrer le motif sur le nom de la variable ET sur le type
+  de guillemets qu'emploie le fichier**, et **réafficher le numéro extrait** avant de s'en servir.
+  Un contrôle dont on ne voit pas l'entrée ne contrôle rien non plus.
 
 ## Vérifications avant déploiement
 
