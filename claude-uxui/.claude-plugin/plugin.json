@@ -1,0 +1,24 @@
+{
+  "name": "claude-uxui",
+  "version": "0.1.0",
+  "description": "Skills UX/UI génériques pour Claude Code : la mise en page et l'ergonomie du produit, là où claude-utils traite le processus de développement. Chaque skill lit les spécificités du dépôt dans `.claude/uxui-notes.md` et vérifie le profil du projet avant d'agir — une consigne mobile appliquée à un projet desktop casse la page. Skills disponibles : ui-frame (cadre téléphone centré sur écran large pour une application mobile-only, avec ses pièges de scroll mal placé, d'éléments position fixed qui dérivent, de portails hors cadre et d'unités viewport calculées contre la vraie fenêtre).",
+  "author": {
+    "name": "Jean-Rémy"
+  },
+  "keywords": [
+    "ux",
+    "ui",
+    "css",
+    "layout",
+    "responsive",
+    "mobile-first",
+    "mobile-only",
+    "viewport",
+    "frame",
+    "breakpoint",
+    "scroll",
+    "pwa",
+    "design"
+  ],
+  "license": "MIT"
+}

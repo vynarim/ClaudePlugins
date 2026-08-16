@@ -2,12 +2,18 @@
 
 Repo-catalogue de la **marketplace `dev-tools`** (plugins Claude Code). Repo public, **généraliste** :
 outillage Claude Code transverse, sans domaine métier. Vocabulaire : repo `ClaudePlugins` ·
-marketplace `dev-tools` · plugin `claude-utils` · skills `/<nom>`.
+marketplace `dev-tools` · plugins `claude-utils` et `claude-uxui` · skills `/<nom>`.
 
-Les 14 skills publiées — `eco` · `audit` · `test` · `ci` · `doc` · `context-check` · `kit-sync` ·
-`perms` · `ship` · `deploy` · `pr-draft` · `session-brief` · `handoff` · `update-plugins`. Rôle de
-chacune et structure du repo : [README.md](README.md). *Cette liste est l'une des six déclarations
-contrôlées par `coherence.mjs` : y ajouter toute nouvelle skill.*
+**Deux plugins, deux axes.** `claude-utils` = le **processus** de développement (commit, tests,
+publication, permissions, docs). `claude-uxui` = le **produit** affiché à l'utilisateur (mise en page,
+ergonomie). Une skill se range par cet axe, pas par affinité de sujet — mélanger les deux brouille le
+routeur des deux plugins.
+
+`claude-utils`, 14 skills — `eco` · `audit` · `test` · `ci` · `doc` · `context-check` · `kit-sync` ·
+`perms` · `ship` · `deploy` · `pr-draft` · `session-brief` · `handoff` · `update-plugins`.
+`claude-uxui`, 1 skill — `ui-frame`. Rôle de chacune et structure du repo : [README.md](README.md).
+*Ces listes sont l'une des déclarations contrôlées par `coherence.mjs` : y ajouter toute nouvelle
+skill.*
 
 ## Règles du catalogue
 
@@ -22,6 +28,18 @@ contrôlées par `coherence.mjs` : y ajouter toute nouvelle skill.*
   proactive du plugin, l'aligner la rendrait réactive. Exception inscrite dans `plugin-check`
   § « Exceptions admises » **et** dans la table `EXCEPTIONS` de `coherence.mjs` — les deux bougent
   ensemble.
+- Côté `claude-uxui` : **un seul** fichier de notes pour tout le plugin (`.claude/uxui-notes.md`), pas
+  un par skill, et un préfixe `ui-` obligatoire sur les noms de skills. Sans préfixe, `frame` ou
+  `viewport` sont des mots trop courants — l'étape 1 de `coherence.mjs` cherche par sous-chaîne et les
+  « trouve » dans n'importe quelle phrase, déclarant présente une skill déclarée nulle part.
+- **Une skill ne se déplace pas d'un plugin à l'autre.** Les postes qui ont installé le premier gardent
+  leur copie et se retrouvent avec deux skills pour le même geste, aux descriptions identiques. D'où
+  un plugin dès la première skill de son axe, plutôt qu'un regroupement plus tard.
+- Le nombre de cibles de déclaration **dépend du plugin** : 6 pour `claude-utils` (il a un
+  `QUICKSTART.md`), 5 pour `claude-uxui`. `coherence.mjs` découvre les plugins et retire les cibles
+  absentes au lieu de rougir.
+- `marketplace.metadata.version` est la version du **catalogue**, pas celle d'un plugin. Chaque plugin
+  a la sienne, contrôlée contre sa ligne du README racine.
 
 ## Conventions
 
@@ -43,21 +61,27 @@ contrôlées par `coherence.mjs` : y ajouter toute nouvelle skill.*
 *Bloc remplacé à chaque `/handoff`, jamais empilé. **Le vérifier contre `git status` avant de le
 croire** — il décrit l'état au moment où il a été écrit, pas l'état courant.*
 
-2.8.1 publiée et commitée (`0b21c29`), arbre propre, ce poste à jour. Le garde-fou CI tient
-3 contrôles : JSON, `coherence.mjs` (six déclarations · deux manifestes · frontmatter) et `liens.mjs`
-— vus verts sur 3 runs (5 JSON, 16 skills, 0 lien mort).
+`claude-utils` 2.8.1 publiée et commitée (`0b21c29`). **Second plugin `claude-uxui` 0.1.0 posé mais
+non commité ni publié** : une skill, `ui-frame`. Catalogue passé à 2.9.0. Le garde-fou CI tient
+3 contrôles : JSON, `coherence.mjs` (déclarations · manifestes · frontmatter) et `liens.mjs`.
+`coherence.mjs` et `liens.mjs` **découvrent** désormais les plugins au lieu de les énumérer.
 
 ### À reprendre en premier
 
-1. **`agents-sync` (#09)** — seul chantier réellement ouvert. **Deux définitions en circulation, à
+1. **Publier `claude-uxui`** — relire `ui-frame` (jamais éprouvée sur un vrai dépôt), puis `/ship`. Le
+   premier terrain d'essai est une app mobile-only : la skill doit **s'arrêter** sur un dépôt
+   `responsive`, c'est ce comportement-là qu'il faut vérifier en premier, pas le cadre lui-même.
+   Ensuite `claude plugin install claude-uxui@dev-tools` — c'est un **nouveau** plugin, `update` ne
+   l'installe pas.
+2. **`agents-sync` (#09)** — chantier ouvert. **Deux définitions en circulation, à
    trancher avant d'écrire une ligne** : cohérence `CLAUDE.md` ⇄ `AGENTS.md` (roadmap du 15/08,
    priorité 3, un seul projet concerné) *vs* alignement des définitions de sous-agents entre projets
    frères sur le modèle de `kit-sync` (validé à l'oral le 16/08). Ni le même périmètre ni la même
    urgence. Une `description` devinée est un routeur faux : la skill part à la place d'une autre.
-2. **Nemesis** — arbre propre et à jour (`e564d30`), rien à committer. Restent deux chantiers :
+3. **Nemesis** — arbre propre et à jour (`e564d30`), rien à committer. Restent deux chantiers :
    `.claude/skills/` y garde 4 doublons de `claude-utils` (`deploy`, `doc`, `ship`, `test`), et
    `/perms` n'y est jamais passé (pas de `perms-notes.md`).
-3. **Autres postes** — `claude plugin marketplace update dev-tools` puis `claude plugin update
+4. **Autres postes** — `claude plugin marketplace update dev-tools` puis `claude plugin update
    claude-utils@dev-tools` (ou `/update-plugins`). Sans le second, le bump n'est pas appliqué.
 
 ## Détails déportés (lire seulement si pertinent)
