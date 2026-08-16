@@ -51,40 +51,54 @@ Repo **généraliste** : outillage Claude Code transverse, sans domaine métier 
 
 *Bloc remplacé à chaque `/handoff`, jamais empilé — il est chargé à chaque prompt.*
 
-Lot **2.8.0** écrit le 16/08/2026 : `perms`, `ci` (publiées) et `plugin-check` (interne). Resync des
-six déclarations faite, versions alignées aux trois endroits. Reste la roadmap : `agents-sync` (#09),
-et la migration des skills doublons de **Nemesis**, dernier dépôt concerné.
+Lot **2.8.0** en ligne (`7b0017f`), plus trois commits du 16/08/2026 **sans bump** : `189f3f1`
+(sections « ne fait PAS » d'`eco` et `update-plugins`), `2991400` (`perms-notes.md`), `21e9a07`
+(garde-fou CI). Conséquence à ne pas perdre : ces retouches sont sur `main` mais **n'atteignent aucun
+poste** tant que `claude-utils` reste en 2.8.0 — elles partent avec le prochain lot. `/perms` a tourné
+pour de vrai ici (113 → 56 entrées, 8 `ask` posés) ; le garde-fou CI, lui, **n'a jamais été vu tourner**.
 
 ### À reprendre en premier
 
-1. `/update-plugins` + rechargement de fenêtre — tant que le cache est en 2.7.0, `/perms` et `/ci`
-   n'existent sur aucun poste, y compris celui-ci.
-2. Essayer `/perms` sur le poste : c'est le cas le plus parlant (113 entrées, 85 ombrées).
-3. **Nemesis** : shipper d'abord le chantier en cours (12 fichiers non commités, dont
-   `ReclaimBanner.jsx` et `useReclaimActif.js`), *puis* migrer ses 4 skills doublons — l'inverse rend
-   le commit de migration illisible.
+1. `gh auth login`, puis `gh run list --limit 3` : le run déclenché par `21e9a07` est le premier et
+   personne ne l'a observé. Ensuite `gh api repos/vynarim/ClaudePlugins/branches/main/protection --jq
+   '.required_status_checks.contexts'` — un `404` veut dire que le workflow informe sans rien
+   empêcher, et qu'une poussée rouge entre quand même.
+2. **Nemesis** : shipper d'abord le chantier en cours (12 fichiers non commités, dont
+   `ReclaimBanner.jsx` et `useReclaimActif.js`), *puis* migrer ses 4 skills doublons, *puis* `/perms`
+   — il coche 7 lignes de la grille de danger qu'EscaleAzur, même métier, ne coche pas.
+3. `agents-sync` (#09), dernière skill de la roadmap.
 
 ### Dettes connues / à ne pas refaire
 
-- **`ci` n'a pas de `ci-notes.md`, et c'est voulu** : elle lit `test-notes.md` (les étapes) et
-  `deploy-notes.md` (cibles, secrets). Une skill qui réclame ses propres notes pour redire ce qui est
-  écrit à côté fabrique la divergence qu'on passe ensuite son temps à réconcilier.
-- **Un contrôle de cohérence écrit en PowerShell 5.1 ment deux fois** s'il n'est pas blindé : lecture
-  en ANSI par défaut (tout motif accentué échoue → les 16 skills ressortent en `MANQUE`) et
-  `description` de frontmatter repliée sur plusieurs lignes (« À utiliser quand » coupé se lit comme
-  absent). Les deux pièges sont désormais traités dans `plugin-check`. Le contrôle de liens a été
-  réécrit en Node pour la même raison — la version PowerShell décalait les résultats d'un fichier.
-- **Ombrage de permissions : la portée compte autant que le motif.** Une entrée déclarée dans un
-  projet ne peut pas ombrer une entrée du poste. Sans cette règle le détecteur annonçait 104 ombrages
-  au lieu de 85, et supprimer sur cette base aurait rétabli des questions déjà réglées.
-- Ouvert, non traité : `eco` et `update-plugins` n'ont pas de section « Ce que cette skill ne fait
-  PAS », pourtant convention maison ; `eco` emploie en plus d'autres formulations de déclencheurs.
+- **`ci` n'a pas de `ci-notes.md`, et c'est voulu** : elle lit `test-notes.md` et `deploy-notes.md`.
+  Une skill qui réclame ses propres notes pour redire ce qui est écrit à côté fabrique la divergence
+  qu'on passe ensuite son temps à réconcilier.
+- **Un contrôle de cohérence en PowerShell 5.1 ment deux fois** s'il n'est pas blindé : lecture ANSI
+  par défaut (tout motif accentué échoue → les 16 skills en `MANQUE`) et `description` repliée sur
+  plusieurs lignes (« À utiliser quand » coupé se lit comme absent). Traités dans `plugin-check` ; le
+  contrôle de liens a été réécrit en Node pour la même raison.
+- **Le détecteur d'ombrage est un pré-filtre, et le premier vrai passage l'a montré trois fois** : il
+  rate les motifs `Read`/`Edit` (`/**` ne préfixe pas littéralement `/plugins/**`), il donne pour
+  ombrée une commande composée dont seul le premier segment est couvert alors que le harness découpe
+  sur `&&`, et les doublons exacts vivent entre le poste et les *autres* projets — invisibles depuis
+  un seul dépôt. Détail dans [.claude/perms-notes.md](.claude/perms-notes.md), pas ici.
+- **Deux règles de permissions tranchées** : une entrée d'un fichier **versionné** ne se supprime pas
+  parce que le poste la couvre (les 6 `Bash(git …:*)` sont seules sur un poste qui clone) ; et un
+  `ask` posé au poste **écrase** un `allow` que le projet s'est donné exprès — d'où la suppression, et
+  non le passage en `ask`, des 4 entrées de déploiement LudEvent.
+- **La description d'`eco` ne doit pas être ramenée au gabarit maison** : c'est la seule skill
+  proactive du plugin. L'aligner la rendrait réactive — elle ne partirait plus qu'après un « je
+  sature », trop tard. Exception inscrite dans `plugin-check`, § « Exceptions admises ».
+- **Le garde-fou CI ne rejoue que 2 des 4 étapes de `plugin-check`** (JSON, liens). Les six
+  déclarations et le frontmatter vivent en PowerShell dans un `SKILL.md` ; l'étape 2 existe en
+  `node -e` mais **imprime sans jamais sortir en erreur**, donc verte quoi qu'il arrive. Le chemin
+  propre est un `coherence.mjs` à côté de `liens.mjs`, appelé par la skill *et* par le workflow —
+  surtout pas une seconde copie de la logique dans le YAML.
 
 ### État git
 
-Branche `main`, à jour avec `origin/main` avant ce lot — 0 commit d'avance, 0 stash. Lot 2.8.0 en
-attente de `/ship` : 6 fichiers modifiés (2 manifestes, `CLAUDE.md`, les 2 README, `QUICKSTART.md`) et
-3 dossiers de skills non suivis (`perms`, `ci`, `plugin-check`).
+Branche `main`, à jour avec `origin/main` (`21e9a07`) — 0 commit d'avance, 0 stash. Seul ce bloc est
+non commité. Aucun bump depuis 2.8.0.
 
 ## Docs
 
