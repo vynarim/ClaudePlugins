@@ -9,9 +9,13 @@
 // échoue ; description repliée : « À utiliser » coupé entre deux lignes se lit comme absent). Node lit
 // en UTF-8 et les blancs sont écrasés avant comparaison — les deux pièges disparaissent ici.
 //
-// La liste des six cibles est celle de DEPLOYMENT.md § « Ajouter une skill à un plugin existant »,
+// La liste des cibles est celle de DEPLOYMENT.md § « Ajouter une skill à un plugin existant »,
 // point 4. Elle est recopiée ici parce qu'un script doit bien la porter ; c'est la SEULE copie, et
 // elle se relit à chaque modification de DEPLOYMENT.md.
+//
+// Les plugins sont DÉCOUVERTS, pas énumérés : un dossier de premier niveau qui porte un
+// `.claude-plugin/plugin.json` est un plugin. Une liste en dur ici ferait qu'un troisième plugin
+// serait ignoré en silence par le garde-fou — vert sur un catalogue faux, le pire des deux mondes.
 //
 // Usage : node coherence.mjs        (depuis la racine du dépôt)
 // Sortie : 1 s'il reste un défaut. La longueur d'un SKILL.md est un signalement, pas un défaut.
@@ -19,16 +23,24 @@
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 
-const PLUGIN = 'claude-utils';
+const PLUGINS = readdirSync('.', { withFileTypes: true })
+  .filter((e) => e.isDirectory() && !e.name.startsWith('.'))
+  .map((e) => e.name)
+  .filter((n) => existsSync(join(n, '.claude-plugin', 'plugin.json')))
+  .sort();
 
-const CIBLES = [
-  `${PLUGIN}/.claude-plugin/plugin.json`,
-  '.claude-plugin/marketplace.json',
-  `${PLUGIN}/README.md`,
-  `${PLUGIN}/QUICKSTART.md`,
-  'README.md',
-  'CLAUDE.md',
-];
+// Toutes les cibles ne concernent pas tous les plugins : `QUICKSTART.md` n'existe que là où une prise
+// en main a été écrite. Un fichier absent est retiré de la liste au lieu de faire échouer le
+// contrôle — sinon le garde-fou rougirait sur un plugin qui n'a rien fait de mal.
+const ciblesDe = (plugin) =>
+  [
+    `${plugin}/.claude-plugin/plugin.json`,
+    '.claude-plugin/marketplace.json',
+    `${plugin}/README.md`,
+    `${plugin}/QUICKSTART.md`,
+    'README.md',
+    'CLAUDE.md',
+  ].filter((f) => existsSync(f));
 
 // Un écart arbitré ne se resignale pas. Toute entrée ici doit avoir sa ligne dans le SKILL.md,
 // § « Exceptions admises » — une exception sans raison écrite est un défaut qu'on a renoncé à traiter.
@@ -50,76 +62,96 @@ let signalements = 0;
 const lire = (f) => readFileSync(f, 'utf8').replace(/^﻿/, '');
 const aplatir = (t) => t.replace(/\s+/g, ' ');
 
-// ---------------------------------------------------------------- Étape 1 — les six déclarations
+const skillsDe = (plugin) =>
+  readdirSync(`${plugin}/skills`, { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name);
 
-const skills = readdirSync(`${PLUGIN}/skills`, { withFileTypes: true })
-  .filter((e) => e.isDirectory())
-  .map((e) => e.name);
-
-const contenus = new Map(CIBLES.map((c) => [c, aplatir(lire(c))]));
-
-console.log('— Étape 1 : les six déclarations');
-for (const s of skills) {
-  // Recherche de sous-chaîne, comme la commande PowerShell qu'elle remplace : une ABSENCE est une
-  // certitude, une PRÉSENCE ne l'est pas. Resserrer sur une frontière de mot ferait rougir des
-  // déclarations légitimes (`context-check` et son tiret, un nom entre accents graves) — et un
-  // garde-fou qui rougit à tort est désactivé la semaine suivante.
-  const manque = CIBLES.filter((c) => !contenus.get(c).includes(s));
-  if (manque.length) {
-    console.log(`::error::${s} — non déclarée dans : ${manque.join(', ')}`);
-    defauts++;
-  }
+console.log(`Plugins découverts : ${PLUGINS.join(', ') || '(aucun)'}`);
+if (!PLUGINS.length) {
+  console.log('::error::aucun plugin trouvé — un plugin est un dossier portant .claude-plugin/plugin.json');
+  process.exit(1);
 }
-console.log(`  ${skills.length} skill(s) publiée(s) vérifiée(s) sur ${CIBLES.length} cibles`);
 
-// ------------------------------------------------------------------ Étape 2 — les deux manifestes
+// ------------------------------------------------------------------- Étape 1 — les déclarations
 
-console.log('\n— Étape 2 : les deux manifestes');
-const plugin = JSON.parse(lire(`${PLUGIN}/.claude-plugin/plugin.json`));
+console.log('\n— Étape 1 : les déclarations');
+for (const plugin of PLUGINS) {
+  const cibles = ciblesDe(plugin);
+  const contenus = new Map(cibles.map((c) => [c, aplatir(lire(c))]));
+  const skills = skillsDe(plugin);
+
+  for (const s of skills) {
+    // Recherche de sous-chaîne, comme la commande PowerShell qu'elle remplace : une ABSENCE est une
+    // certitude, une PRÉSENCE ne l'est pas. Resserrer sur une frontière de mot ferait rougir des
+    // déclarations légitimes (`context-check` et son tiret, un nom entre accents graves) — et un
+    // garde-fou qui rougit à tort est désactivé la semaine suivante.
+    const manque = cibles.filter((c) => !contenus.get(c).includes(s));
+    if (manque.length) {
+      console.log(`::error::${plugin}/${s} — non déclarée dans : ${manque.join(', ')}`);
+      defauts++;
+    }
+  }
+  console.log(`  ${plugin} — ${skills.length} skill(s) sur ${cibles.length} cibles`);
+}
+
+// -------------------------------------------------------------------- Étape 2 — les manifestes
+
+console.log('\n— Étape 2 : les manifestes');
 const marketplace = JSON.parse(lire('.claude-plugin/marketplace.json'));
-const entree = marketplace.plugins.find((p) => p.name === PLUGIN);
+const readmeRacine = lire('README.md').split('\n');
 
-if (!entree) {
-  console.log(`::error::${PLUGIN} absent de marketplace.json`);
-  defauts++;
-} else {
-  if (plugin.description !== entree.description) {
-    console.log('::error::description DIVERGENTE entre plugin.json et marketplace.json');
+for (const plugin of PLUGINS) {
+  const manifeste = JSON.parse(lire(`${plugin}/.claude-plugin/plugin.json`));
+  const entree = marketplace.plugins.find((p) => p.name === plugin);
+
+  if (!entree) {
+    console.log(`::error::${plugin} absent de marketplace.json`);
+    defauts++;
+    continue;
+  }
+  if (manifeste.description !== entree.description) {
+    console.log(`::error::${plugin} — description DIVERGENTE entre plugin.json et marketplace.json`);
     defauts++;
   }
-  if (JSON.stringify(plugin.keywords) !== JSON.stringify(entree.keywords)) {
-    console.log('::error::keywords DIVERGENTS entre plugin.json et marketplace.json');
+  if (JSON.stringify(manifeste.keywords) !== JSON.stringify(entree.keywords)) {
+    console.log(`::error::${plugin} — keywords DIVERGENTS entre plugin.json et marketplace.json`);
     defauts++;
+  }
+
+  // La version d'un plugin se lit à DEUX endroits : son manifeste, et la colonne version du tableau
+  // des plugins du README racine. C'est le README qu'on oublie — il ne casse rien, il désinforme.
+  //
+  // `metadata.version` de la marketplace n'entre plus dans cette comparaison : à plusieurs plugins,
+  // elle ne peut plus être la version de l'un d'eux. C'est la version du CATALOGUE, bumpée à chaque
+  // publication ; qu'elle l'ait été ne se déduit d'aucun fichier, donc ne se contrôle pas ici.
+  const ligne = readmeRacine.find((l) => l.startsWith('|') && l.includes(`\`${plugin}\``));
+  const versionReadme = ligne
+    ? (ligne.split('|').map((c) => c.trim()).find((c) => /^\d+\.\d+\.\d+$/.test(c)) ?? '(aucune)')
+    : '(ligne absente)';
+
+  if (manifeste.version !== versionReadme) {
+    console.log(
+      `::error::${plugin} — versions DÉSALIGNÉES — plugin.json: ${manifeste.version} | README racine: ${versionReadme}`,
+    );
+    defauts++;
+  } else {
+    console.log(`  ${plugin} — version ${manifeste.version}, alignée sur le README racine`);
   }
 }
 
-// La version se lit à trois endroits, et les trois doivent coïncider : le manifeste du plugin, les
-// métadonnées de la marketplace, et la colonne version du tableau des plugins du README racine.
-// C'est le README qu'on oublie — il ne casse rien, il désinforme.
-const ligneReadme = lire('README.md')
-  .split('\n')
-  .find((l) => l.startsWith('|') && l.includes(`\`${PLUGIN}\``));
-const versionReadme = ligneReadme
-  ? (ligneReadme.split('|').map((c) => c.trim()).find((c) => /^\d+\.\d+\.\d+$/.test(c)) ?? '(aucune)')
-  : '(ligne absente)';
-
-const versions = {
-  'plugin.json': plugin.version,
-  'marketplace.metadata': marketplace.metadata?.version,
-  'README racine': versionReadme,
-};
-const distinctes = new Set(Object.values(versions));
-if (distinctes.size > 1) {
-  console.log(`::error::versions DÉSALIGNÉES — ${Object.entries(versions).map(([k, v]) => `${k}: ${v}`).join(' | ')}`);
+const versionCatalogue = marketplace.metadata?.version;
+if (!/^\d+\.\d+\.\d+$/.test(versionCatalogue ?? '')) {
+  console.log(`::error::marketplace.metadata.version absente ou hors semver — ${versionCatalogue}`);
   defauts++;
 } else {
-  console.log(`  version ${plugin.version} — alignée sur les trois emplacements`);
+  console.log(`  catalogue — version ${versionCatalogue} (non comparée : voir le commentaire)`);
 }
 
 // -------------------------------------------------------- Étape 3 — frontmatter et convention maison
 
 console.log('\n— Étape 3 : frontmatter et convention maison');
-const racines = [`${PLUGIN}/skills`, '.claude/skills'];
+const racines = [...PLUGINS.map((p) => `${p}/skills`), '.claude/skills'];
 let verifiees = 0;
 
 for (const racine of racines) {
@@ -173,7 +205,8 @@ console.log(`\n${defauts} défaut(s) · ${signalements} signalement(s)`);
 if (!defauts) {
   console.log(
     'Non tranché automatiquement : les présences de l\'étape 1 sont trouvées par simple recherche de\n' +
-    'mot — une skill au nom courant (test, doc, ci) peut être « déclarée » par une phrase quelconque.',
+    'mot — une skill au nom courant (test, doc, ci) peut être « déclarée » par une phrase quelconque.\n' +
+    'Et le bump de `marketplace.metadata.version` à chaque publication ne se déduit d\'aucun fichier.',
   );
 }
 process.exit(defauts ? 1 : 0);

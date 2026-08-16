@@ -1,9 +1,10 @@
 ---
 name: plugin-check
 description: >-
-  Vérifie la cohérence du catalogue de ce repo avant publication : chaque skill est-elle déclarée dans
-  les six endroits que liste DEPLOYMENT.md, les deux manifestes disent-ils la même chose, les versions
-  sont-elles alignées, les liens vers `references/` pointent-ils sur des fichiers qui existent. Rend un
+  Vérifie la cohérence du catalogue de ce repo avant publication : chaque skill de chaque plugin
+  est-elle déclarée dans tous les endroits que liste DEPLOYMENT.md, les deux manifestes d'un plugin
+  disent-ils la même chose, les versions sont-elles alignées, les liens vers `references/`
+  pointent-ils sur des fichiers qui existent. Rend un
   tableau des manques et les correctifs exacts, sans rien appliquer sans accord. À utiliser avant un
   `/ship` qui publie une version, ou après avoir ajouté une skill. Déclenche sur : « plugin-check »,
   « vérifie le catalogue », « est-ce que la skill est bien déclarée partout », « cohérence des
@@ -33,22 +34,32 @@ Un seul script pour les trois contrôles, et c'est **le même** que celui du gar
 côté finit par diverger de l'autre, et ce dépôt existe en grande partie pour traquer ce défaut-là. Il
 sort en `1` s'il reste un défaut. Ce qu'il couvre :
 
-**Les six déclarations** — chaque skill de `claude-utils/skills` cherchée dans les six fichiers que
-liste [DEPLOYMENT.md](../../../DEPLOYMENT.md) § « Ajouter une skill », point 4. Portée du contrôle :
-une absence est une certitude, une présence ne l'est pas. `test`, `doc` ou `ci` sont des mots
-courants — la recherche les trouve dans une phrase quelconque. Toute skill muette au rapport dont la
-déclaration est récente se re-vérifie à l'œil, dans la bonne liste. Le script le redit en fin de
-sortie plutôt que de laisser croire à une preuve.
+**Les déclarations** — chaque skill de chaque plugin, cherchée dans les fichiers que liste
+[DEPLOYMENT.md](../../../DEPLOYMENT.md) § « Ajouter une skill », point 4. Portée du contrôle : une
+absence est une certitude, une présence ne l'est pas. `test`, `doc` ou `ci` sont des mots courants —
+la recherche les trouve dans une phrase quelconque. Toute skill muette au rapport dont la déclaration
+est récente se re-vérifie à l'œil, dans la bonne liste. Le script le redit en fin de sortie plutôt que
+de laisser croire à une preuve.
+
+**Les plugins sont découverts, pas énumérés** : un dossier de premier niveau portant
+`.claude-plugin/plugin.json` en est un. Le nombre de cibles varie donc d'un plugin à l'autre — six
+pour `claude-utils`, cinq pour `claude-uxui` qui n'a pas de `QUICKSTART.md` — et une cible absente est
+retirée de la liste au lieu de faire rougir un plugin qui n'a rien fait de mal.
 
 Deux endroits échappent au comptage, tous deux dans `QUICKSTART.md` : la ligne du tableau « quelle
 skill pour quoi », **et** l'énumération des skills proposées par `/` à l'étape « Vérifier ». La
 seconde est celle qu'on oublie.
 
 **Les deux manifestes** — `description` et `keywords` identiques entre `plugin.json` et
-`marketplace.json` : deux manifestes qui divergent donnent une recherche incohérente selon le fichier
-interrogé. La version se lit à trois endroits — `plugin.json`, `metadata.version` de la marketplace,
-et la colonne version du tableau des plugins du [README racine](../../../README.md) — et les trois
-doivent coïncider. C'est le README qu'on oublie : il ne casse rien, il désinforme.
+`marketplace.json`, plugin par plugin : deux manifestes qui divergent donnent une recherche
+incohérente selon le fichier interrogé. La version d'un plugin se lit à **deux** endroits — son
+`plugin.json` et la colonne version du tableau des plugins du [README racine](../../../README.md) —
+et les deux doivent coïncider. C'est le README qu'on oublie : il ne casse rien, il désinforme.
+
+`metadata.version` de la marketplace n'entre plus dans cette comparaison. À plusieurs plugins elle ne
+peut plus être la version de l'un d'eux : c'est la version du **catalogue**, bumpée à chaque
+publication. Qu'elle l'ait été ne se déduit d'aucun fichier — le script vérifie seulement qu'elle est
+un semver, et le signale dans son « non tranché automatiquement ».
 
 **Le frontmatter** — `name` identique au nom du dossier, sinon la skill se charge sous un autre nom
 que celui qu'on tape ; une `description` qui porte « À utiliser » **et** « Déclenche sur : », puisque
@@ -96,8 +107,8 @@ signaler à chaque passage.
 
 ## Étape 3 — Rendre
 
-Tableau skill × six déclarations, puis les correctifs **exacts** : le fichier, la ligne à ajouter, le
-texte proposé. Rien n'est appliqué avant accord.
+Un tableau skill × déclarations **par plugin**, puis les correctifs **exacts** : le fichier, la ligne
+à ajouter, le texte proposé. Rien n'est appliqué avant accord.
 
 ## Ce que cette skill ne fait PAS
 
@@ -109,7 +120,7 @@ texte proposé. Rien n'est appliqué avant accord.
 
 ## Sortie attendue
 
-Le tableau des six déclarations avec ✅/❌ par skill, l'état des manifestes (descriptions, keywords,
-les trois versions), les liens morts et les fichiers orphelins de `references/`, puis la liste
+Le tableau des déclarations avec ✅/❌ par skill et par plugin, l'état des manifestes (descriptions,
+keywords, versions), les liens morts et les fichiers orphelins de `references/`, puis la liste
 ordonnée des correctifs à appliquer. Et, en fin de rapport, ce que le contrôle **n'a pas** pu
 trancher automatiquement — au premier chef les présences trouvées par simple recherche de mot.

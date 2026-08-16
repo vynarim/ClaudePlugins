@@ -11,9 +11,17 @@
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, resolve, relative } from 'node:path';
 
+// Les dossiers de skills des plugins sont découverts, pas énumérés : une liste en dur ici ferait
+// qu'un plugin ajouté plus tard échapperait au contrôle sans que rien ne le signale.
+const plugins = readdirSync('.', { withFileTypes: true })
+  .filter((e) => e.isDirectory() && !e.name.startsWith('.'))
+  .map((e) => e.name)
+  .filter((n) => existsSync(join(n, '.claude-plugin', 'plugin.json')))
+  .sort();
+
 const racines = process.argv.slice(2).length
   ? process.argv.slice(2)
-  : ['claude-utils/skills', '.claude/skills'];
+  : [...plugins.map((p) => `${p}/skills`), '.claude/skills'];
 
 const skills = [];
 for (const racine of racines) {

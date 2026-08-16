@@ -24,9 +24,16 @@ classique : la skill est écrite, mais jamais déclarée ni publiée.
 2. **Le déclenchement** — les phrases réelles qu'il emploierait. Sans elles la skill existe mais ne
    part jamais.
 3. **La destination** :
-   - `claude-utils/skills/<nom>/` — **publiée**, disponible sur tous les postes et tous les projets.
+   - `claude-utils/skills/<nom>/` — **publiée**, axe **processus** de développement (commit, tests,
+     publication, permissions, docs).
+   - `claude-uxui/skills/ui-<nom>/` — **publiée**, axe **produit** affiché à l'utilisateur (mise en
+     page, ergonomie). Préfixe `ui-` obligatoire.
    - `.claude/skills/<nom>/` — **interne**, ne sert qu'à ce repo (comme cette skill-ci).
-   Trancher sur un critère unique : est-ce que ça a du sens dans un autre dépôt ?
+
+   Deux questions, dans cet ordre : est-ce que ça a du sens dans un autre dépôt ? puis — processus ou
+   produit ? Ne pas ranger par affinité de sujet : un plugin dont l'axe se brouille voit son routeur
+   se brouiller avec. Et **une skill ne se déplace pas** d'un plugin à l'autre après publication : les
+   postes déjà à jour gardent l'ancienne copie et se retrouvent avec deux skills pour le même geste.
 4. **Les limites** — ce que la skill ne doit pas faire (modifier des fichiers, pousser, explorer
    l'arborescence…).
 
@@ -75,8 +82,9 @@ Viser ~100 lignes. Ce qui déborde (gabarits, tableaux de référence, procédur
 
 **Étape 4 — Resynchroniser (uniquement si la skill est publiée)**
 
-Une skill interne s'arrête à l'étape 3. Une skill dans `claude-utils/` doit en plus être **déclarée
-partout où la liste des skills existe**, sinon elle est publiée mais invisible.
+Une skill interne s'arrête à l'étape 3. Une skill publiée doit en plus être **déclarée partout où la
+liste des skills de son plugin existe**, sinon elle est publiée mais invisible. Le nombre de cibles
+dépend du plugin — six pour `claude-utils`, cinq pour `claude-uxui` qui n'a pas de `QUICKSTART.md`.
 
 La liste de référence vit dans [DEPLOYMENT.md](../../../DEPLOYMENT.md), § « Ajouter une skill à un
 plugin existant », point 4 : **la lire et la suivre point par point**, plutôt que de la recopier ici
@@ -86,8 +94,11 @@ deux manifestes (dont le bump de `version` et les `keywords`), les trois docs et
 Valider les JSON touchés :
 
 ```powershell
-node -e "['.claude-plugin/marketplace.json','claude-utils/.claude-plugin/plugin.json'].forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})"
+node ".claude\skills\plugin-check\references\coherence.mjs"
 ```
+
+Il valide les manifestes au passage (il les parse) **et** vérifie que la skill est bien déclarée
+partout — ce que la seule validation JSON ne dit pas.
 
 **Étape 5 — Rappeler la suite**
 

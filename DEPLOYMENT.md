@@ -38,9 +38,12 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
       le fichier interrogé.
    3. `<plugin>/README.md` — ligne du tableau des skills, plus une ligne d'« Historique » si le
       changement est notable.
-   4. `claude-utils/QUICKSTART.md` — tableau « quelle skill pour quoi », **et** la liste des skills
-      proposées par `/` à l'étape « Vérifier ».
-   5. [README.md](README.md) racine — tableau des skills **et** colonne version du tableau des plugins.
+   4. `<plugin>/QUICKSTART.md` — tableau « quelle skill pour quoi », **et** la liste des skills
+      proposées par `/` à l'étape « Vérifier ». *Seuls les plugins qui ont un QUICKSTART sont
+      concernés : `claude-utils` en a un, `claude-uxui` non. D'où **six** cibles pour le premier,
+      **cinq** pour le second.*
+   5. [README.md](README.md) racine — tableau des skills du plugin **et** colonne version du tableau
+      des plugins.
    6. [CLAUDE.md](CLAUDE.md) — liste des skills du plugin.
 5. Publie (section suivante).
 
@@ -50,12 +53,16 @@ plugins dans un projet. S'applique à **tous** les plugins du repo (`claude-util
 
 ## Publier une version
 
-1. Incrémente `version` dans `<plugin>/.claude-plugin/plugin.json` (le plugin modifié), et reporte-la
-   dans le tableau des plugins du [README.md](README.md) racine. Si le changement est notable,
-   ajoute une ligne à la section « Historique » du README du plugin.
-2. Valide les manifestes JSON touchés — un JSON cassé empêche le chargement du plugin :
+1. Incrémente `version` dans `<plugin>/.claude-plugin/plugin.json` (le plugin modifié **seul** — les
+   autres ne bougent pas), et reporte-la dans le tableau des plugins du [README.md](README.md)
+   racine. Incrémente aussi `metadata.version` de `.claude-plugin/marketplace.json` : c'est la version
+   du **catalogue**, pas celle d'un plugin — elle bouge à chaque publication, quel que soit le plugin
+   publié. Si le changement est notable, ajoute une ligne à la section « Historique » du README du
+   plugin.
+2. Valide les manifestes JSON touchés — un JSON cassé empêche le chargement du plugin. La commande
+   prend **tous** les manifestes du dépôt, pour ne pas dépendre d'une liste à tenir à jour :
    ```powershell
-   node -e "['.claude-plugin/marketplace.json','claude-utils/.claude-plugin/plugin.json'].forEach(f=>{JSON.parse(require('fs').readFileSync(f,'utf8'));console.log('OK '+f)})"
+   node -e "const{readFileSync,readdirSync,existsSync}=require('fs');['.claude-plugin/marketplace.json',...readdirSync('.',{withFileTypes:true}).filter(e=>e.isDirectory()&&!e.name.startsWith('.')).map(e=>e.name+'/.claude-plugin/plugin.json').filter(existsSync)].forEach(f=>{JSON.parse(readFileSync(f,'utf8'));console.log('OK '+f)})"
    ```
 3. `git commit` + `git push` (via `/ship`).
 4. Sur chaque poste, après le push :

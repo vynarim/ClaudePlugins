@@ -42,9 +42,10 @@ jobs:
           node-version: 22
 
       # Un manifeste cassé n'est pas une config en moins : le plugin ne se charge plus, sur tous les
-      # postes à la fois. DEPLOYMENT.md ne nomme que les deux manifestes ; on valide les cinq JSON
-      # suivis, parce qu'`examples/` est recopié dans les projets consommateurs et que `.claude/`
-      # porte les permissions de quiconque clone.
+      # postes à la fois. DEPLOYMENT.md ne nomme que les manifestes ; on valide TOUS les JSON suivis,
+      # parce qu'`examples/` est recopié dans les projets consommateurs et que `.claude/` porte les
+      # permissions de quiconque clone. Le `git ls-files` évite en prime une liste à tenir à jour à
+      # chaque plugin ajouté.
       #
       # Tous les fichiers sont testés avant de sortir : un rapport qui s'arrête au premier cassé fait
       # recommencer le tour autant de fois qu'il y a de fichiers.
@@ -59,9 +60,9 @@ jobs:
             process.exit(casse ? 1 : 0);
           '
 
-      # Les six déclarations, les deux manifestes, le frontmatter. Même script que `plugin-check`,
-      # appelé des deux côtés : une skill déclarée dans cinq endroits sur six est publiée et
-      # invisible, et deux manifestes qui divergent empêchent le plugin de se charger.
+      # Les déclarations, les manifestes, le frontmatter — pour chaque plugin découvert. Même script
+      # que `plugin-check`, appelé des deux côtés : une skill déclarée dans cinq endroits sur six est
+      # publiée et invisible, et deux manifestes qui divergent empêchent le plugin de se charger.
       - name: Cohérence du catalogue
         run: node .claude/skills/plugin-check/references/coherence.mjs
 
