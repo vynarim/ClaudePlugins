@@ -11,25 +11,38 @@ skills. Tout ce que le README affirme est vérifiable mécaniquement.
 
 | Section | Où est la vérité |
 |---|---|
+| **Champ « About » GitHub** | `gh repo view --json description` — **il n'est dans aucun fichier du dépôt**, donc aucune passe `/doc` ne le corrige par accident. C'est pourtant le premier texte que voit un visiteur, avant le README. Le vérifier à chaque passe de fond |
 | Table des plugins (nom, version) | `.claude-plugin/marketplace.json` **et** `<plugin>/.claude-plugin/plugin.json` — voir « la version se dit à trois endroits » plus bas |
-| Tableau des skills | `claude-utils/skills/*/SKILL.md` — **un dossier = une ligne**, et le rôle se lit dans le `description` du frontmatter, pas dans le corps |
-| Notes projet lues par une skill | les `SKILL.md` eux-mêmes : `grep -l "\.claude/.*-notes\.md" claude-utils/skills/*/SKILL.md`. Aujourd'hui `audit`, `deploy`, `test`, `doc` lisent les leurs, et `ship` lit le seul champ « Bumpé par » de `deploy-notes.md` |
-| Installation rapide | [INSTALL.md](../INSTALL.md) — **y renvoyer, ne pas dupliquer.** Le README ne garde que les deux commandes et l'avertissement de double scope |
+| Tableaux des skills | `<plugin>/skills/*/SKILL.md` — **un dossier = une ligne**, et le rôle se lit dans le `description` du frontmatter, pas dans le corps. Deux plugins aujourd'hui : ne pas n'en compter qu'un |
+| Notes projet lues par une skill | les `SKILL.md` eux-mêmes : `grep -l "\.claude/.*-notes\.md" */skills/*/SKILL.md`. Aujourd'hui `audit`, `deploy`, `test`, `doc`, `kit-sync`, `perms` et `ui-frame` lisent les leurs ; `ship` lit le seul champ « Bumpé par » de `deploy-notes.md`, et `ci` lit celles de `test` et `deploy` sans en avoir |
+| Installation rapide | [INSTALL.md](../INSTALL.md) — **y renvoyer, ne pas dupliquer.** Le README ne garde que les commandes et l'avertissement de double scope |
 | Structure du repo | l'arborescence réelle, pas la mémoire qu'on en a |
 | Documentation (liens de fin) | les fichiers présents à la racine et dans `docs/` |
 
-## Ordre des sections à préserver
+## Ordre des sections
 
-`# ClaudePlugins` → bandeau du tutoriel → table des plugins → `## Plugin claude-utils` (+ `### Skills`)
-→ `## Installation rapide` → `## Structure du repo` → `## Documentation`
+Refondu à la passe forme du 16/08. Ordre actuel, à préserver par les passes de **fond** :
 
-## Deux README, une frontière
+`# ClaudePlugins` → badges → phrase d'accroche → diagramme mermaid → `## Installer` →
+`## Les deux plugins` (+ un `###` par plugin) → `## Les notes projet` → `## Documentation` →
+`## Mettre à jour`
+
+Deux principes qui ont motivé la refonte, et qui ne se redécouvriront pas :
+
+- **La première phrase dit ce qu'est le dépôt**, pas ce qu'il propose de lire. Le bandeau du tutoriel
+  occupait cette place et faisait passer le tutoriel pour le sujet du repo.
+- **`Installer` remonte avant le catalogue** : le lecteur veut essayer, pas inventorier.
+- Le tableau des 14 skills de `claude-utils` est **replié** derrière un `<details>`, précédé d'une
+  table par famille. Déplié, c'est le mur qui rend la page illisible.
+
+## Trois README, une frontière
 
 - **`README.md` (racine)** — *présente* : ce que contient le catalogue, comment l'installer, où lire
   la suite. Il renvoie, il ne détaille pas.
-- **`claude-utils/README.md`** — *détaille* le plugin : usage d'`/audit`, mécanique des notes projet,
-  procédure de migration d'une skill locale.
-- **`claude-utils/QUICKSTART.md`** — *prend en main* depuis un poste neuf.
+- **`<plugin>/README.md`** — *détaille* le plugin. Pour `claude-utils` : usage d'`/audit`, mécanique
+  des notes, migration d'une skill locale. Pour `claude-uxui` : le garde-fou de profil, et pourquoi
+  le plugin est séparé.
+- **`claude-utils/QUICKSTART.md`** — *prend en main* depuis un poste neuf. Seul `claude-utils` en a un.
 
 Une même explication qui apparaît dans deux de ces fichiers finit par diverger. En cas de doute, le
 détail va dans le README du plugin et la racine y renvoie.
@@ -69,19 +82,18 @@ Si un plugin gagne un jour un hook, la phrase devient fausse et doit **tomber**,
 
 ## Pièges maison
 
-- **La version se dit à trois endroits** : `version` du `plugin.json`, `metadata.version` du
-  `marketplace.json`, et la table des plugins du README. C'est l'écart le plus fréquent du dépôt, et
-  le seul que le lecteur voit avant d'installer.
-- **`description` et `keywords` doivent être identiques entre les deux manifestes** — divergence déjà
-  constatée et corrigée (`CONF-04` du journal d'audit) :
-
-  ```powershell
-  node -e "const a=require('./claude-utils/.claude-plugin/plugin.json'),b=require('./.claude-plugin/marketplace.json').plugins[0];console.log(a.description===b.description, JSON.stringify(a.keywords)===JSON.stringify(b.keywords))"
-  ```
-
-- **Compter avant d'écrire** : autant de lignes dans le tableau des skills que de dossiers dans
-  `claude-utils/skills/`, et autant de rôles énumérés dans la ligne de présentation du plugin. C'est
-  par cette énumération que `context-check` a disparu du récapitulatif sans que personne le voie.
+- **La version d'un plugin se dit à deux endroits** : `version` de son `plugin.json`, et sa ligne du
+  tableau des plugins du README. `metadata.version` du `marketplace.json` est celle du **catalogue**
+  et n'a plus à coïncider avec l'une d'elles depuis qu'il y a deux plugins. C'est l'écart le plus
+  fréquent du dépôt, et le seul que le lecteur voit avant d'installer.
+- **`description` et `keywords` doivent être identiques entre les deux manifestes d'un même plugin** —
+  divergence déjà constatée et corrigée (`CONF-04` du journal d'audit). Ne pas rejouer la commande à
+  la main : `node .claude/skills/plugin-check/references/coherence.mjs` la fait pour **tous** les
+  plugins découverts, là où l'ancienne commande était figée sur `plugins[0]`.
+- **Compter avant d'écrire** : autant de lignes dans les tableaux des skills que de dossiers dans
+  `<plugin>/skills/`, **les deux plugins additionnés**, et autant de rôles énumérés dans les lignes de
+  présentation. C'est par cette énumération que `context-check` a disparu du récapitulatif sans que
+  personne le voie.
 - **Skills publiées ≠ skills internes.** `claude-utils/skills/` s'installe chez les autres ;
   `.claude/skills/` (`skill-new`) ne sort jamais du dépôt et n'a rien à faire dans un tableau
   d'installation.
