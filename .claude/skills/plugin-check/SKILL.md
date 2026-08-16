@@ -86,6 +86,18 @@ skills ressortent en `MANQUE`. Et la `description` du frontmatter est repliée s
 sans écraser les blancs, « À utiliser quand » coupé entre deux lignes se lit comme absent. Un contrôle
 qui échoue toujours ne contrôle rien — celui qui réussit toujours non plus.
 
+### Exceptions admises
+
+Un écart arbitré ne se resignale pas — sans quoi le rapport se remplit de constats qu'on a déjà
+tranchés, et on cesse de le lire.
+
+| Skill | Écart | Pourquoi il reste |
+|---|---|---|
+| `eco` | description hors gabarit : « À utiliser **DÈS QU'**une session démarre […] même sans demande explicite », puis « Déclenche **aussi** quand… » | C'est la seule skill **proactive** du plugin. Le gabarit maison décrit une skill réactive, déclenchée par une phrase de l'utilisateur ; l'y ramener ferait qu'`eco` ne partirait plus qu'après un « je sature » — c'est-à-dire trop tard. Le « aussi » est porteur : les phrases sont un déclencheur **supplémentaire**, pas la condition. |
+
+Ajouter une ligne ici plutôt que de « corriger » une skill est le bon geste quand l'écart est un
+choix. Une exception sans raison écrite n'en est pas une : c'est un défaut qu'on a renoncé à traiter.
+
 ## Étape 4 — Les liens et les orphelins
 
 ```powershell

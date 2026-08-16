@@ -96,3 +96,17 @@ une tâche lourde.
 
 Détails (commandes, variables d'environnement, hygiène du pool partagé, bascule API) :
 `references/reglages-vscode.md`.
+
+## Ce que cette skill ne fait PAS
+
+- Elle n'exécute rien à ta place : ni `/clear`, ni `/compact`, ni `/rewind`, ni `/model`. Décider seul
+  du moment où l'on jette du contexte est le meilleur moyen de jeter ce qui comptait.
+- Elle **n'estime pas la consommation localement**. La fenêtre est comptée côté serveur et partagée
+  avec le chat Claude.ai : toute estimation locale dérive et finit par mentir. C'est exactement le
+  hook retiré en 2.0.0 — le remplacer par une autre estimation maison serait refaire la même erreur.
+  Les sources sont `/usage`, `/status`, ou une status line.
+- Elle ne réécrit pas le `CLAUDE.md`. Elle en donne la règle — un index, pas une encyclopédie ;
+  l'audit et la condensation sont le travail de `context-check`.
+- Elle n'écrit pas la trace de fin de session : elle la recommande, `handoff` l'écrit.
+- Elle ne délègue pas d'office à un sous-agent. En dessous de quelques fichiers, un agent qui repart
+  à froid coûte plus qu'il ne rapporte.

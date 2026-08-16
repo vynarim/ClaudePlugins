@@ -44,6 +44,21 @@ Objectif : appliquer la dernière version publiée d'un (ou de tous les) plugin(
    fenêtre VS Code (`Ctrl+Shift+P` → *Developer: Reload Window*) ou `/reload-plugins`. La skill ne peut
    pas recharger la fenêtre elle-même.
 
+## Ce que cette skill ne fait PAS
+
+- Elle ne recharge pas la fenêtre et ne redémarre rien : tant que le rechargement n'est pas fait à la
+  main, la session continue de tourner sur l'ancien payload — c'est le piège habituel, la commande
+  répond « updated » et rien ne change.
+- Elle n'**installe** pas un plugin absent du poste (`claude plugin install`) et n'active pas un
+  plugin désactivé.
+- Elle ne redescend pas de version : `update` ne gère pas le downgrade, qui passe par `uninstall`
+  puis `install`.
+- Elle ne met à jour que les plugins de `dev-tools` — ceux des autres marketplaces ne sont pas
+  touchés, même installés sur le même poste.
+- Elle ne touche pas au dépôt de la marketplace : aucun manifeste édité, aucune version bumpée. Un
+  plugin annoncé « déjà à jour » alors qu'on attend mieux est un **bump manquant côté repo**, pas un
+  échec de la skill.
+
 ## Sortie attendue
 
 Confirmer, par plugin, l'ancienne et la nouvelle version (ou « déjà à jour »), puis rappeler de
