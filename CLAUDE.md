@@ -51,32 +51,54 @@ Repo **généraliste** : outillage Claude Code transverse, sans domaine métier 
 
 *Bloc remplacé à chaque `/handoff`, jamais empilé — il est chargé à chaque prompt.*
 
-Lot **2.8.0** en ligne (`7b0017f`), plus trois commits du 16/08/2026 **sans bump** : `189f3f1`
-(sections « ne fait PAS » d'`eco` et `update-plugins`), `2991400` (`perms-notes.md`), `21e9a07`
-(garde-fou CI). Conséquence à ne pas perdre : ces retouches sont sur `main` mais **n'atteignent aucun
-poste** tant que `claude-utils` reste en 2.8.0 — elles partent avec le prochain lot. `/perms` a tourné
-pour de vrai ici (113 → 56 entrées, 8 `ask` posés) ; le garde-fou CI, lui, **n'a jamais été vu tourner**.
+Lot **2.8.1 entièrement préparé et vérifié, mais rien n'est commité** — toute la session vit dans
+8 fichiers de l'arbre de travail. Le garde-fou CI passe de 2 à 3 contrôles : `coherence.mjs` (nouveau,
+étapes 1–3 de `plugin-check` : six déclarations, deux manifestes, frontmatter) est appelé par la skill
+*et* par le workflow. Les deux inconnues de la session précédente sont levées : le workflow **a été vu
+tourner** (3 runs verts, logs lus — 5 JSON, 16 skills, 0 lien mort) et `main` **n'est pas protégée**
+(404 ; tranché, voir dettes).
 
 ### À reprendre en premier
 
-1. `gh auth login`, puis `gh run list --limit 3` : le run déclenché par `21e9a07` est le premier et
-   personne ne l'a observé. Ensuite `gh api repos/vynarim/ClaudePlugins/branches/main/protection --jq
-   '.required_status_checks.contexts'` — un `404` veut dire que le workflow informe sans rien
-   empêcher, et qu'une poussée rouge entre quand même.
-2. **Nemesis** : shipper d'abord le chantier en cours (12 fichiers non commités, dont
-   `ReclaimBanner.jsx` et `useReclaimActif.js`), *puis* migrer ses 4 skills doublons, *puis* `/perms`
-   — il coche 7 lignes de la grille de danger qu'EscaleAzur, même métier, ne coche pas.
-3. `agents-sync` (#09), dernière skill de la roadmap.
+1. **`/ship` ici, avant tout le reste** : 7 fichiers modifiés + `coherence.mjs` non suivi. Rien de
+   cette session n'a survécu à git. Puis sur chaque poste `claude plugin marketplace update dev-tools`
+   puis `claude plugin update claude-utils@dev-tools` — sans le second, le bump n'est pas appliqué.
+2. **Nemesis** : `/test` d'abord, puis **un commit unique des 8 entrées**. `functions/lib/throttle.js`
+   est **non suivi** alors que [`functions/index.js`](../Nemesis/functions/index.js) l'importe déjà —
+   committer `index.js` seul met sur `main` des Cloud Functions qui ne démarrent plus. Ensuite
+   seulement : les 4 skills doublons, puis `/perms` (7 lignes de la grille de danger).
+3. **`agents-sync` (#09)** — **deux définitions en circulation, à trancher avant d'écrire une ligne.**
+   La roadmap du 15/08 dit « cohérence `CLAUDE.md` ⇄ `AGENTS.md`, priorité 3, **un seul projet
+   concerné** ». Le 16/08, une autre lecture a été validée à l'oral : aligner les définitions de
+   **sous-agents** (`agents/`, `.claude/agents/`) entre projets frères, sur le modèle de `kit-sync`.
+   Les deux ne décrivent ni le même périmètre ni la même urgence. Trancher d'abord — une
+   `description` devinée est un routeur faux, et la skill part à la place d'une autre.
 
 ### Dettes connues / à ne pas refaire
 
+- **Protéger `main` : tranché non, ne pas rouvrir.** Un `required_status_checks` fait rejeter les
+  poussées directes (le check ne peut pas être vert avant le push), donc impose un flux PR, contredit
+  « travail directement sur `main` » et casse `/ship`. Le garde-fou est **informatif, et c'est
+  assumé** : une poussée rouge entre, la notification d'échec suffit sur un dépôt solo.
+- **Une trace de handoff se vérifie contre git avant d'être crue.** Celle du 16/08 envoyait shipper
+  « 12 fichiers Nemesis dont `ReclaimBanner.jsx` » : déjà commités, disparus de l'arbre. Un
+  `git status` de 3 secondes a évité de travailler sur un chantier fantôme.
 - **`ci` n'a pas de `ci-notes.md`, et c'est voulu** : elle lit `test-notes.md` et `deploy-notes.md`.
   Une skill qui réclame ses propres notes pour redire ce qui est écrit à côté fabrique la divergence
   qu'on passe ensuite son temps à réconcilier.
-- **Un contrôle de cohérence en PowerShell 5.1 ment deux fois** s'il n'est pas blindé : lecture ANSI
-  par défaut (tout motif accentué échoue → les 16 skills en `MANQUE`) et `description` repliée sur
-  plusieurs lignes (« À utiliser quand » coupé se lit comme absent). Traités dans `plugin-check` ; le
-  contrôle de liens a été réécrit en Node pour la même raison.
+- **Un contrôle maison ment de trois façons en PowerShell 5.1**, et les trois ont été rencontrées pour
+  de vrai : lecture ANSI par défaut (tout motif accentué échoue → les 16 skills en `MANQUE`),
+  `description` repliée sur plusieurs lignes (« À utiliser quand » coupé se lit comme absent), et
+  **BOM** écrit par `Set-Content -Encoding UTF8` (trois octets invisibles qui font échouer le `^---` du
+  frontmatter, donc « name absent » sur une skill intacte). D'où `coherence.mjs` et `liens.mjs` en
+  Node. Corollaire de méthode : **un garde-fou se prouve dans les deux sens** — vert sur l'arbre réel
+  *et* rouge sur une copie cassée exprès. C'est ce second test qui a trouvé le BOM.
+- **Ce qui reste hors du garde-fou CI, faute d'être automatisable** : les deux emplacements de
+  `QUICKSTART.md` que le comptage ne distingue pas, et le jugement sur le contenu d'une skill. Par
+  ailleurs l'étape « six déclarations » cherche une **sous-chaîne** — une absence est une certitude,
+  une présence ne l'est pas. Resserrer sur une frontière de mot ferait rougir des déclarations
+  légitimes, et un garde-fou qui rougit à tort est désactivé la semaine suivante. Même raison pour la
+  longueur > 150 lignes, rendue en *signalement* et non en défaut (`audit` fait 214 lignes).
 - **Le détecteur d'ombrage est un pré-filtre, et le premier vrai passage l'a montré trois fois** : il
   rate les motifs `Read`/`Edit` (`/**` ne préfixe pas littéralement `/plugins/**`), il donne pour
   ombrée une commande composée dont seul le premier segment est couvert alors que le harness découpe
@@ -88,17 +110,16 @@ pour de vrai ici (113 → 56 entrées, 8 `ask` posés) ; le garde-fou CI, lui, *
   non le passage en `ask`, des 4 entrées de déploiement LudEvent.
 - **La description d'`eco` ne doit pas être ramenée au gabarit maison** : c'est la seule skill
   proactive du plugin. L'aligner la rendrait réactive — elle ne partirait plus qu'après un « je
-  sature », trop tard. Exception inscrite dans `plugin-check`, § « Exceptions admises ».
-- **Le garde-fou CI ne rejoue que 2 des 4 étapes de `plugin-check`** (JSON, liens). Les six
-  déclarations et le frontmatter vivent en PowerShell dans un `SKILL.md` ; l'étape 2 existe en
-  `node -e` mais **imprime sans jamais sortir en erreur**, donc verte quoi qu'il arrive. Le chemin
-  propre est un `coherence.mjs` à côté de `liens.mjs`, appelé par la skill *et* par le workflow —
-  surtout pas une seconde copie de la logique dans le YAML.
+  sature », trop tard. Exception inscrite dans `plugin-check` § « Exceptions admises », **et** dans la
+  table `EXCEPTIONS` de `coherence.mjs` — les deux doivent bouger ensemble.
 
 ### État git
 
-Branche `main`, à jour avec `origin/main` (`21e9a07`) — 0 commit d'avance, 0 stash. Seul ce bloc est
-non commité. Aucun bump depuis 2.8.0.
+Branche `main`, à jour avec `origin/main` (`ac52af8`) — 0 commit d'avance, 0 stash. **Non commité :**
+`marketplace.json`, `plugin.json`, `README.md` racine, `claude-utils/README.md` (bump 2.8.0 → 2.8.1 aux
+trois emplacements + historique), `plugin-check/SKILL.md`, `garde-fou.yml`, ce `CLAUDE.md`, et
+`coherence.mjs` **non suivi**. Batterie rejouée localement avant écriture : JSON ✅ · cohérence ✅ ·
+liens ✅.
 
 ## Docs
 
