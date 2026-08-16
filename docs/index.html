@@ -671,6 +671,7 @@
       <span class="meta">🧩 <b>débutant accompagné</b></span>
       <span class="meta">⏱️ <b>~1h15</b> (Parties 1 à 3)</span>
       <span class="meta">🎯 <b>Site + PWA déployable</b></span>
+      <span class="meta">🗓️ Mis à jour le <b>16 août 2026</b></span>
     </div>
   </div>
 </header>
@@ -695,7 +696,7 @@
       <ul>
         <li>un ordinateur Windows, macOS ou Linux avec VS Code&nbsp;;</li>
         <li>un assistant agentique installé&nbsp;: Claude Code pour suivre exactement le pas à pas, ou un équivalent (Codex/Gemini/Cursor...)&nbsp;;</li>
-        <li>une <strong>licence Claude Pro</strong> (~20&nbsp;€/mois) — le compte gratuit ne donne pas accès à Claude Code&nbsp;; Pro suffit largement pour ce cours (à défaut&nbsp;: Max, ou une clé API en pay-as-you-go)&nbsp;;</li>
+        <li>une <strong>licence Claude Pro</strong> (20&nbsp;$/mois) — le compte gratuit ne donne pas accès à Claude Code&nbsp;; Pro suffit largement pour ce cours (à défaut&nbsp;: Max, ou une clé API en pay-as-you-go)&nbsp;;</li>
         <li>Node.js 18+ — facultatif pour installer Claude Code (l'installeur natif suffit), mais nécessaire pour le cas pratique (Firebase CLI, Vite, <code>npm</code>)&nbsp;;</li>
         <li>un compte Firebase pour aller jusqu'au déploiement&nbsp;;</li>
         <li>comptez <strong>~1 h</strong> pour la formation (Parties 1 à 3)&nbsp;; les Parties 4 à 7 sont des mémos à garder pour plus tard, hors temps.</li>
@@ -842,7 +843,11 @@
       <span class="label">💳 Bon à savoir</span>
       <p>Claude Code est un <strong>outil payant</strong>&nbsp;: abonnement Claude (Pro 20&nbsp;$/mois, Max 100/200&nbsp;$/mois, Team, Enterprise) <strong>ou</strong> crédits API. <strong>⚠️ Le compte Claude gratuit ne suffit pas</strong> — il faut au minimum <strong>Pro</strong> (le palier suffisant pour ce cours)&nbsp;; <strong>Max</strong> ne se justifie que pour un usage quotidien intensif. Pour seulement expérimenter, une clé API en pay-as-you-go (quelques centimes d'usage réel) fait aussi l'affaire.</p>
     </div>
-    <h4>Installer le CLI — deux méthodes à lancer depuis le terminal VS Code <span style="font-weight:400;font-size:.85rem;">(page officielle&nbsp;: <a href="https://claude.com/download">claude.com/download</a>)</span></h4>
+    <div class="callout tip">
+      <span class="label">🖥️ Où tourne Claude Code&nbsp;?</span>
+      <p>Cinq surfaces, un seul moteur&nbsp;: <strong>terminal</strong> (le CLI — c'est celui du cours), <strong>extension VS Code</strong>, <strong>app desktop</strong> (macOS/Windows), <strong>navigateur</strong> (<a href="https://claude.ai/code">claude.ai/code</a>) et <strong>JetBrains</strong>. Vos <code>CLAUDE.md</code>, réglages et serveurs MCP suivent d'une surface à l'autre. <strong>Si le terminal vous freine pour démarrer, l'app desktop est le chemin le plus court</strong>&nbsp;: on installe, on se connecte, on code — aucune ligne de commande. Le cours reste en CLI + VS Code parce que c'est là que les gestes qu'on apprend ici (diff, contexte, commandes) se voient le mieux.</p>
+    </div>
+    <h4>Installer le CLI — trois méthodes à lancer depuis le terminal VS Code <span style="font-weight:400;font-size:.85rem;">(page officielle&nbsp;: <a href="https://claude.com/download">claude.com/download</a>)</span></h4>
     <div class="terminal">
       <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 1 [Recommandé] — installeur natif (aucune dépendance)</span></div>
 <pre><span class="c"># Windows 11 — PowerShell (clic droit sur Démarrer → Terminal)</span>
@@ -851,12 +856,19 @@
 <span class="c"># (Mac/Linux, pour info :  curl -fsSL https://claude.ai/install.sh | bash)</span></pre>
     </div>
     <div class="terminal">
-      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 2 — via npm (nécessite Node.js 18+)</span></div>
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 2 — winget (Windows, sans script PowerShell)</span></div>
+<pre><span class="p">PS&gt;</span> <span class="k">winget</span> install Anthropic.ClaudeCode
+
+<span class="c"># pas de mise à jour automatique : relancer de temps en temps</span>
+<span class="p">PS&gt;</span> <span class="k">winget</span> upgrade Anthropic.ClaudeCode</pre>
+    </div>
+    <div class="terminal">
+      <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="tt">méthode 3 — via npm (nécessite Node.js 18+)</span></div>
 <pre><span class="p">PS&gt;</span> <span class="k">npm</span> install -g @anthropic-ai/claude-code</pre>
     </div>
     <div class="callout warn">
       <span class="label">⚠️ Pièges classiques (Windows 11)</span>
-      <p><strong>1. La commande est refusée&nbsp;?</strong> Windows bloque par défaut l'exécution des scripts PowerShell. Autorisez-les pour votre compte en lançant une fois&nbsp;: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code>, puis relancez l'installation.<br>
+      <p><strong>1. La commande est refusée&nbsp;?</strong> Windows bloque par défaut l'exécution des scripts PowerShell. Autorisez-les pour votre compte en lançant une fois&nbsp;: <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code>, puis relancez l'installation. <em>La méthode 2 (winget) ne passe pas par un script&nbsp;: elle contourne ce piège.</em><br>
       <strong>2. <code>claude</code> n'est «&nbsp;pas reconnu&nbsp;» après l'installation&nbsp;?</strong> Le <code>PATH</code> n'est pas encore à jour&nbsp;: <strong>fermez puis rouvrez le terminal</strong> (voire VS Code).<br>
       <strong>3. En cas de doute&nbsp;:</strong> <code>claude doctor</code> diagnostique l'installation.</p>
     </div>
@@ -871,8 +883,8 @@
     </div>
     <h4>L'extension VS Code</h4>
     <ol>
-      <li>Ouvrez VS Code (version <strong>1.98.0 ou supérieure</strong>).</li>
-      <li>Dans le panneau Extensions (<code>Ctrl+Shift+X</code>), cherchez <strong>«&nbsp;Claude Code&nbsp;»</strong> et installez celle de l'éditeur <strong>anthropic</strong> (<a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">lien direct Marketplace</a>). Le CLI doit être installé au préalable&nbsp;: l'extension l'enrobe.</li>
+      <li>Ouvrez VS Code (version <strong>1.94.0 ou supérieure</strong>).</li>
+      <li>Dans le panneau Extensions (<code>Ctrl+Shift+X</code>), cherchez <strong>«&nbsp;Claude Code&nbsp;»</strong> et installez celle de l'éditeur <strong>anthropic</strong> (<a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">lien direct Marketplace</a>). L'extension <strong>embarque sa propre copie du CLI</strong> pour son panneau de chat&nbsp;: elle fonctionne même sans installation préalable. Le CLI installé ci-dessus reste nécessaire pour taper <code>claude</code> dans le terminal intégré — ce que fait le cours.</li>
       <li>Lancez-la&nbsp;: icône <strong>étincelle ✱</strong> en haut à droite quand un fichier est ouvert, ou Palette <code>Ctrl+Shift+P</code> → «&nbsp;Claude Code&nbsp;».</li>
       <li>À la <strong>première connexion</strong>, un onglet navigateur s'ouvre pour vous authentifier avec votre compte Anthropic. (Variante&nbsp;: définir <code>ANTHROPIC_API_KEY</code> et lancer VS Code via <code>code .</code>.)</li>
     </ol>
@@ -886,9 +898,9 @@
     <ul>
       <li><strong>1. Le prompt 🎯</strong> — une intention claire (le quoi, le contexte, la contrainte), jamais «&nbsp;fais un truc&nbsp;». <em>Ex.&nbsp;: «&nbsp;Crée une landing page responsive en HTML/CSS/JS vanilla, sans framework.&nbsp;»</em></li>
       <li><strong>2. Les mentions <code>@fichier</code> 📎</strong> — taper <code>@</code> ajoute un fichier au contexte&nbsp;: c'est ainsi qu'on dit «&nbsp;regarde <em>ce</em> fichier&nbsp;».</li>
-      <li><strong>3. La mémoire de projet 🧠</strong> — des règles persistantes (stack, conventions). <code>CLAUDE.md</code> avec Claude Code&nbsp;; fichier d'instructions ou règles de workspace ailleurs.</li>
+      <li><strong>3. La mémoire de projet 🧠</strong> — des règles persistantes (stack, conventions). <code>CLAUDE.md</code> avec Claude Code&nbsp;: <strong>ne l'écrivez pas à la main la première fois</strong>, tapez <code>/init</code> — l'agent lit le dépôt et en génère une première version, que vous corrigez ensuite. Fichier d'instructions ou règles de workspace ailleurs.</li>
       <li><strong>4. Le diff 🔍</strong> — votre code review&nbsp;: vert = ajouts, rouge = suppressions. On accepte, rejette ou révise, <em>jamais à l'aveugle.</em></li>
-      <li><strong>5. Les checkpoints ⏪</strong> — des points de restauration pour revenir en arrière si une modif casse&nbsp;; à combiner avec Git.</li>
+      <li><strong>5. Les checkpoints ⏪</strong> — des points de restauration pour revenir en arrière si une modif casse. Avec Claude Code&nbsp;: <code>/rewind</code>, ou <strong>Échap deux fois</strong> quand le champ de saisie est vide&nbsp;; le menu propose de restaurer <em>le code</em>, <em>la conversation</em>, ou les deux. <strong>À combiner avec Git, pas à la place</strong>&nbsp;: un fichier modifié par une commande shell n'est pas suivi par les checkpoints.</li>
     </ul>
     <div class="callout info">
       <span class="label">➡️ À vous de jouer</span>
@@ -1012,7 +1024,7 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
       <ul>
         <li>Connecter des <strong>serveurs MCP</strong> pour donner à l'agent l'accès à des outils externes (bases, API…).</li>
         <li>Le mode <strong>headless</strong> (<code>claude -p "…"</code>) pour scripter dans des hooks Git ou pipelines CI/CD.</li>
-        <li>Doc officielle&nbsp;: <a href="https://docs.claude.com/en/docs/claude-code/overview">docs.claude.com/en/docs/claude-code/overview</a></li>
+        <li>Doc officielle&nbsp;: <a href="https://code.claude.com/docs/en/overview">code.claude.com/docs/en/overview</a></li>
       </ul>
     </div>
 
@@ -1120,7 +1132,7 @@ Explique-moi à la fin comment tester l'installabilité.</pre>
             </tr>
             <tr>
               <td data-label="Outil"><strong>Assistant agentique</strong><br><span style="font-weight:400;font-size:.85em;">(Claude Code ici)</span></td>
-              <td data-label="Installer"><code>irm https://claude.ai/install.ps1 | iex</code> ou <a href="https://claude.com/download">claude.com/download</a><br>+ extension <a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">anthropic.claude-code</a></td>
+              <td data-label="Installer"><code>winget install Anthropic.ClaudeCode</code><br>ou <code>irm https://claude.ai/install.ps1 | iex</code> · <a href="https://claude.com/download">claude.com/download</a><br>+ extension <a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">anthropic.claude-code</a></td>
               <td data-label="À quoi ça sert">L'agent de dev. <span style="font-size:.9em;">Codex, Gemini, Cursor, Copilot fonctionnent pareil&nbsp;: vérifiez qu'il voit le dossier projet.</span></td>
             </tr>
             <tr>
@@ -1347,14 +1359,17 @@ et un cas "aucune trottinette".</pre>
         <thead><tr><th>Élément</th><th>Commande / action</th></tr></thead>
         <tbody>
           <tr><td data-label="Élément">Installer Claude Code (natif, <strong>PowerShell</strong>)</td><td data-label="Commande / action"><code>irm https://claude.ai/install.ps1 | iex</code></td></tr>
+          <tr><td data-label="Élément">Installer Claude Code (<strong>winget</strong>, Windows)</td><td data-label="Commande / action"><code>winget install Anthropic.ClaudeCode</code> · maj&nbsp;: <code>winget upgrade Anthropic.ClaudeCode</code></td></tr>
           <tr><td data-label="Élément">Installer Claude Code (npm, Node 18+)</td><td data-label="Commande / action"><code>npm install -g @anthropic-ai/claude-code</code></td></tr>
           <tr><td data-label="Élément">Vérifier Claude Code</td><td data-label="Commande / action"><code>claude --version</code> puis <code>claude doctor</code></td></tr>
           <tr><td data-label="Élément">Lancer Claude Code dans le terminal</td><td data-label="Commande / action"><code>claude</code></td></tr>
-          <tr><td data-label="Élément">Extension VS Code Claude Code</td><td data-label="Commande / action">Marketplace → «&nbsp;Claude Code&nbsp;» (éditeur <em>anthropic</em>), VS Code ≥ 1.98</td></tr>
+          <tr><td data-label="Élément">Extension VS Code Claude Code</td><td data-label="Commande / action">Marketplace → «&nbsp;Claude Code&nbsp;» (éditeur <em>anthropic</em>), VS Code ≥ 1.94</td></tr>
+          <tr><td data-label="Élément">Autres surfaces</td><td data-label="Commande / action">App desktop (macOS/Windows) · navigateur <a href="https://claude.ai/code">claude.ai/code</a> · JetBrains</td></tr>
           <tr><td data-label="Élément">Ouvrir le panneau Claude Code</td><td data-label="Commande / action">Icône ✱ (fichier ouvert) ou <code>Ctrl/Cmd+Shift+P</code> → «&nbsp;Claude Code&nbsp;»</td></tr>
           <tr><td data-label="Élément">Référencer un fichier</td><td data-label="Commande / action"><code>@</code> dans Claude Code&nbsp;; équivalent ailleurs&nbsp;: attacher un fichier, sélectionner un contexte ou pointer un chemin</td></tr>
           <tr><td data-label="Élément">Multi-lignes dans Claude Code terminal</td><td data-label="Commande / action"><code>/terminal-setup</code> (active <code>Shift+Entrée</code>)</td></tr>
-          <tr><td data-label="Élément">Mémoire de projet</td><td data-label="Commande / action"><code>CLAUDE.md</code> avec Claude Code&nbsp;; équivalent ailleurs&nbsp;: fichier d'instructions, règles projet, workspace rules</td></tr>
+          <tr><td data-label="Élément">Mémoire de projet</td><td data-label="Commande / action"><code>/init</code> génère le <code>CLAUDE.md</code> depuis le dépôt&nbsp;; équivalent ailleurs&nbsp;: fichier d'instructions, règles projet, workspace rules</td></tr>
+          <tr><td data-label="Élément">Revenir en arrière</td><td data-label="Commande / action"><code>/rewind</code> ou <strong>Échap ×2</strong> (saisie vide) — restaure le code, la conversation, ou les deux</td></tr>
           <tr><td data-label="Élément">Réflexe universel</td><td data-label="Commande / action">Prompt clair → contexte limité → diff lu → test local → commit</td></tr>
           <tr><td data-label="Élément">Installer Firebase CLI</td><td data-label="Commande / action"><code>npm install -g firebase-tools</code></td></tr>
           <tr><td data-label="Élément">Se connecter à Firebase</td><td data-label="Commande / action"><code>firebase login</code></td></tr>
@@ -1415,7 +1430,7 @@ et un cas "aucune trottinette".</pre>
 
     <div class="callout tip">
       <span class="label">⌨️ Les commandes à connaître (Claude Code)</span>
-      <p><code>/context</code> — voir ce qui occupe la fenêtre · <code>/compact</code> — la résumer quand elle se remplit · <code>/clear</code> — repartir d'un contexte vierge · <code>/model</code> — changer de modèle. Avec un autre outil, retenez le réflexe&nbsp;: <strong>mesurer, réduire, repartir proprement.</strong></p>
+      <p><code>/context</code> — voir ce qui occupe la fenêtre · <code>/compact</code> — la résumer quand elle se remplit · <code>/clear</code> — repartir d'un contexte vierge · <code>/rewind</code> — revenir à un état antérieur (code et/ou conversation) · <code>/model</code> — changer de modèle. Avec un autre outil, retenez le réflexe&nbsp;: <strong>mesurer, réduire, repartir proprement.</strong></p>
     </div>
 
     <h4>Réflexes complémentaires</h4>
@@ -1456,7 +1471,7 @@ et un cas "aucune trottinette".</pre>
       <div class="link-card">
         <h3>🤖 Exemple principal : Claude Code</h3>
         <ul>
-          <li><a href="https://docs.claude.com/en/docs/claude-code/overview">Documentation Claude Code</a><span class="desc">Le point de départ officiel</span></li>
+          <li><a href="https://code.claude.com/docs/en/overview">Documentation Claude Code</a><span class="desc">Le point de départ officiel</span></li>
           <li><a href="https://claude.com/product/claude-code">Page produit Claude Code</a><span class="desc">Présentation &amp; cas d'usage</span></li>
           <li><a href="https://claude.com/download">Téléchargements (CLI + appli bureau)</a></li>
           <li><a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">Extension VS Code</a><span class="desc">éditeur anthropic</span></li>
