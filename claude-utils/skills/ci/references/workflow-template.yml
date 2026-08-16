@@ -1,0 +1,67 @@
+# Garde-fou de non-régression — rejoue à la poussée la batterie que /test joue en local.
+#
+# GABARIT : chaque `run:` ci-dessous doit correspondre à un script qui existe RÉELLEMENT dans le
+# package.json du projet. Supprimer les lignes sans équivalent plutôt que les garder « au cas où » —
+# une étape inventée échoue au premier run, et un workflow rouge en permanence est désactivé la
+# semaine suivante.
+#
+# Ce workflow ne déploie rien. Les règles de sécurité et les index gardent la porte de la base : les
+# voir changer sous l'effet d'une poussée, sans qu'un humain regarde, est exactement ce qu'on évite.
+name: Garde-fou
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Une poussée qui en remplace une autre annule le run précédent : inutile de payer deux fois la même
+# vérification sur la même branche.
+concurrency:
+  group: garde-fou-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # aligner sur engines.node / .nvmrc du projet
+          cache: npm
+
+      # `ci` et non `install` : le lockfile fait foi, sinon la CI teste d'autres dépendances que le
+      # poste et un échec ici ne veut plus rien dire.
+      - run: npm ci
+
+      # --- La batterie, dans l'ordre de test-notes.md. Ne garder que ce qui existe. ---
+      - run: npm run lint
+      - run: npm test
+
+      - run: npm run build
+        env:
+          # Identifiant PUBLIC (clé d'API web, id de projet) : en `vars`, pas en `secrets`. Il part de
+          # toute façon dans le bundle ; ce sont les règles de sécurité qui autorisent ou refusent.
+          #
+          # Le repli évite un piège : posée en secret plutôt qu'en variable, la valeur serait vide
+          # sans que rien n'échoue — le build passerait, et l'application publiée annoncerait n'être
+          # reliée à aucune base.
+          VITE_API_KEY: ${{ vars.API_KEY || secrets.API_KEY }}
+          VITE_PROJECT_ID: ${{ vars.PROJECT_ID || 'valeur-par-defaut' }}
+
+      # Un VRAI secret manquant doit arrêter le run, pas produire un artefact vide. Le secret passe
+      # par `env:` et jamais par interpolation dans la ligne `run:`.
+      # - name: Contrôle des secrets requis
+      #   env:
+      #     COMPTE_SERVICE: ${{ secrets.SERVICE_ACCOUNT }}
+      #   run: |
+      #     test -n "$COMPTE_SERVICE" || { echo "::error::secret SERVICE_ACCOUNT absent"; exit 1; }
+
+      # Étapes lentes (E2E, émulateurs) : en dernier. Sur dépôt privé, les minutes sont comptées —
+      # les réserver à `workflow_dispatch` est un arbitrage légitime, à écrire dans test-notes.md.
+      # - run: npm run test:e2e

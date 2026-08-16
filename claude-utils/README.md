@@ -12,9 +12,11 @@ pour grossir — chaque nouvelle capacité est une skill de plus sous `skills/`.
 | `eco` | `/eco` | Discipline tokens/contexte : une session = un objectif, `/clear` aux bascules, délégation aux sous-agents. |
 | `audit` | `/audit` | Revue de code par axes (sécurité, données, métier, perf, propreté, config) : demande l'axe au démarrage, rend un diagnostic classé par gravité avec sa couverture, tient un journal pour que deux audits se complètent. Ne modifie aucun code. |
 | `test` | `/test` | Joue la batterie de non-régression (lint, unitaires, build, puis les étapes lentes), rend un tableau ✅/❌ et déclare ce qui n'a pas été éprouvé. Ne committe rien, ne touche jamais la prod. |
+| `ci` | `/ci` | Pose ou réaligne le garde-fou distant : un workflow GitHub Actions qui rejoue à la poussée la batterie de `/test`. N'écrit une étape que si son script existe, et ne déploie jamais ce qui garde la porte. |
 | `doc` | `/doc` | Réaligne le README sur le dépôt, en deux axes : **fond** (la vérité vient des sources, écarts classés `périmé` / `absent` / `inventé`) et **forme** (`/doc forme` : ordre de lecture, aération, mermaid, encarts, captures inutilisées). |
 | `context-check` | `/context-check` | Audite le `CLAUDE.md` du projet (longueur, sections à déporter) et propose la version condensée. |
 | `kit-sync` | `/kit-sync` | Compare un socle partagé entre projets frères, classe chaque divergence (progrès à propager / adaptation légitime / dérive) et propose la propagation fichier par fichier. Ne fusionne rien en silence. |
+| `perms` | `/perms` | Nettoie les listes de permissions (poste et projet) : entrées déjà couvertes par un motif plus large, entrées devenues impossibles à déclencher, gestes destructeurs laissés en `allow`. Ne relâche jamais une interdiction. |
 | `ship` | `/ship` | Commit + push : découpe en commits cohérents, message aligné sur l'historique du projet. Bumpe la version si `deploy-notes.md` le lui demande. |
 | `deploy` | `/deploy` | Mise en production : bump, vérifications, contrôle anti-secrets, envoi via `ship`, déploiement cible par cible dans un ordre qui dépend du sens du changement, puis vérification en ligne. Lit `.claude/deploy-notes.md` — sans lui, elle s'arrête. |
 | `pr-draft` | `/pr-draft` | Génère titre + corps structuré de PR GitHub depuis le diff courant. |
@@ -66,7 +68,7 @@ passages suivants, pas seulement au premier. Un correctif qui casse trois versio
 
 Méthode complète : [skills/audit/SKILL.md](skills/audit/SKILL.md).
 
-## Les notes projet — `deploy`, `test`, `doc`, `kit-sync`
+## Les notes projet — `deploy`, `test`, `doc`, `kit-sync`, `perms`
 
 Ces skills portent la **méthode** ; ce qui varie d'un dépôt à l'autre vit dans un fichier de notes du
 projet, sur le modèle d'`audit-notes.md`. C'est ce qui leur permet de servir n'importe quel dépôt
@@ -78,6 +80,12 @@ sans en connaître aucun.
 | `test` | `.claude/test-notes.md` | tourne quand même, en déduisant les étapes de `package.json` |
 | `doc` | `.claude/doc-notes.md` | tourne quand même, en reconstituant la carte à chaque passage |
 | `kit-sync` | `.claude/kit-notes.md` | demande une fois le projet frère et le chemin du socle, puis tourne — la comparaison est en lecture seule |
+| `perms` | `.claude/perms-notes.md` | tourne quand même, mais re-propose à chaque passage les entrées qu'on a décidé de garder |
+
+**`ci` ne crée pas un sixième fichier de notes** : les étapes qu'elle doit rejouer sont déjà décrites
+dans `test-notes.md`, les cibles et les secrets dans `deploy-notes.md`. Une skill qui réclame ses
+propres notes pour redire ce qui est écrit à côté fabrique la divergence qu'on passe ensuite son temps
+à réconcilier.
 
 Deux skills tiennent en plus un **journal**, écrit sans demander parce que c'est un fichier
 d'arbitrage et non du code : `.claude/audit-log.md` (les constats et leur test de re-vérification) et
@@ -163,6 +171,37 @@ rend trouvable, et `DEPLOYMENT.md` en fait le premier point de la resynchronisat
 
 ## Historique
 
+- **2.8.0** — deux skills en plus : **`perms`** et **`ci`**, qui traitent chacune un garde-fou qu'on
+  croit posé et qui ne l'est plus. `perms` part d'un constat mesuré sur le poste de développement :
+  **113 entrées** dans la liste `allow` du poste, **76** dans celle d'un seul projet, dont **85
+  ombrées** — déjà couvertes par un motif plus large — et une bonne part devenues impossibles à
+  déclencher, puisqu'elles citent un chemin de scratchpad avec l'UUID d'une session morte, une version
+  d'extension VS Code figée ou un fichier de travail effacé depuis. Le problème n'est pas le volume,
+  c'est que les trois entrées qui autorisent en permanence un `rm -rf`, un `sed -i` ou un
+  `firebase deploy` sont noyées dedans. La skill sépare donc ce qui se traite en masse de ce qui
+  s'arbitre : **supprimer une entrée ombrée ne change aucun comportement** — le geste reste autorisé
+  par le motif qui la couvrait — tandis que redescendre une entrée en `ask` en change un, et se
+  décide ligne par ligne. Elle propose `ask` et jamais `deny`, qui bloque même sur demande explicite
+  et finit contourné à la main dans l'urgence. Deux pièges sont traités dans le détecteur d'ombrage
+  livré en `references/` : `Bash(…)` et `PowerShell(…)` sont **deux listes disjointes**, si bien qu'un
+  poste qui emploie les deux shells voit des doublons qui n'en sont pas ; et la portée compte autant
+  que le motif — un `Read` nu déclaré dans un projet ne couvre rien en dehors de ce projet, ce qui
+  interdit à une entrée projet d'ombrer une entrée poste. Le détecteur est annoncé comme un
+  pré-filtre : il compare des motifs, pas la sémantique du harness. `ci` est le pendant distant de
+  `/test` : une batterie qui ne tourne que sur le poste de celui qui l'a écrite est sautée le jour où
+  on est pressé, et c'est ce jour-là qu'elle aurait servi. Elle ne redéfinit pas la batterie, elle la
+  rejoue — les étapes viennent de `test-notes.md` ou de `package.json`, et **aucune étape n'est écrite
+  sans que son script existe** : un `npm run lint` dans un projet qui n'a pas ce script échoue au
+  premier run, et un workflow rouge en permanence est désactivé la semaine suivante, laissant le dépôt
+  moins protégé qu'avant. Elle ne déploie rien, et refuse en particulier d'écrire la publication des
+  règles de sécurité dans un workflow — les voir changer sous l'effet d'une poussée est précisément ce
+  qu'on évite. Deux points repris du seul workflow maison qui existait : `npm ci` et non `npm install`,
+  et surtout **identifiant public ≠ secret** — une clé d'API web posée en `secrets` plutôt qu'en `vars`
+  serait vide sans que rien n'échoue, le build passerait, et l'application publiée n'annoncerait
+  aucune base. Enfin `ci` distingue le voyant du garde-fou : tant que le check n'est pas exigé par la
+  protection de branche, une poussée rouge entre quand même, et la skill le dit au lieu de laisser
+  croire le contraire. `ci` ne réclame pas ses propres notes : elle lit celles de `test` et de
+  `deploy`.
 - **2.7.0** — deux skills en plus et un axe : **`handoff`**, **`kit-sync`**, et l'axe **forme** de
   `doc`. `handoff` referme une boucle ouverte dans le plugin lui-même — `eco` recommandait de laisser
   une trace de fin de session, `session-brief` déclarait la relire, et rien ne l'écrivait. Elle écrit

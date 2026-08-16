@@ -1,7 +1,7 @@
 {
   "name": "claude-utils",
-  "version": "2.7.0",
-  "description": "Boîte à outils générique pour Claude Code : conteneur de skills internes réutilisables. Skills disponibles : eco (discipline tokens/contexte), audit (revue de code par axes : sécurité, données, métier, perf, propreté, config), test (batterie de non-régression), doc (réalignement du README sur le dépôt, axes fond et forme), context-check (audit du CLAUDE.md), handoff (trace d'état de fin de session, relue au démarrage suivant), kit-sync (alignement d'un socle partagé entre projets frères), ship (commit + push, avec bump de version si les notes du projet le demandent), deploy (mise en production, cible par cible, avec vérification en ligne), pr-draft (génération PR GitHub), session-brief (brief de reprise de session), update-plugins (mise à jour des plugins dev-tools).",
+  "version": "2.8.0",
+  "description": "Boîte à outils générique pour Claude Code : conteneur de skills internes réutilisables. Skills disponibles : eco (discipline tokens/contexte), audit (revue de code par axes : sécurité, données, métier, perf, propreté, config), test (batterie de non-régression), ci (garde-fou GitHub Actions qui rejoue la batterie à la poussée), doc (réalignement du README sur le dépôt, axes fond et forme), context-check (audit du CLAUDE.md), handoff (trace d'état de fin de session, relue au démarrage suivant), kit-sync (alignement d'un socle partagé entre projets frères), perms (nettoyage des listes de permissions : redondances, entrées périmées, gestes destructeurs en allow), ship (commit + push, avec bump de version si les notes du projet le demandent), deploy (mise en production, cible par cible, avec vérification en ligne), pr-draft (génération PR GitHub), session-brief (brief de reprise de session), update-plugins (mise à jour des plugins dev-tools).",
   "author": {
     "name": "Jean-Rémy"
   },
@@ -29,7 +29,12 @@
     "readme",
     "handoff",
     "kit",
-    "sync"
+    "sync",
+    "ci",
+    "workflow",
+    "github-actions",
+    "permissions",
+    "settings"
   ],
   "license": "MIT"
 }
