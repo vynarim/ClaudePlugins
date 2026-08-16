@@ -22,69 +22,49 @@ La liste de référence est celle de [DEPLOYMENT.md](../../../DEPLOYMENT.md), §
 plugin existant », point 4. **La relire à chaque passage** plutôt que de la recopier ici : une seconde
 copie diverge, et c'est exactement le défaut que cette skill est censée trouver.
 
-## Étape 1 — Les six déclarations
+## Étape 1 — Déclarations, manifestes, frontmatter
 
 ```powershell
-$skills = Get-ChildItem claude-utils\skills -Directory | Select-Object -ExpandProperty Name
-$cibles = @(
-  'claude-utils\.claude-plugin\plugin.json',
-  '.claude-plugin\marketplace.json',
-  'claude-utils\README.md',
-  'claude-utils\QUICKSTART.md',
-  'README.md',
-  'CLAUDE.md'
-)
-foreach ($s in $skills) {
-  $manque = $cibles | Where-Object { -not (Select-String -Path $_ -Pattern ([regex]::Escape($s)) -Quiet) }
-  if ($manque) { "$s -> MANQUE dans : $($manque -join ', ')" } else { "$s ok" }
-}
+node ".claude\skills\plugin-check\references\coherence.mjs"
 ```
 
-**Portée du contrôle** : une absence est une certitude, une présence ne l'est pas. `test`, `doc` ou
-`ci` sont des mots courants — la commande les trouve dans une phrase quelconque. Toute skill signalée
-« ok » dont la déclaration est récente se re-vérifie à l'œil, dans la bonne liste.
+Un seul script pour les trois contrôles, et c'est **le même** que celui du garde-fou CI
+([garde-fou.yml](../../../.github/workflows/garde-fou.yml)) : une logique de contrôle recopiée d'un
+côté finit par diverger de l'autre, et ce dépôt existe en grande partie pour traquer ce défaut-là. Il
+sort en `1` s'il reste un défaut. Ce qu'il couvre :
 
-Deux endroits échappent au comptage automatique, tous deux dans `QUICKSTART.md` : la ligne du tableau
-« quelle skill pour quoi », **et** l'énumération des skills proposées par `/` à l'étape « Vérifier ».
-La seconde est celle qu'on oublie.
+**Les six déclarations** — chaque skill de `claude-utils/skills` cherchée dans les six fichiers que
+liste [DEPLOYMENT.md](../../../DEPLOYMENT.md) § « Ajouter une skill », point 4. Portée du contrôle :
+une absence est une certitude, une présence ne l'est pas. `test`, `doc` ou `ci` sont des mots
+courants — la recherche les trouve dans une phrase quelconque. Toute skill muette au rapport dont la
+déclaration est récente se re-vérifie à l'œil, dans la bonne liste. Le script le redit en fin de
+sortie plutôt que de laisser croire à une preuve.
 
-## Étape 2 — Les deux manifestes
+Deux endroits échappent au comptage, tous deux dans `QUICKSTART.md` : la ligne du tableau « quelle
+skill pour quoi », **et** l'énumération des skills proposées par `/` à l'étape « Vérifier ». La
+seconde est celle qu'on oublie.
 
-```powershell
-node -e "const a=require('./claude-utils/.claude-plugin/plugin.json'),m=require('./.claude-plugin/marketplace.json'),b=m.plugins.find(p=>p.name==='claude-utils');console.log('description :',a.description===b.description?'identiques':'DIVERGENTES');console.log('keywords    :',JSON.stringify(a.keywords)===JSON.stringify(b.keywords)?'identiques':'DIVERGENTS');console.log('versions    : plugin',a.version,'| marketplace.metadata',m.metadata.version)"
-```
+**Les deux manifestes** — `description` et `keywords` identiques entre `plugin.json` et
+`marketplace.json` : deux manifestes qui divergent donnent une recherche incohérente selon le fichier
+interrogé. La version se lit à trois endroits — `plugin.json`, `metadata.version` de la marketplace,
+et la colonne version du tableau des plugins du [README racine](../../../README.md) — et les trois
+doivent coïncider. C'est le README qu'on oublie : il ne casse rien, il désinforme.
 
-Deux manifestes qui divergent donnent une recherche incohérente selon le fichier interrogé. La
-version, elle, se lit à trois endroits : `plugin.json`, `metadata.version` de la marketplace, et la
-colonne version du tableau des plugins du [README racine](../../../README.md). Les trois doivent
-coïncider.
-
-## Étape 3 — Frontmatter et convention maison
-
-```powershell
-Get-ChildItem claude-utils\skills, .claude\skills -Recurse -Filter SKILL.md | ForEach-Object {
-  $d = $_.Directory.Name
-  # -Encoding UTF8 et écrasement des retours à la ligne : sans les deux, ce contrôle ment.
-  $t = (Get-Content $_.FullName -Raw -Encoding UTF8) -replace '\s+', ' '
-  $nom  = if ($t -match 'name:\s*(\S+)') { $Matches[1] } else { '(absent)' }
-  $decl = if ($t -match 'Déclenche sur')   { 'ok' } else { 'MANQUE' }
-  $util = if ($t -match 'À utiliser')      { 'ok' } else { 'MANQUE' }
-  $pas  = if ($t -match 'ne fait PAS')     { 'ok' } else { 'MANQUE' }
-  "{0,-14} name={1,-14} declenche={2,-6} utiliser={3,-6} nePasFaire={4}" -f $d, $nom, $decl, $util, $pas
-}
-```
-
-Ce qui est vérifié : `name` identique au nom du dossier — sinon la skill se charge sous un autre nom
+**Le frontmatter** — `name` identique au nom du dossier, sinon la skill se charge sous un autre nom
 que celui qu'on tape ; une `description` qui porte « À utiliser » **et** « Déclenche sur : », puisque
 c'est le routeur et que sans formulations réelles la skill existe sans jamais partir ; la section
-« Ce que cette skill ne fait PAS » ; et la longueur, à signaler au-delà de ~150 lignes — ce qui
-déborde a sa place dans `references/`.
+« Ce que cette skill ne fait PAS ». La longueur au-delà de ~150 lignes sort en **signalement, pas en
+défaut** : ce qui déborde a sa place dans `references/`, mais une skill longue reste fonctionnelle et
+un garde-fou qui rougit pour un excès de zèle est désactivé la semaine suivante.
 
-**Deux pièges, sans lesquels ce contrôle rend un rapport entièrement faux.** PowerShell 5.1 lit les
-fichiers en ANSI par défaut : sans `-Encoding UTF8`, aucun motif accentué ne correspond et les seize
-skills ressortent en `MANQUE`. Et la `description` du frontmatter est repliée sur plusieurs lignes :
-sans écraser les blancs, « À utiliser quand » coupé entre deux lignes se lit comme absent. Un contrôle
-qui échoue toujours ne contrôle rien — celui qui réussit toujours non plus.
+**Pourquoi ce contrôle n'est plus en PowerShell.** Il y a menti trois fois. PowerShell 5.1 lit les
+fichiers en ANSI par défaut — sans `-Encoding UTF8`, aucun motif accentué ne correspond et les seize
+skills ressortent en `MANQUE`. La `description` du frontmatter est repliée sur plusieurs lignes —
+sans écraser les blancs, « À utiliser quand » coupé entre deux lignes se lit comme absent. Et un
+fichier réécrit par `Set-Content -Encoding UTF8` porte un **BOM** : trois octets invisibles qui font
+échouer le `^---` du frontmatter et rendent « name absent » sur une skill intacte. Les trois sont
+traités dans le script. Un contrôle qui échoue toujours ne contrôle rien — celui qui réussit toujours
+non plus.
 
 ### Exceptions admises
 
@@ -98,7 +78,7 @@ tranchés, et on cesse de le lire.
 Ajouter une ligne ici plutôt que de « corriger » une skill est le bon geste quand l'écart est un
 choix. Une exception sans raison écrite n'en est pas une : c'est un défaut qu'on a renoncé à traiter.
 
-## Étape 4 — Les liens et les orphelins
+## Étape 2 — Les liens et les orphelins
 
 ```powershell
 node ".claude\skills\plugin-check\references\liens.mjs"
@@ -114,7 +94,7 @@ considère un fichier comme cité si **son nom** apparaît dans le `SKILL.md`, m
 gabarit passé en argument dans un bloc de commande est référencé, il ne serait pas honnête de le
 signaler à chaque passage.
 
-## Étape 5 — Rendre
+## Étape 3 — Rendre
 
 Tableau skill × six déclarations, puis les correctifs **exacts** : le fichier, la ligne à ajouter, le
 texte proposé. Rien n'est appliqué avant accord.

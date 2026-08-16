@@ -1,11 +1,13 @@
 # Garde-fou de non-régression du catalogue `dev-tools`.
 #
-# Il ne redéfinit pas la batterie : il rejoue les deux contrôles de ce dépôt qui existent déjà sous
-# forme exécutable — la validation JSON de DEPLOYMENT.md § « Publier » (point 2), et le contrôle de
-# liens de la skill interne `plugin-check` (étape 4). Rien d'autre n'est écrit ici : les trois autres
-# étapes de `plugin-check` vivent en PowerShell dans un SKILL.md, et recopier leur logique dans ce
-# fichier fabriquerait exactement la seconde copie divergente que ce dépôt passe son temps à traquer.
-# Ce qui reste dehors est listé dans le README de la CI, pas contourné en silence.
+# Il ne redéfinit pas la batterie : il rejoue les contrôles de ce dépôt qui existent déjà sous forme
+# exécutable — la validation JSON de DEPLOYMENT.md § « Publier » (point 2), puis les deux scripts de
+# la skill interne `plugin-check`, `coherence.mjs` et `liens.mjs`. Aucune logique de contrôle n'est
+# écrite ici : la skill et ce workflow appellent les mêmes fichiers, faute de quoi on fabriquerait la
+# seconde copie divergente que ce dépôt passe son temps à traquer.
+#
+# Reste dehors, faute d'implémentation exécutable : les deux emplacements de `QUICKSTART.md` que le
+# comptage automatique ne distingue pas, et le jugement sur le contenu d'une skill.
 #
 # Ce workflow ne publie rien. `docs/` est servi par GitHub Pages depuis la branche : la poussée met le
 # tutoriel en ligne que ce job soit vert ou rouge, tant qu'aucune protection de branche n'exige le
@@ -56,6 +58,12 @@ jobs:
             }
             process.exit(casse ? 1 : 0);
           '
+
+      # Les six déclarations, les deux manifestes, le frontmatter. Même script que `plugin-check`,
+      # appelé des deux côtés : une skill déclarée dans cinq endroits sur six est publiée et
+      # invisible, et deux manifestes qui divergent empêchent le plugin de se charger.
+      - name: Cohérence du catalogue
+        run: node .claude/skills/plugin-check/references/coherence.mjs
 
       # Liens relatifs morts, et fichiers de `references/` que plus aucun SKILL.md ne cite. Le script
       # existe déjà, il est appelé tel quel par `plugin-check`, et il sort en 1 s'il reste un lien
