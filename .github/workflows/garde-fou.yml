@@ -1,0 +1,64 @@
+# Garde-fou de non-régression du catalogue `dev-tools`.
+#
+# Il ne redéfinit pas la batterie : il rejoue les deux contrôles de ce dépôt qui existent déjà sous
+# forme exécutable — la validation JSON de DEPLOYMENT.md § « Publier » (point 2), et le contrôle de
+# liens de la skill interne `plugin-check` (étape 4). Rien d'autre n'est écrit ici : les trois autres
+# étapes de `plugin-check` vivent en PowerShell dans un SKILL.md, et recopier leur logique dans ce
+# fichier fabriquerait exactement la seconde copie divergente que ce dépôt passe son temps à traquer.
+# Ce qui reste dehors est listé dans le README de la CI, pas contourné en silence.
+#
+# Ce workflow ne publie rien. `docs/` est servi par GitHub Pages depuis la branche : la poussée met le
+# tutoriel en ligne que ce job soit vert ou rouge, tant qu'aucune protection de branche n'exige le
+# check.
+name: Garde-fou
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Une poussée qui en remplace une autre annule le run précédent.
+concurrency:
+  group: garde-fou-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Ni `cache: npm` ni `npm ci` : ce dépôt n'a ni `package.json` ni lockfile. `cache: npm`
+      # échouerait faute de fichier de verrouillage à hacher, et le job serait rouge dès le premier
+      # run — un garde-fou rouge en permanence est désactivé la semaine suivante.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Un manifeste cassé n'est pas une config en moins : le plugin ne se charge plus, sur tous les
+      # postes à la fois. DEPLOYMENT.md ne nomme que les deux manifestes ; on valide les cinq JSON
+      # suivis, parce qu'`examples/` est recopié dans les projets consommateurs et que `.claude/`
+      # porte les permissions de quiconque clone.
+      #
+      # Tous les fichiers sont testés avant de sortir : un rapport qui s'arrête au premier cassé fait
+      # recommencer le tour autant de fois qu'il y a de fichiers.
+      - name: JSON valides
+        run: |
+          git ls-files -z '*.json' | xargs -0 node -e '
+            let casse = 0;
+            for (const f of process.argv.slice(1)) {
+              try { JSON.parse(require("fs").readFileSync(f, "utf8")); console.log("OK " + f); }
+              catch (e) { console.log("::error file=" + f + "::JSON invalide — " + e.message); casse++; }
+            }
+            process.exit(casse ? 1 : 0);
+          '
+
+      # Liens relatifs morts, et fichiers de `references/` que plus aucun SKILL.md ne cite. Le script
+      # existe déjà, il est appelé tel quel par `plugin-check`, et il sort en 1 s'il reste un lien
+      # mort. Une seule implémentation, appelée des deux côtés.
+      - name: Liens et orphelins des skills
+        run: node .claude/skills/plugin-check/references/liens.mjs
