@@ -8,7 +8,7 @@ Ce dépôt héberge les plugins suivants :
 
 | Plugin | Version | Pour quoi faire |
 |---|---|---|
-| [`claude-utils`](claude-utils/) | 2.8.0 | Boîte à outils générique : efficacité tokens, revue de code par axes, non-régression locale et distante, documentation (fond et forme), audit du `CLAUDE.md`, alignement d'un socle partagé, ménage des permissions, commit/push, mise en production, PR GitHub, reprise et clôture de session, mise à jour des plugins |
+| [`claude-utils`](claude-utils/) | 2.8.1 | Boîte à outils générique : efficacité tokens, revue de code par axes, non-régression locale et distante, documentation (fond et forme), audit du `CLAUDE.md`, alignement d'un socle partagé, ménage des permissions, commit/push, mise en production, PR GitHub, reprise et clôture de session, mise à jour des plugins |
 
 ## Plugin `claude-utils`
 

@@ -171,6 +171,11 @@ rend trouvable, et `DEPLOYMENT.md` en fait le premier point de la resynchronisat
 
 ## Historique
 
+- **2.8.1** — correctif de périmètre sur deux skills : `eco` et `update-plugins` disent maintenant ce
+  qu'elles **ne** font **pas**, section que toutes les autres portaient déjà. Une skill dont le
+  périmètre n'est pas borné se fait appeler à la place d'une autre — `update-plugins` pour un
+  déploiement, `eco` pour une revue de code. Aucun comportement modifié par ailleurs.
+
 - **2.8.0** — deux skills en plus : **`perms`** et **`ci`**, qui traitent chacune un garde-fou qu'on
   croit posé et qui ne l'est plus. `perms` part d'un constat mesuré sur le poste de développement :
   **113 entrées** dans la liste `allow` du poste, **76** dans celle d'un seul projet, dont **85
