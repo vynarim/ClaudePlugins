@@ -8,5 +8,16 @@
       "Bash(git ls-files:*)",
       "Bash(git show:*)"
     ]
+  },
+  "enabledPlugins": {
+    "claude-utils@dev-tools": true
+  },
+  "extraKnownMarketplaces": {
+    "dev-tools": {
+      "source": {
+        "source": "github",
+        "repo": "vynarim/ClaudePlugins"
+      }
+    }
   }
 }
